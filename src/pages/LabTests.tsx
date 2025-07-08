@@ -1,60 +1,70 @@
-
+import React from "react";
+import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { 
-  Search,
-  TestTube,
-  Clock,
-  MapPin,
-  Star,
-  Calendar,
-  Shield,
-  Truck
-} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Search, TestTube, Clock, Shield, Truck, Star, Calendar, ShoppingCart } from "lucide-react";
+import { useCart } from "@/components/CartContext";
+import { useNavigate } from "react-router-dom";
+
+const labTests = [
+  {
+    id: "1",
+    name: "Complete Blood Count (CBC)",
+    description: "Comprehensive blood analysis including RBC, WBC, platelets",
+    price: 299,
+    originalPrice: 399,
+    discount: 25,
+    preparationTime: "No fasting required",
+    reportTime: "Same day",
+    rating: 4.8,
+    reviews: 1250,
+    inStock: true,
+  },
+  {
+    id: "2",
+    name: "Lipid Profile",
+    description: "Cholesterol and triglyceride levels assessment",
+    price: 449,
+    originalPrice: 599,
+    discount: 25,
+    preparationTime: "12 hours fasting",
+    reportTime: "Same day",
+    rating: 4.7,
+    reviews: 980,
+    inStock: true,
+  },
+  {
+    id: "3",
+    name: "Thyroid Function Test",
+    description: "TSH, T3, T4 levels to assess thyroid health",
+    price: 599,
+    originalPrice: 799,
+    discount: 25,
+    preparationTime: "No fasting required",
+    reportTime: "Next day",
+    rating: 4.9,
+    reviews: 2100,
+    inStock: true,
+  },
+];
 
 const LabTests = () => {
-  const labTests = [
-    {
-      id: "1",
-      name: "Complete Blood Count (CBC)",
-      description: "Comprehensive blood analysis including RBC, WBC, platelets",
-      price: 299,
-      originalPrice: 399,
-      discount: 25,
-      preparationTime: "No fasting required",
-      reportTime: "Same day",
-      rating: 4.8,
-      reviews: 1250
-    },
-    {
-      id: "2", 
-      name: "Lipid Profile",
-      description: "Cholesterol and triglyceride levels assessment",
-      price: 449,
-      originalPrice: 599,
-      discount: 25,
-      preparationTime: "12 hours fasting",
-      reportTime: "Same day",
-      rating: 4.7,
-      reviews: 980
-    },
-    {
-      id: "3",
-      name: "Thyroid Function Test",
-      description: "TSH, T3, T4 levels to assess thyroid health",
-      price: 599,
-      originalPrice: 799,
-      discount: 25,
-      preparationTime: "No fasting required",
-      reportTime: "Next day",
-      rating: 4.9,
-      reviews: 2100
-    }
-  ];
+  const [searchQuery, setSearchQuery] = useState("");
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
+
+  const handleAddToCart = (testId: string) => {
+    addToCart(testId);
+    navigate("/cart");
+  };
+
+  const handleBookTest = (testId: string) => {
+    navigate(`/book-test/${testId}`);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -62,7 +72,6 @@ const LabTests = () => {
       
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
-          {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               Lab Tests & Diagnostics
@@ -72,7 +81,6 @@ const LabTests = () => {
             </p>
           </div>
 
-          {/* Search */}
           <Card className="mb-8">
             <CardContent className="p-6">
               <div className="relative">
@@ -80,12 +88,13 @@ const LabTests = () => {
                 <Input
                   placeholder="Search for tests, packages, or health conditions..."
                   className="pl-10"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
             </CardContent>
           </Card>
 
-          {/* Features */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
             <div className="flex items-center space-x-3 p-4 bg-white rounded-lg shadow-sm">
               <TestTube className="h-8 w-8 text-blue-600" />
@@ -117,7 +126,6 @@ const LabTests = () => {
             </div>
           </div>
 
-          {/* Lab Tests */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {labTests.map((test) => (
               <Card key={test.id} className="hover:shadow-lg transition-shadow">
@@ -151,10 +159,24 @@ const LabTests = () => {
                       </div>
                     </div>
                   </div>
-                  <Button className="w-full">
-                    <Calendar className="mr-2 h-4 w-4" />
-                    Book Test
-                  </Button>
+                  <div className="flex space-x-2">
+                    <Button
+                      onClick={() => handleAddToCart(test.id)}
+                      disabled={!test.inStock}
+                      className="w-full"
+                    >
+                      <ShoppingCart className="mr-2 h-4 w-4" />
+                      Add to Cart
+                    </Button>
+                    <Button
+                      onClick={() => handleBookTest(test.id)}
+                      variant="outline"
+                      className="w-full"
+                    >
+                      <Calendar className="mr-2 h-4 w-4" />
+                      Book Test
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             ))}

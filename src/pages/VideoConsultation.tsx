@@ -1,4 +1,4 @@
-
+import { Link } from "react-router-dom"; // Added Link
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -139,7 +139,7 @@ const VideoConsultation = () => {
           </div>
 
           {/* Consultation Packages */}
-          <div className="mb-12">
+          {/* <div className="mb-12">
             <h2 className="text-2xl font-bold text-practo-navy text-center mb-8">
               Choose Your Consultation Package
             </h2>
@@ -190,7 +190,7 @@ const VideoConsultation = () => {
                 </Card>
               ))}
             </div>
-          </div>
+          </div> */}
 
           {/* Available Doctors */}
           <div className="mb-12">
@@ -217,11 +217,19 @@ const VideoConsultation = () => {
                           </Badge>
                         </div>
                       </div>
-                      <div className="text-right">
+                      <div className="text-right space-y-2">
                         <p className="text-lg font-bold text-practo-navy">₹{doctor.price}</p>
-                        <Button size="sm" className="mt-2 bg-practo-navy hover:bg-practo-sky">
-                          Consult Now
-                        </Button>
+                        <Link to={`/doctor/${doctor.id}`} className="block">
+                          <Button variant="outline" size="sm" className="w-full">
+                            View Profile
+                          </Button>
+                        </Link>
+                        <Link to="/book-appointment" className="block">
+                          <Button size="sm" className="w-full bg-practo-navy hover:bg-practo-sky">
+                            <Calendar className="mr-2 h-4 w-4" />
+                            Book Now
+                          </Button>
+                        </Link>
                       </div>
                     </div>
                   </CardContent>

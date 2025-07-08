@@ -3,6 +3,9 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import ReadArticleSection from "@/components/Articles";
+import HospitalSection from "@/components/HospitalSection";
+import SpecialtySection from "@/components/SpecialtySection";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -95,73 +98,76 @@ const Index = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary/10 via-blue-50 to-green-50 py-20">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8 animate-fade-in">
-              <div className="space-y-4">
-                <Badge className="bg-primary/10 text-primary border-primary/20">
-                  ✨ Your Health, Our Priority
-                </Badge>
-                <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 leading-tight">
-                  Find & Book
-                  <span className="text-primary block">Doctor Appointments</span>
-                </h1>
-                <p className="text-xl text-gray-600 max-w-lg">
-                  Connect with verified doctors, book appointments instantly, and manage your health records - all in one platform.
-                </p>
-              </div>
+    <section className="relative bg-gradient-to-br from-primary/10 via-blue-50 to-green-50 py-8 md:py-10">
+  <div className="container mx-auto px-4">
+    <div className="grid lg:grid-cols-[3fr_2fr] gap-12 items-center">
+      {/* Left Side (Text + Search) */}
+      <div className="space-y-8 animate-fade-in">
+        <div className="space-y-4">
+          <Badge className="bg-primary/10 text-primary border-primary/20">
+            ✨ Your Health, Our Priority
+          </Badge>
+          <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 leading-tight">
+            Find & Book
+            <span className="text-primary block">Doctor Appointments</span>
+          </h1>
+          <p className="text-xl text-gray-600 max-w-lg">
+            Connect with verified doctors, book appointments instantly, and manage your health records - all in one platform.
+          </p>
+        </div>
 
-              {/* Search Bar */}
-              <div className="bg-white rounded-2xl p-6 shadow-xl border">
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <div className="flex-1 relative">
-                    <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
-                    <Input
-                      placeholder="Search doctors, specialties, hospitals..."
-                      className="pl-12 h-14 text-lg border-0 focus-visible:ring-0"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                  </div>
-                  <Button size="lg" className="h-14 px-8 text-lg">
-                    <Search className="mr-2 h-5 w-5" />
-                    Search
-                  </Button>
-                </div>
-              </div>
-
-              {/* Quick Actions */}
-              <div className="flex flex-wrap gap-3">
-                <Button variant="outline" size="sm" className="rounded-full">
-                  <Video className="mr-2 h-4 w-4" />
-                  Video Consultation
-                </Button>
-                <Button variant="outline" size="sm" className="rounded-full">
-                  <Calendar className="mr-2 h-4 w-4" />
-                  Book Appointment
-                </Button>
-                <Button variant="outline" size="sm" className="rounded-full">
-                  <Phone className="mr-2 h-4 w-4" />
-                  Emergency
-                </Button>
-              </div>
+        {/* Search Bar */}
+        <div className="bg-white rounded-2xl p-6 shadow-xl border">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex-1 relative">
+              <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+              <Input
+                placeholder="Search doctors, specialties, hospitals..."
+                className="pl-12 h-14 text-lg border-0 focus-visible:ring-0"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
-
-            <div className="relative">
-              <div className="relative z-10">
-                <img
-                  src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&h=800&fit=crop&crop=face"
-                  alt="Doctor consultation"
-                  className="rounded-3xl shadow-2xl"
-                />
-              </div>
-              <div className="absolute -top-4 -right-4 w-24 h-24 bg-primary/20 rounded-full blur-xl"></div>
-              <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-green-400/20 rounded-full blur-xl"></div>
-            </div>
+            <Button size="lg" className="h-14 px-8 text-lg">
+              <Search className="mr-2 h-5 w-5" />
+              Search
+            </Button>
           </div>
         </div>
-      </section>
+
+        {/* Quick Actions */}
+        <div className="flex flex-wrap gap-3">
+          <Button variant="outline" size="sm" className="rounded-full">
+            <Video className="mr-2 h-4 w-4" />
+            Video Consultation
+          </Button>
+          <Button variant="outline" size="sm" className="rounded-full">
+            <Calendar className="mr-2 h-4 w-4" />
+            Book Appointment
+          </Button>
+          <Button variant="outline" size="sm" className="rounded-full">
+            <Phone className="mr-2 h-4 w-4" />
+            Emergency
+          </Button>
+        </div>
+      </div>
+
+      {/* Right Side (Image) */}
+      <div className="relative w-full max-w-full">
+        <div className="relative z-10">
+          <img
+            src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&h=800&fit=crop&crop=face"
+            alt="Doctor consultation"
+            className="rounded-2xl shadow-xl w-full h-auto max-h-[400px] object-cover"
+          />
+        </div>
+        <div className="absolute -top-4 -right-4 w-24 h-24 bg-primary/20 rounded-full blur-xl"></div>
+        <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-green-400/20 rounded-full blur-xl"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 
       {/* Stats Section */}
       <section className="py-12 bg-white border-b">
@@ -216,6 +222,8 @@ const Index = () => {
         </div>
       </section>
 
+     
+  
       {/* Featured Doctors */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
@@ -232,6 +240,8 @@ const Index = () => {
               <Button variant="outline">View All Doctors</Button>
             </Link>
           </div>
+
+        
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {mockDoctors.map((doctor) => (
@@ -277,6 +287,10 @@ const Index = () => {
           </div>
         </div>
       </section>
+ <SpecialtySection/>
+
+      <HospitalSection />
+
 
       {/* Features Section */}
       <section className="py-20 bg-gradient-to-br from-primary/5 to-green-50">
@@ -310,6 +324,8 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+       <ReadArticleSection />
 
       {/* CTA Section */}
       <section className="py-20 bg-primary text-white">

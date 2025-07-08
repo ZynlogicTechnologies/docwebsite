@@ -1,39 +1,43 @@
-
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  Search, User, Menu, X, Heart, Calendar, FileText, Pill, TestTube, Video, LogOut, Building
+} from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { 
-  Search, 
-  User, 
-  Menu, 
-  X, 
-  Heart, 
-  Calendar,
-  FileText,
-  Pill,
-  TestTube,
-  Video
-} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem
+} from "@/components/ui/dropdown-menu";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
 
   const navItems = [
     { href: "/find-doctors", label: "Find Doctors", icon: User },
     { href: "/video-consultation", label: "Video Consult", icon: Video },
-    { href: "/book-appointment", label: "Book Appointment", icon: Calendar },
-    { href: "/health-records", label: "Health Records", icon: FileText },
+    { href: "/about", label: "About Us", icon: Building },
     { href: "/medicine", label: "Medicine", icon: Pill },
     { href: "/lab-tests", label: "Lab Tests", icon: TestTube },
   ];
+
+  const handleLogout = () => {
+    localStorage.removeItem("isLoggedIn");
+    setIsMenuOpen(false);
+    navigate("/");
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
+          {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-practo-navy">
               <Heart className="h-5 w-5 text-white" />
@@ -41,28 +45,25 @@ const Header = () => {
             <span className="text-xl font-bold text-practo-navy">MediCare</span>
           </Link>
 
-          {/* Desktop Navigation */}
+          {/* Navigation - Desktop */}
           <nav className="hidden md:flex items-center space-x-6">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.href}
-                  to={item.href}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-practo-light ${
-                    location.pathname === item.href
-                      ? "text-practo-navy bg-practo-light"
-                      : "text-gray-600 hover:text-practo-navy"
-                  }`}
-                >
-                  <Icon className="h-4 w-4" />
-                  <span>{item.label}</span>
-                </Link>
-              );
-            })}
+            {navItems.map(({ href, label, icon: Icon }) => (
+              <Link
+                key={href}
+                to={href}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-practo-light ${
+                  location.pathname === href
+                    ? "text-practo-navy bg-practo-light"
+                    : "text-gray-600 hover:text-practo-navy"
+                }`}
+              >
+                <Icon className="h-4 w-4" />
+                <span>{label}</span>
+              </Link>
+            ))}
           </nav>
 
-          {/* Search Bar */}
+          {/* Search - Desktop */}
           <div className="hidden lg:flex items-center space-x-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
@@ -75,15 +76,41 @@ const Header = () => {
 
           {/* User Actions */}
           <div className="flex items-center space-x-4">
-            <Button variant="outline" size="sm" className="hidden md:flex" asChild>
-              <Link to="/auth">
-                <User className="h-4 w-4 mr-2" />
-                Login
-              </Link>
-            </Button>
-            <Button size="sm" className="hidden md:flex bg-practo-navy hover:bg-practo-sky" asChild>
-              <Link to="/auth">Sign Up</Link>
-            </Button>
+            {!isLoggedIn && (
+              <>
+                <Button variant="outline" size="sm" className="hidden md:flex" asChild>
+                  <Link to="/auth">
+                    <User className="h-4 w-4 mr-2" />
+                    Login
+                  </Link>
+                </Button>
+                <Button size="sm" className="hidden md:flex bg-practo-navy hover:bg-practo-sky" asChild>
+                  <Link to="/auth">Sign Up</Link>
+                </Button>
+              </>
+            )}
+
+            {/* Profile Dropdown */}
+            {isLoggedIn && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="rounded-full border hover:bg-gray-100">
+                    <User className="h-5 w-5 text-practo-navy" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48 mt-2 shadow-lg">
+                  <DropdownMenuItem onClick={() => navigate("/dashboard")}>
+                    Dashboard
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate("/health-records")}>
+                    Medical Records
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout} className="text-red-600">
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
 
             {/* Mobile Menu Button */}
             <Button
@@ -101,6 +128,7 @@ const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t">
             <div className="space-y-4">
+              {/* Search Mobile */}
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                 <Input
@@ -108,35 +136,54 @@ const Header = () => {
                   className="w-full pl-10"
                 />
               </div>
-              
+
+              {/* Nav Mobile */}
               <nav className="space-y-2">
-                {navItems.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <Link
-                      key={item.href}
-                      to={item.href}
-                      className={`flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                        location.pathname === item.href
-                          ? "text-practo-navy bg-practo-light"
-                          : "text-gray-600 hover:text-practo-navy hover:bg-practo-light"
-                      }`}
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <Icon className="h-4 w-4" />
-                      <span>{item.label}</span>
-                    </Link>
-                  );
-                })}
+                {navItems.map(({ href, label, icon: Icon }) => (
+                  <Link
+                    key={href}
+                    to={href}
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                      location.pathname === href
+                        ? "text-practo-navy bg-practo-light"
+                        : "text-gray-600 hover:text-practo-navy hover:bg-practo-light"
+                    }`}
+                  >
+                    <Icon className="h-4 w-4" />
+                    <span>{label}</span>
+                  </Link>
+                ))}
               </nav>
 
-              <div className="flex space-x-2 pt-4 border-t">
-                <Button variant="outline" size="sm" className="flex-1" asChild>
-                  <Link to="/auth">Login</Link>
-                </Button>
-                <Button size="sm" className="flex-1 bg-practo-navy hover:bg-practo-sky" asChild>
-                  <Link to="/auth">Sign Up</Link>
-                </Button>
+              {/* Auth Mobile */}
+              <div className="flex flex-col gap-2 pt-4 border-t">
+                {!isLoggedIn ? (
+                  <>
+                    <Button variant="outline" size="sm" asChild>
+                      <Link to="/auth">Login</Link>
+                    </Button>
+                    <Button size="sm" className="bg-practo-navy hover:bg-practo-sky" asChild>
+                      <Link to="/auth">Sign Up</Link>
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/dashboard" onClick={() => setIsMenuOpen(false)}>
+                      <Button variant="ghost" className="w-full justify-start">
+                        Dashboard
+                      </Button>
+                    </Link>
+                    <Link to="/medical-records" onClick={() => setIsMenuOpen(false)}>
+                      <Button variant="ghost" className="w-full justify-start">
+                        Medical Records
+                      </Button>
+                    </Link>
+                    <Button variant="outline" size="sm" onClick={handleLogout}>
+                      Logout
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           </div>

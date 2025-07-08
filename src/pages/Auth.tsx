@@ -1,6 +1,5 @@
-
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,13 +11,29 @@ import { Heart, Eye, EyeOff, Phone, Mail } from "lucide-react";
 const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loginData, setLoginData] = useState({ email: "", password: "" });
-  const [signupData, setSignupData] = useState({ 
-    name: "", 
-    email: "", 
-    phone: "", 
-    password: "", 
-    confirmPassword: "" 
+  const [signupData, setSignupData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
   });
+  const navigate = useNavigate();
+
+  // Mock credentials
+  const MOCK_EMAIL = "premmekiri22@gmail.com";
+  const MOCK_PASSWORD = "prem@2002";
+
+  // Handle login button click
+  const handleLogin = () => {
+    if (loginData.email === MOCK_EMAIL && loginData.password === MOCK_PASSWORD) {
+      localStorage.setItem("isLoggedIn", "true"); // Set logged-in state
+      alert("Login successful!");
+      navigate("/dashboard");
+    } else {
+      alert("Invalid email or password. Please try again.");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-practo-light to-white flex items-center justify-center p-4">
@@ -37,10 +52,16 @@ const Auth = () => {
         <Card className="border-practo-light shadow-lg">
           <Tabs defaultValue="login" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="login" className="data-[state=active]:bg-practo-navy data-[state=active]:text-white">
+              <TabsTrigger
+                value="login"
+                className="data-[state=active]:bg-practo-navy data-[state=active]:text-white"
+              >
                 Login
               </TabsTrigger>
-              <TabsTrigger value="signup" className="data-[state=active]:bg-practo-navy data-[state=active]:text-white">
+              <TabsTrigger
+                value="signup"
+                className="data-[state=active]:bg-practo-navy data-[state=active]:text-white"
+              >
                 Sign Up
               </TabsTrigger>
             </TabsList>
@@ -61,11 +82,11 @@ const Auth = () => {
                       placeholder="Enter email or phone number"
                       className="pl-10"
                       value={loginData.email}
-                      onChange={(e) => setLoginData({...loginData, email: e.target.value})}
+                      onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
                     />
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="login-password">Password</Label>
                   <div className="relative">
@@ -75,7 +96,7 @@ const Auth = () => {
                       placeholder="Enter your password"
                       className="pr-10"
                       value={loginData.password}
-                      onChange={(e) => setLoginData({...loginData, password: e.target.value})}
+                      onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
                     />
                     <button
                       type="button"
@@ -97,16 +118,17 @@ const Auth = () => {
                   </Link>
                 </div>
 
-                <Button className="w-full bg-practo-navy hover:bg-practo-sky">
+                <Button
+                  className="w-full bg-practo-navy hover:bg-practo-sky"
+                  onClick={handleLogin}
+                >
                   Login
                 </Button>
 
                 <div className="text-center">
                   <p className="text-sm text-gray-600">
                     Don't have an account?{" "}
-                    <button className="text-practo-sky hover:underline">
-                      Sign up
-                    </button>
+                    <button className="text-practo-sky hover:underline">Sign up</button>
                   </p>
                 </div>
               </CardContent>
@@ -125,7 +147,7 @@ const Auth = () => {
                     type="text"
                     placeholder="Enter your full name"
                     value={signupData.name}
-                    onChange={(e) => setSignupData({...signupData, name: e.target.value})}
+                    onChange={(e) => setSignupData({ ...signupData, name: e.target.value })}
                   />
                 </div>
 
@@ -139,7 +161,7 @@ const Auth = () => {
                       placeholder="Enter your email"
                       className="pl-10"
                       value={signupData.email}
-                      onChange={(e) => setSignupData({...signupData, email: e.target.value})}
+                      onChange={(e) => setSignupData({ ...signupData, email: e.target.value })}
                     />
                   </div>
                 </div>
@@ -154,7 +176,7 @@ const Auth = () => {
                       placeholder="Enter your phone number"
                       className="pl-10"
                       value={signupData.phone}
-                      onChange={(e) => setSignupData({...signupData, phone: e.target.value})}
+                      onChange={(e) => setSignupData({ ...signupData, phone: e.target.value })}
                     />
                   </div>
                 </div>
@@ -168,7 +190,7 @@ const Auth = () => {
                       placeholder="Create a password"
                       className="pr-10"
                       value={signupData.password}
-                      onChange={(e) => setSignupData({...signupData, password: e.target.value})}
+                      onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
                     />
                     <button
                       type="button"
@@ -187,7 +209,7 @@ const Auth = () => {
                     type="password"
                     placeholder="Confirm your password"
                     value={signupData.confirmPassword}
-                    onChange={(e) => setSignupData({...signupData, confirmPassword: e.target.value})}
+                    onChange={(e) => setSignupData({ ...signupData, confirmPassword: e.target.value })}
                   />
                 </div>
 
@@ -212,9 +234,7 @@ const Auth = () => {
                 <div className="text-center">
                   <p className="text-sm text-gray-600">
                     Already have an account?{" "}
-                    <button className="text-practo-sky hover:underline">
-                      Login
-                    </button>
+                    <button className="text-practo-sky hover:underline">Login</button>
                   </p>
                 </div>
               </CardContent>
