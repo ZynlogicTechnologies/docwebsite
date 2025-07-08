@@ -29,7 +29,7 @@ export default {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: 'hsl(210 100% 50%)',
+					DEFAULT: '#202b6d',
 					foreground: 'hsl(0 0% 100%)'
 				},
 				secondary: {
@@ -66,19 +66,10 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				'medical-blue': {
-					50: '#eff6ff',
-					100: '#dbeafe',
-					500: '#3b82f6',
-					600: '#2563eb',
-					700: '#1d4ed8'
-				},
-				'medical-green': {
-					50: '#f0fdf4',
-					100: '#dcfce7',
-					500: '#22c55e',
-					600: '#16a34a',
-					700: '#15803d'
+				'practo': {
+					'navy': '#202b6d',
+					'sky': '#1d9be3', 
+					'light': '#bbd4e7'
 				}
 			},
 			borderRadius: {

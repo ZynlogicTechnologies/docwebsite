@@ -14,7 +14,7 @@ import {
   FileText,
   Pill,
   TestTube,
-  Phone
+  Video
 } from "lucide-react";
 
 const Header = () => {
@@ -23,6 +23,7 @@ const Header = () => {
 
   const navItems = [
     { href: "/find-doctors", label: "Find Doctors", icon: User },
+    { href: "/video-consultation", label: "Video Consult", icon: Video },
     { href: "/book-appointment", label: "Book Appointment", icon: Calendar },
     { href: "/health-records", label: "Health Records", icon: FileText },
     { href: "/medicine", label: "Medicine", icon: Pill },
@@ -34,10 +35,10 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center space-x-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-practo-navy">
               <Heart className="h-5 w-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-primary">MediCare</span>
+            <span className="text-xl font-bold text-practo-navy">MediCare</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -48,10 +49,10 @@ const Header = () => {
                 <Link
                   key={item.href}
                   to={item.href}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-primary/10 ${
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-practo-light ${
                     location.pathname === item.href
-                      ? "text-primary bg-primary/10"
-                      : "text-gray-600 hover:text-primary"
+                      ? "text-practo-navy bg-practo-light"
+                      : "text-gray-600 hover:text-practo-navy"
                   }`}
                 >
                   <Icon className="h-4 w-4" />
@@ -74,12 +75,14 @@ const Header = () => {
 
           {/* User Actions */}
           <div className="flex items-center space-x-4">
-            <Button variant="outline" size="sm" className="hidden md:flex">
-              <User className="h-4 w-4 mr-2" />
-              Login
+            <Button variant="outline" size="sm" className="hidden md:flex" asChild>
+              <Link to="/auth">
+                <User className="h-4 w-4 mr-2" />
+                Login
+              </Link>
             </Button>
-            <Button size="sm" className="hidden md:flex">
-              Sign Up
+            <Button size="sm" className="hidden md:flex bg-practo-navy hover:bg-practo-sky" asChild>
+              <Link to="/auth">Sign Up</Link>
             </Button>
 
             {/* Mobile Menu Button */}
@@ -115,8 +118,8 @@ const Header = () => {
                       to={item.href}
                       className={`flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                         location.pathname === item.href
-                          ? "text-primary bg-primary/10"
-                          : "text-gray-600 hover:text-primary hover:bg-primary/5"
+                          ? "text-practo-navy bg-practo-light"
+                          : "text-gray-600 hover:text-practo-navy hover:bg-practo-light"
                       }`}
                       onClick={() => setIsMenuOpen(false)}
                     >
@@ -128,11 +131,11 @@ const Header = () => {
               </nav>
 
               <div className="flex space-x-2 pt-4 border-t">
-                <Button variant="outline" size="sm" className="flex-1">
-                  Login
+                <Button variant="outline" size="sm" className="flex-1" asChild>
+                  <Link to="/auth">Login</Link>
                 </Button>
-                <Button size="sm" className="flex-1">
-                  Sign Up
+                <Button size="sm" className="flex-1 bg-practo-navy hover:bg-practo-sky" asChild>
+                  <Link to="/auth">Sign Up</Link>
                 </Button>
               </div>
             </div>
