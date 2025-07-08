@@ -1,9 +1,19 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
+import FindDoctors from "./pages/FindDoctors";
+import BookAppointment from "./pages/BookAppointment";
+import HealthRecords from "./pages/HealthRecords";
+import Medicine from "./pages/Medicine";
+import LabTests from "./pages/LabTests";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import DoctorProfile from "./pages/DoctorProfile";
+import PatientDashboard from "./pages/PatientDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -16,7 +26,15 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/find-doctors" element={<FindDoctors />} />
+          <Route path="/book-appointment" element={<BookAppointment />} />
+          <Route path="/health-records" element={<HealthRecords />} />
+          <Route path="/medicine" element={<Medicine />} />
+          <Route path="/lab-tests" element={<LabTests />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/doctor/:id" element={<DoctorProfile />} />
+          <Route path="/dashboard" element={<PatientDashboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

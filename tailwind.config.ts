@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -18,6 +19,9 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				'inter': ['Inter', 'sans-serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -25,24 +29,24 @@ export default {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					DEFAULT: 'hsl(210 100% 50%)',
+					foreground: 'hsl(0 0% 100%)'
 				},
 				secondary: {
-					DEFAULT: 'hsl(var(--secondary))',
-					foreground: 'hsl(var(--secondary-foreground))'
+					DEFAULT: 'hsl(210 40% 96.1%)',
+					foreground: 'hsl(222.2 47.4% 11.2%)'
 				},
 				destructive: {
-					DEFAULT: 'hsl(var(--destructive))',
-					foreground: 'hsl(var(--destructive-foreground))'
+					DEFAULT: 'hsl(0 84.2% 60.2%)',
+					foreground: 'hsl(210 40% 98%)'
 				},
 				muted: {
-					DEFAULT: 'hsl(var(--muted))',
-					foreground: 'hsl(var(--muted-foreground))'
+					DEFAULT: 'hsl(210 40% 96.1%)',
+					foreground: 'hsl(215.4 16.3% 46.9%)'
 				},
 				accent: {
-					DEFAULT: 'hsl(var(--accent))',
-					foreground: 'hsl(var(--accent-foreground))'
+					DEFAULT: 'hsl(210 40% 96.1%)',
+					foreground: 'hsl(222.2 47.4% 11.2%)'
 				},
 				popover: {
 					DEFAULT: 'hsl(var(--popover))',
@@ -61,6 +65,20 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				'medical-blue': {
+					50: '#eff6ff',
+					100: '#dbeafe',
+					500: '#3b82f6',
+					600: '#2563eb',
+					700: '#1d4ed8'
+				},
+				'medical-green': {
+					50: '#f0fdf4',
+					100: '#dcfce7',
+					500: '#22c55e',
+					600: '#16a34a',
+					700: '#15803d'
 				}
 			},
 			borderRadius: {
@@ -84,11 +102,21 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'fade-in': {
+					'0%': { opacity: '0', transform: 'translateY(20px)' },
+					'100%': { opacity: '1', transform: 'translateY(0)' }
+				},
+				'slide-in': {
+					'0%': { transform: 'translateX(-100%)' },
+					'100%': { transform: 'translateX(0)' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-in': 'fade-in 0.6s ease-out',
+				'slide-in': 'slide-in 0.3s ease-out'
 			}
 		}
 	},
