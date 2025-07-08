@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Heart, Eye, EyeOff, Phone, Mail } from "lucide-react";
+import { Eye, EyeOff, Phone, Mail } from "lucide-react";
 
 const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -21,15 +21,32 @@ const Auth = () => {
   const navigate = useNavigate();
 
   // Mock credentials
-  const MOCK_EMAIL = "premmekiri22@gmail.com";
-  const MOCK_PASSWORD = "prem@2002";
+  const MOCK_CREDENTIALS = [
+    {
+      email: "premmekiri22@gmail.com",
+      password: "prem@2002",
+      redirectTo: "/dashboard",
+      role: "user",
+    },
+    {
+      email: "admin@gmail.com",
+      password: "admin@123",
+      redirectTo: "/admin-dashboard",
+      role: "admin",
+    },
+  ];
 
   // Handle login button click
   const handleLogin = () => {
-    if (loginData.email === MOCK_EMAIL && loginData.password === MOCK_PASSWORD) {
-      localStorage.setItem("isLoggedIn", "true"); // Set logged-in state
+    const user = MOCK_CREDENTIALS.find(
+      (cred) => cred.email === loginData.email && cred.password === loginData.password
+    );
+
+    if (user) {
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("userRole", user.role);
       alert("Login successful!");
-      navigate("/dashboard");
+      navigate(user.redirectTo);
     } else {
       alert("Invalid email or password. Please try again.");
     }
@@ -42,7 +59,11 @@ const Auth = () => {
         <div className="text-center mb-8">
           <Link to="/" className="flex items-center justify-center space-x-2">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-practo-navy">
-              <Heart className="h-6 w-6 text-white" />
+              <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtmGKUkkbFQtXTPCWPiudoEEzT2301MdDuvg&s"
+                alt="MediCare Logo"
+                className="h-6 w-6"
+              />
             </div>
             <span className="text-2xl font-bold text-practo-navy">MediCare</span>
           </Link>
