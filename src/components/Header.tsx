@@ -105,6 +105,9 @@ const Header = () => {
                   <DropdownMenuItem onClick={() => navigate("/health-records")}>
                     Medical Records
                   </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate("/cart")}>
+                    Cart
+                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleLogout} className="text-red-600">
                     Logout
                   </DropdownMenuItem>
