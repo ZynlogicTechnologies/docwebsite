@@ -27,7 +27,7 @@ const AccessPatientHistory = () => {
       <CardContent className="space-y-4">
         {patientHistory.map((history) => (
           <div key={history.id} className="p-4 bg-gray-50 rounded-lg">
-            <h3 className="font-semibold text-[#007E85]">{history.patient}</h3>
+            <h3 className="font-semibold text-[black]">{history.patient}</h3>
             <p className="text-sm text-gray-600">Visit Date: {history.visitDate}</p>
             <p className="text-sm text-gray-600">Diagnosis: {history.diagnosis}</p>
           </div>

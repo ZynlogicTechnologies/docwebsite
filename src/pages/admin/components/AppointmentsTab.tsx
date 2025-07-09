@@ -7,9 +7,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 const appointments = [
   { id: "1", patient: "John Doe", doctor: "Dr. Sarah", time: "10:30 AM", type: "Video", status: "Completed" },
   { id: "2", patient: "Jane Smith", doctor: "Dr. Michael", time: "11:00 AM", type: "In-person", status: "In Progress" },
-  { id: "3", patient: "Alice Johnson", doctor: "Dr. Raj", time: "12:15 PM", type: "Video", status: "Scheduled" },
-  { id: "4", patient: "David Lee", doctor: "Dr. Kavita", time: "1:00 PM", type: "In-person", status: "Completed" },
-  { id: "5", patient: "Michael Brown", doctor: "Dr. Emily", time: "2:30 PM", type: "Video", status: "Cancelled" },
+  
 ];
 
 const getStatusCount = (status: string) => appointments.filter(a => a.status === status).length;

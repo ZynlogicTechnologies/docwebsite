@@ -7,9 +7,7 @@ import { Badge } from "@/components/ui/badge";
 const recentAppointments = [
   { id: "1", patient: "John Doe", doctor: "Dr. Sarah", time: "10:30 AM", type: "Video", status: "Completed" },
   { id: "2", patient: "Jane Smith", doctor: "Dr. Michael", time: "11:00 AM", type: "In-person", status: "In Progress" },
-  { id: "3", patient: "Robert Brown", doctor: "Dr. Emily", time: "12:45 PM", type: "Video", status: "Scheduled" },
-  { id: "4", patient: "Alice Johnson", doctor: "Dr. Raj", time: "2:15 PM", type: "In-person", status: "Completed" },
-  { id: "5", patient: "David Lee", doctor: "Dr. Kavita", time: "3:30 PM", type: "Video", status: "In Progress" },
+  
 ];
 
 const OverviewTab = () => {
@@ -32,7 +30,7 @@ const OverviewTab = () => {
                   </Avatar>
                   <div>
                     <p className="font-medium text-gray-800">{appointment.patient}</p>
-                    <p className="text-sm text-[#007E85]">{appointment.doctor}</p>
+                    <p className="text-sm text-gray">{appointment.doctor}</p>
                     <p className="text-xs text-gray-500">{appointment.time}</p>
                   </div>
                 </div>

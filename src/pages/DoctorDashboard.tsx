@@ -27,7 +27,7 @@ const DoctorDashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50">
 
-      
+
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-7xl mx-auto">
           {/* Welcome Section */}
@@ -38,8 +38,8 @@ const DoctorDashboard = () => {
                   DR
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-[#007E85]">Welcome, Dr. John Doe</h1>
-                  <p className="text-[#007E85]">Your Doctor Dashboard - Last Login: 12:30 PM IST, Jul 09, 2025</p>
+                  <h1 className="text-2xl font-bold text-[black]">Welcome, Dr. John Doe</h1>
+                  <p className="text-[black]">Your Doctor Dashboard - Last Login: 12:30 PM IST, Jul 09, 2025</p>
                 </div>
               </div>
               <SettingsSupport onLogout={handleLogout} />
@@ -49,29 +49,45 @@ const DoctorDashboard = () => {
           {/* Navigation Tabs */}
           <div className="mb-6 flex space-x-4">
             <Button
-              variant={activeTab === "dashboard" ? "default" : "outline"}
+              className={`${activeTab === "dashboard"
+                  ? "bg-[#007E85] text-white hover:bg-[#006670]"
+                  : "border border-gray-300 text-[#007E85] bg-white hover:bg-gray-100"
+                }`}
               onClick={() => setActiveTab("dashboard")}
             >
               <Heart className="h-4 w-4 mr-2" /> Dashboard
             </Button>
+
             <Button
-              variant={activeTab === "appointments" ? "default" : "outline"}
+              className={`${activeTab === "appointments"
+                  ? "bg-[#007E85] text-white hover:bg-[#006670]"
+                  : "border border-gray-300 text-[#007E85] bg-white hover:bg-gray-100"
+                }`}
               onClick={() => setActiveTab("appointments")}
             >
               <Calendar className="h-4 w-4 mr-2" /> Appointments
             </Button>
+
             <Button
-              variant={activeTab === "patients" ? "default" : "outline"}
+              className={`${activeTab === "patients"
+                  ? "bg-[#007E85] text-white hover:bg-[#006670]"
+                  : "border border-gray-300 text-[#007E85] bg-white hover:bg-gray-100"
+                }`}
               onClick={() => setActiveTab("patients")}
             >
               <Users className="h-4 w-4 mr-2" /> Patients
             </Button>
+
             <Button
-              variant={activeTab === "history" ? "default" : "outline"}
+              className={`${activeTab === "history"
+                  ? "bg-[#007E85] text-white hover:bg-[#006670]"
+                  : "border border-gray-300 text-[#007E85] bg-white hover:bg-gray-100"
+                }`}
               onClick={() => setActiveTab("history")}
             >
               <FileText className="h-4 w-4 mr-2" /> History
             </Button>
+
           </div>
 
           {/* Content Area */}

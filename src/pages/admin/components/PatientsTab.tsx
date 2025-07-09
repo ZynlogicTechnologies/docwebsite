@@ -140,7 +140,7 @@ const PatientsTab = () => {
             </div>
             <form onSubmit={handleAddPatient} className="space-y-4">
               <div>
-                <label className="text-sm font-medium text-[#007E85]">Name</label>
+                <label className="text-sm font-medium text-[black]">Name</label>
                 <Input
                   name="name"
                   value={formData.name}
@@ -151,7 +151,7 @@ const PatientsTab = () => {
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-[#007E85]">Age</label>
+                <label className="text-sm font-medium text-[black]">Age</label>
                 <Input
                   name="age"
                   type="number"
@@ -163,7 +163,7 @@ const PatientsTab = () => {
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-[#007E85]">Gender</label>
+                <label className="text-sm font-medium text-[black]">Gender</label>
                 <select
                   name="gender"
                   value={formData.gender}
@@ -177,7 +177,7 @@ const PatientsTab = () => {
                 </select>
               </div>
               <div>
-                <label className="text-sm font-medium text-[#007E85]">Status</label>
+                <label className="text-sm font-medium text-[black]">Status</label>
                 <select
                   name="status"
                   value={formData.status}
@@ -190,7 +190,7 @@ const PatientsTab = () => {
                 </select>
               </div>
               <div>
-                <label className="text-sm font-medium text-[#007E85]">Medical Condition</label>
+                <label className="text-sm font-medium text-[black]">Medical Condition</label>
                 <Input
                   name="condition"
                   value={formData.condition}

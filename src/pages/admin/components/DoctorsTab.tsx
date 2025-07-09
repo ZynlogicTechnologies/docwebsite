@@ -144,7 +144,7 @@ const DoctorsTab = () => {
             </div>
             <form onSubmit={handleAddDoctor} className="space-y-4">
               <div>
-                <label className="text-sm font-medium text-[#007E85]">Name</label>
+                <label className="text-sm font-medium text-[black]">Name</label>
                 <Input
                   name="name"
                   value={formData.name}
@@ -155,7 +155,7 @@ const DoctorsTab = () => {
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-[#007E85]">Speciality</label>
+                <label className="text-sm font-medium text-[black]">Speciality</label>
                 <Input
                   name="speciality"
                   value={formData.speciality}
@@ -166,7 +166,7 @@ const DoctorsTab = () => {
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-[#007E85]">Status</label>
+                <label className="text-sm font-medium text-[black]">Status</label>
                 <select
                   name="status"
                   value={formData.status}
@@ -179,7 +179,7 @@ const DoctorsTab = () => {
                 </select>
               </div>
               <div>
-                <label className="text-sm font-medium text-[#007E85]">Experience</label>
+                <label className="text-sm font-medium text-[black]">Experience</label>
                 <Input
                   name="experience"
                   value={formData.experience}
@@ -189,7 +189,7 @@ const DoctorsTab = () => {
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-[#007E85]">Qualifications</label>
+                <label className="text-sm font-medium text-[black]">Qualifications</label>
                 <Input
                   name="qualifications"
                   value={formData.qualifications}

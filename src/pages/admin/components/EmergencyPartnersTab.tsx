@@ -38,21 +38,22 @@ const EmergencyPartnersTab = () => {
               View and update emergency contacts, ambulance partners, and response units
             </CardDescription>
           </div>
-          <div className="flex items-center space-x-2">
-            <Button className="bg-[#007E85] text-white">
-              <PlusCircle className="h-4 w-4 mr-2" />
-              Add Partner
-            </Button>
-          </div>
+          <Button className="bg-[#007E85] text-white hover:bg-[#006670]">
+            <PlusCircle className="h-4 w-4 mr-2" />
+            Add Partner
+          </Button>
         </div>
       </CardHeader>
 
       <CardContent className="space-y-4">
         {emergencyPartners.map((partner) => (
-          <div key={partner.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-md">
+          <div
+            key={partner.id}
+            className="flex justify-between items-center p-4 bg-gray-50 rounded-lg"
+          >
             <div>
-              <p className="font-medium text-gray-800">{partner.name}</p>
-              <p className="text-sm text-gray-500">{partner.contact}</p>
+              <p className="text-sm font-medium text-gray-800">{partner.name}</p>
+              <p className="text-xs text-gray-500">{partner.contact}</p>
               <p className="text-xs text-[#007E85]">{partner.type}</p>
             </div>
             <div className="text-right space-y-1">

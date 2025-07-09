@@ -25,7 +25,7 @@ const DoctorProfile = () => {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="p-4 bg-gray-50 rounded-lg">
-          <h3 className="font-semibold text-[#007E85]">{profile.name}</h3>
+          <h3 className="font-semibold text-[black]">{profile.name}</h3>
           <p className="text-sm text-gray-600">Specialization: {profile.specialization}</p>
           <p className="text-sm text-gray-600">Availability: {profile.availability}</p>
         </div>

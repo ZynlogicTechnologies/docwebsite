@@ -25,7 +25,7 @@ const ManageUsers = () => {
       <CardContent className="space-y-4">
         {users.map((user) => (
           <div key={user.id} className="p-4 bg-gray-50 rounded-lg">
-            <h3 className="font-semibold text-[#007E85]">{user.name}</h3>
+            <h3 className="font-semibold text-[black]">{user.name}</h3>
             <p className="text-sm text-gray-600">Role: {user.role}</p>
           </div>
         ))}

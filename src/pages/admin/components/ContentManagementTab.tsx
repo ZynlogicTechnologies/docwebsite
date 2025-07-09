@@ -38,12 +38,10 @@ const ContentManagementTab = () => {
               Manage homepage banners, health tips, articles, and static content
             </CardDescription>
           </div>
-          <div className="flex items-center space-x-2">
-            <Button className="bg-[#007E85] text-white">
-              <UploadCloud className="h-4 w-4 mr-2" />
-              Add Content
-            </Button>
-          </div>
+          <Button className="bg-[#007E85] text-white hover:bg-[#006670]">
+            <UploadCloud className="h-4 w-4 mr-2" />
+            Add Content
+          </Button>
         </div>
       </CardHeader>
 
@@ -51,7 +49,7 @@ const ContentManagementTab = () => {
         {contentItems.map((item) => (
           <div
             key={item.id}
-            className="flex items-center justify-between p-4 bg-gray-50 rounded-md"
+            className="flex justify-between items-center p-4 bg-gray-50 rounded-lg"
           >
             <div>
               <p className="text-sm font-medium text-gray-800">{item.title}</p>

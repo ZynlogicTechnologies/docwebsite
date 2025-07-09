@@ -28,7 +28,7 @@ const ViewAppointments = () => {
         {appointments.map((app) => (
           <div key={app.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
             <div>
-              <h3 className="font-semibold text-[#007E85]">{app.patient}</h3>
+              <h3 className="font-semibold text-[black]">{app.patient}</h3>
               <div className="flex items-center text-sm text-gray-600 mt-1">
                 <Clock className="h-3 w-3 mr-1" />
                 {app.date} at {app.time}

@@ -26,7 +26,7 @@ const ConsultPatients = () => {
       <CardContent className="space-y-4">
         {patients.map((patient) => (
           <div key={patient.id} className="p-4 bg-gray-50 rounded-lg">
-            <h3 className="font-semibold text-[#007E85]">{patient.name}</h3>
+            <h3 className="font-semibold text-[black]">{patient.name}</h3>
             <p className="text-sm text-gray-600">Last Consultation: {patient.lastConsultation}</p>
           </div>
         ))}
