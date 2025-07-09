@@ -1,66 +1,101 @@
-import { Link } from "react-router-dom";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import SettingsSupport from "@/components/SettingsSupport";
+import ViewAppointments from "@/components/ViewAppointments";
+import ConsultPatients from "@/components/ConsultPatients";
+import WritePrescription from "@/components/WritePrescription";
+import AccessPatientHistory from "@/components/AccessPatientHistory";
+import DoctorDashboardSummary from "@/components/DoctorDashboardSummary";
+import ManageUsers from "@/components/ManageUsers";
+import DoctorProfile from "@/components/DoctorProfile";
 import { Button } from "@/components/ui/button";
-import { User } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Calendar, Users, FileText, Heart } from "lucide-react";
 
 const DoctorDashboard = () => {
-  const doctors = [
-    { id: "1", name: "Dr. Anil Sharma", specialty: "Cardiology", experience: "15 yrs", fee: "₹1500", href: "/doctors/1" },
-    { id: "2", name: "Dr. Priya Patel", specialty: "Dermatology", experience: "10 yrs", fee: "₹1200", href: "/doctors/2" },
-    { id: "3", name: "Dr. Ravi Kumar", specialty: "Pediatrics", experience: "8 yrs", fee: "₹1000", href: "/doctors/3" },
-    { id: "4", name: "Dr. Sneha Gupta", specialty: "Orthopedics", experience: "12 yrs", fee: "₹1300", href: "/doctors/4" },
-  ];
+  const [activeTab, setActiveTab] = useState<"dashboard" | "appointments" | "patients" | "history">("dashboard");
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("userRole");
+    navigate("/auth");
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <div className="relative w-full bg-gradient-to-r from-[#007E85] to-[#006670] py-20 text-white">
-        <div className="container mx-auto px-4 max-w-6xl text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Doctor Dashboard</h1>
-          <p className="text-lg text-gray-100 mb-6">Connect with top doctors across specialties.</p>
-          <Link to="/find-doctors">
-            <Button className="bg-white text-[#007E85] hover:bg-gray-100 shadow-lg hover:shadow-xl transition-all">
-              Find a Doctor
-            </Button>
-          </Link>
-        </div>
-      </div>
 
-      {/* Featured Doctors Section */}
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-gray-800 mb-10 text-center">Featured Doctors</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {doctors.map((doctor) => (
-              <Link key={doctor.id} to={doctor.href} className="group">
-                <Card className="hover:shadow-lg transition-all duration-300 hover:-translate-y-2 border-gray-200 overflow-hidden h-full">
-                  <CardHeader className="p-6 text-center bg-[#007E85]/5">
-                    <div className="w-20 h-20 bg-[#007E85]/10 rounded-full flex items-center justify-center mx-auto mb-6 transition-transform group-hover:scale-110">
-                      <User className="h-10 w-10 text-[#007E85]" />
-                    </div>
-                    <CardTitle className="text-xl text-gray-800 font-semibold">{doctor.name}</CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-6 pt-0">
-                    <CardDescription className="text-gray-600 mb-4 text-center">
-                      <span className="block font-medium">{doctor.specialty}</span>
-                      <span className="block text-sm">{doctor.experience} experience</span>
-                      <span className="block text-sm">Fee: {doctor.fee}</span>
-                    </CardDescription>
-                    <div className="text-center">
-                      <Button 
-                        variant="outline"
-                        className="border-[#007E85] text-[#007E85] hover:bg-[#007E85]/10 hover:text-[#007E85]"
-                      >
-                        View Profile
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
+      
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-7xl mx-auto">
+          {/* Welcome Section */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <div className="h-16 w-16 bg-[#007E85] rounded-full flex items-center justify-center text-white text-xl font-bold">
+                  DR
+                </div>
+                <div>
+                  <h1 className="text-2xl font-bold text-[#007E85]">Welcome, Dr. John Doe</h1>
+                  <p className="text-[#007E85]">Your Doctor Dashboard - Last Login: 12:30 PM IST, Jul 09, 2025</p>
+                </div>
+              </div>
+              <SettingsSupport onLogout={handleLogout} />
+            </div>
+          </div>
+
+          {/* Navigation Tabs */}
+          <div className="mb-6 flex space-x-4">
+            <Button
+              variant={activeTab === "dashboard" ? "default" : "outline"}
+              onClick={() => setActiveTab("dashboard")}
+            >
+              <Heart className="h-4 w-4 mr-2" /> Dashboard
+            </Button>
+            <Button
+              variant={activeTab === "appointments" ? "default" : "outline"}
+              onClick={() => setActiveTab("appointments")}
+            >
+              <Calendar className="h-4 w-4 mr-2" /> Appointments
+            </Button>
+            <Button
+              variant={activeTab === "patients" ? "default" : "outline"}
+              onClick={() => setActiveTab("patients")}
+            >
+              <Users className="h-4 w-4 mr-2" /> Patients
+            </Button>
+            <Button
+              variant={activeTab === "history" ? "default" : "outline"}
+              onClick={() => setActiveTab("history")}
+            >
+              <FileText className="h-4 w-4 mr-2" /> History
+            </Button>
+          </div>
+
+          {/* Content Area */}
+          {activeTab === "dashboard" && (
+            <DoctorDashboardSummary />
+          )}
+          {activeTab === "appointments" && (
+            <ViewAppointments />
+          )}
+          {activeTab === "patients" && (
+            <ConsultPatients />
+          )}
+          {activeTab === "history" && (
+            <AccessPatientHistory />
+          )}
+
+          {/* Additional Sections */}
+          <div className="grid md:grid-cols-2 gap-6 mt-8">
+            <ManageUsers />
+            <DoctorProfile />
           </div>
         </div>
       </div>
+
     </div>
   );
 };
