@@ -1,8 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Bell, Heart, Users, Calendar, DollarSign } from "lucide-react";
+import { Bell, Heart, Users, Calendar, DollarSign, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 // Tabs
@@ -16,6 +17,7 @@ import EmergencyPartnersTab from "./EmergencyPartnersTab";
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
+  const navigate = useNavigate();
 
   const stats = [
     {
@@ -48,6 +50,12 @@ const AdminDashboard = () => {
     },
   ];
 
+  const handleLogout = () => {
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("userRole");
+    navigate("/auth");
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -70,6 +78,10 @@ const AdminDashboard = () => {
             <Avatar>
               <AvatarFallback className="bg-[#007E85] text-white">AD</AvatarFallback>
             </Avatar>
+            <Button variant="outline" size="sm" onClick={handleLogout}>
+              <LogOut className="h-4 w-4 mr-2 text-[#007E85]" />
+              Logout
+            </Button>
           </div>
         </div>
       </header>
