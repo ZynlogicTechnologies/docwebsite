@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -82,7 +81,7 @@ const BookAppointment = () => {
             <h1 className="text-3xl font-bold text-gray-900 mb-4">
               Book Your Appointment
             </h1>
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-[#007E85]">
               Choose your preferred doctor and schedule your consultation
             </p>
           </div>
@@ -91,10 +90,10 @@ const BookAppointment = () => {
             {/* Booking Form */}
             <div className="lg:col-span-2 space-y-6">
               {/* Doctor Selection */}
-              <Card>
+              <Card className="border-gray-200">
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
-                    <User className="h-5 w-5" />
+                    <User className="h-5 w-5 text-[#007E85]" />
                     <span>Select Doctor</span>
                   </CardTitle>
                 </CardHeader>
@@ -125,24 +124,24 @@ const BookAppointment = () => {
               </Card>
 
               {/* Appointment Type */}
-              <Card>
+              <Card className="border-gray-200">
                 <CardHeader>
                   <CardTitle>Consultation Type</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <RadioGroup value={appointmentType} onValueChange={setAppointmentType}>
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="online" id="online" />
+                      <RadioGroupItem value="online" id="online" className="text-[#007E85]" />
                       <Label htmlFor="online" className="flex items-center space-x-2 cursor-pointer">
-                        <Video className="h-4 w-4" />
+                        <Video className="h-4 w-4 text-[#007E85]" />
                         <span>Online Consultation</span>
-                        <Badge variant="outline">Recommended</Badge>
+                        <Badge className="bg-[#007E85]/10 text-[#007E85]">Recommended</Badge>
                       </Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="offline" id="offline" />
+                      <RadioGroupItem value="offline" id="offline" className="text-[#007E85]" />
                       <Label htmlFor="offline" className="flex items-center space-x-2 cursor-pointer">
-                        <MapPin className="h-4 w-4" />
+                        <MapPin className="h-4 w-4 text-[#007E85]" />
                         <span>In-Person Visit</span>
                       </Label>
                     </div>
@@ -151,10 +150,10 @@ const BookAppointment = () => {
               </Card>
 
               {/* Date and Time Selection */}
-              <Card>
+              <Card className="border-gray-200">
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
-                    <CalendarIcon className="h-5 w-5" />
+                    <CalendarIcon className="h-5 w-5 text-[#007E85]" />
                     <span>Select Date & Time</span>
                   </CardTitle>
                 </CardHeader>
@@ -167,7 +166,7 @@ const BookAppointment = () => {
                           variant="outline"
                           className="w-full justify-start text-left font-normal"
                         >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          <CalendarIcon className="mr-2 h-4 w-4 text-[#007E85]" />
                           {selectedDate ? format(selectedDate, "PPP") : "Pick a date"}
                         </Button>
                       </PopoverTrigger>
@@ -192,7 +191,7 @@ const BookAppointment = () => {
                           variant={selectedTime === time ? "default" : "outline"}
                           size="sm"
                           onClick={() => setSelectedTime(time)}
-                          className="text-xs"
+                          className={`text-xs ${selectedTime === time ? 'bg-[#007E85] hover:bg-[#006670]' : ''}`}
                         >
                           {time}
                         </Button>
@@ -203,7 +202,7 @@ const BookAppointment = () => {
               </Card>
 
               {/* Patient Information */}
-              <Card>
+              <Card className="border-gray-200">
                 <CardHeader>
                   <CardTitle>Patient Information</CardTitle>
                 </CardHeader>
@@ -250,25 +249,25 @@ const BookAppointment = () => {
               </Card>
 
               {/* Payment Method */}
-              <Card>
+              <Card className="border-gray-200">
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
-                    <CreditCard className="h-5 w-5" />
+                    <CreditCard className="h-5 w-5 text-[#007E85]" />
                     <span>Payment Method</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="card" id="card" />
+                      <RadioGroupItem value="card" id="card" className="text-[#007E85]" />
                       <Label htmlFor="card">Credit/Debit Card</Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="upi" id="upi" />
+                      <RadioGroupItem value="upi" id="upi" className="text-[#007E85]" />
                       <Label htmlFor="upi">UPI</Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="wallet" id="wallet" />
+                      <RadioGroupItem value="wallet" id="wallet" className="text-[#007E85]" />
                       <Label htmlFor="wallet">Digital Wallet</Label>
                     </div>
                   </RadioGroup>
@@ -279,7 +278,7 @@ const BookAppointment = () => {
             {/* Booking Summary */}
             <div className="space-y-6">
               {selectedDoctorData && (
-                <Card>
+                <Card className="border-gray-200">
                   <CardHeader>
                     <CardTitle>Doctor Details</CardTitle>
                   </CardHeader>
@@ -292,7 +291,7 @@ const BookAppointment = () => {
                       />
                       <div>
                         <h3 className="font-semibold">{selectedDoctorData.name}</h3>
-                        <p className="text-sm text-gray-600">{selectedDoctorData.specialty}</p>
+                        <p className="text-sm text-[#007E85]">{selectedDoctorData.specialty}</p>
                       </div>
                     </div>
                     
@@ -316,7 +315,7 @@ const BookAppointment = () => {
                 </Card>
               )}
 
-              <Card>
+              <Card className="border-gray-200">
                 <CardHeader>
                   <CardTitle>Booking Summary</CardTitle>
                 </CardHeader>
@@ -341,7 +340,7 @@ const BookAppointment = () => {
                     {selectedDoctorData && (
                       <div className="flex justify-between">
                         <span className="text-gray-600">Consultation Fee</span>
-                        <span className="font-semibold">₹{selectedDoctorData.consultationFee}</span>
+                        <span className="font-semibold text-[#007E85]">₹{selectedDoctorData.consultationFee}</span>
                       </div>
                     )}
                   </div>
@@ -349,7 +348,7 @@ const BookAppointment = () => {
                   <div className="border-t pt-4">
                     <div className="flex justify-between font-semibold text-lg">
                       <span>Total Amount</span>
-                      <span className="text-primary">
+                      <span className="text-[#007E85]">
                         ₹{selectedDoctorData?.consultationFee || 0}
                       </span>
                     </div>
@@ -357,7 +356,7 @@ const BookAppointment = () => {
 
                   <Button 
                     onClick={handleBookAppointment}
-                    className="w-full h-12 text-lg"
+                    className="w-full h-12 text-lg bg-[#007E85] hover:bg-[#006670]"
                     disabled={!selectedDoctor || !selectedDate || !selectedTime || !patientName}
                   >
                     <CheckCircle className="mr-2 h-5 w-5" />

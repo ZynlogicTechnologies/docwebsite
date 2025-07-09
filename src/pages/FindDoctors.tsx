@@ -1,4 +1,3 @@
-
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
@@ -81,14 +80,14 @@ const FindDoctors = () => {
       
       <div className="container mx-auto px-4 py-8">
         {/* Search and Filters */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border mb-8">
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-8">
           <div className="space-y-6">
             {/* Search Bar */}
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+              <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#007E85]" />
               <Input
                 placeholder="Search doctors by name or specialty..."
-                className="pl-12 h-12 text-lg"
+                className="pl-12 h-12 text-lg border-gray-300 focus-visible:ring-[#007E85]"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -97,7 +96,7 @@ const FindDoctors = () => {
             {/* Filters */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <Select value={selectedSpecialty} onValueChange={setSelectedSpecialty}>
-                <SelectTrigger>
+                <SelectTrigger className="border-gray-300 focus:ring-[#007E85]">
                   <SelectValue placeholder="Specialty" />
                 </SelectTrigger>
                 <SelectContent>
@@ -111,7 +110,7 @@ const FindDoctors = () => {
               </Select>
 
               <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-                <SelectTrigger>
+                <SelectTrigger className="border-gray-300 focus:ring-[#007E85]">
                   <SelectValue placeholder="Location" />
                 </SelectTrigger>
                 <SelectContent>
@@ -125,7 +124,7 @@ const FindDoctors = () => {
               </Select>
 
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger>
+                <SelectTrigger className="border-gray-300 focus:ring-[#007E85]">
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
                 <SelectContent>
@@ -141,6 +140,7 @@ const FindDoctors = () => {
                   id="available"
                   checked={availableOnly}
                   onCheckedChange={(checked) => setAvailableOnly(checked as boolean)}
+                  className="border-gray-300 data-[state=checked]:bg-[#007E85]"
                 />
                 <label
                   htmlFor="available"
@@ -158,7 +158,7 @@ const FindDoctors = () => {
           <h1 className="text-2xl font-bold text-gray-900">
             {filteredDoctors.length} Doctors Found
           </h1>
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-[#007E85]">
             Showing results for "{searchQuery || 'all doctors'}"
           </div>
         </div>
@@ -166,7 +166,7 @@ const FindDoctors = () => {
         {/* Doctor Cards */}
         <div className="space-y-6">
           {filteredDoctors.map((doctor) => (
-            <Card key={doctor.id} className="hover:shadow-lg transition-all duration-300">
+            <Card key={doctor.id} className="hover:shadow-lg transition-all duration-300 border-gray-200">
               <CardContent className="p-6">
                 <div className="flex flex-col lg:flex-row gap-6">
                   {/* Doctor Image and Basic Info */}
@@ -180,12 +180,12 @@ const FindDoctors = () => {
                       <h3 className="text-xl font-semibold text-gray-900">
                         {doctor.name}
                       </h3>
-                      <p className="text-primary font-medium">{doctor.specialty}</p>
+                      <p className="text-[#007E85] font-medium">{doctor.specialty}</p>
                       <p className="text-sm text-gray-600">{doctor.qualification}</p>
                       
                       <div className="flex items-center space-x-4 text-sm text-gray-600">
                         <div className="flex items-center space-x-1">
-                          <Award className="h-4 w-4" />
+                          <Award className="h-4 w-4 text-[#007E85]" />
                           <span>{doctor.experience} years exp</span>
                         </div>
                         <div className="flex items-center space-x-1">
@@ -195,7 +195,7 @@ const FindDoctors = () => {
                       </div>
 
                       <div className="flex items-center space-x-1 text-sm text-gray-600">
-                        <MapPin className="h-4 w-4" />
+                        <MapPin className="h-4 w-4 text-[#007E85]" />
                         <span>{doctor.location}</span>
                       </div>
                     </div>
@@ -206,7 +206,7 @@ const FindDoctors = () => {
                     <div className="bg-gray-50 rounded-lg p-4 space-y-3">
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-600">Consultation Fee</span>
-                        <span className="text-lg font-semibold text-primary">
+                        <span className="text-lg font-semibold text-[#007E85]">
                           ₹{doctor.consultationFee}
                         </span>
                       </div>
@@ -221,7 +221,7 @@ const FindDoctors = () => {
                       <div className="flex items-center space-x-2">
                         <Badge 
                           variant={doctor.available ? "default" : "secondary"}
-                          className="text-xs"
+                          className={`text-xs ${doctor.available ? 'bg-[#007E85]' : ''}`}
                         >
                           {doctor.available ? "Available" : "Busy"}
                         </Badge>
@@ -235,12 +235,12 @@ const FindDoctors = () => {
 
                     <div className="flex flex-col sm:flex-row gap-2">
                       <Link to={`/doctor/${doctor.id}`} className="flex-1">
-                        <Button variant="outline" className="w-full">
+                        <Button variant="outline" className="w-full border-[#007E85] text-[#007E85] hover:bg-[#007E85]/10">
                           View Profile
                         </Button>
                       </Link>
                       <Link to="/book-appointment" className="flex-1">
-                        <Button className="w-full">
+                        <Button className="w-full bg-[#007E85] hover:bg-[#006670]">
                           <Calendar className="mr-2 h-4 w-4" />
                           Book Now
                         </Button>
@@ -248,11 +248,11 @@ const FindDoctors = () => {
                     </div>
 
                     <div className="flex justify-center space-x-4">
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" className="text-[#007E85] hover:bg-[#007E85]/10">
                         <Video className="mr-2 h-4 w-4" />
                         Video Call
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" className="text-[#007E85] hover:bg-[#007E85]/10">
                         <Clock className="mr-2 h-4 w-4" />
                         Schedule
                       </Button>
@@ -266,13 +266,13 @@ const FindDoctors = () => {
 
         {filteredDoctors.length === 0 && (
           <div className="text-center py-12">
-            <div className="text-gray-400 mb-4">
+            <div className="text-[#007E85] mb-4">
               <Search className="h-16 w-16 mx-auto" />
             </div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
               No doctors found
             </h3>
-            <p className="text-gray-600">
+            <p className="text-[#007E85]">
               Try adjusting your search criteria or filters
             </p>
           </div>

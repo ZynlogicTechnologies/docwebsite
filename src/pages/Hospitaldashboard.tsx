@@ -3,7 +3,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Hospital } from "lucide-react";
 
-
 const HospitalDashboard = () => {
   const hospitals = [
     { id: "1", name: "Apollo Hospitals", beds: "500+", location: "Mumbai, Maharashtra", href: "/hospitals/1" },
@@ -14,16 +13,15 @@ const HospitalDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-    
       {/* Hero Section */}
-      <div className="relative w-full bg-gradient-to-r from-[#26A69A] to-[#00695C]/80 py-20 text-white">
+      <div className="relative w-full bg-gradient-to-r from-[#007E85] to-[#006670] py-20 text-white">
         <div className="container mx-auto px-4 max-w-6xl text-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4">Hospital Dashboard</h1>
-          <p className="text-xl text-[#E0E0E0] mb-6">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">Hospital Dashboard</h1>
+          <p className="text-lg text-gray-100 mb-6">
             Manage and explore top hospitals across India.
           </p>
           <Link to="/hospitals">
-            <Button className="bg-[#E0E0E0] text-[#00695C] hover:bg-[#D5D5D5] shadow-lg">
+            <Button className="bg-white text-[#007E85] hover:bg-gray-100 shadow-lg hover:shadow-xl">
               View All Hospitals
             </Button>
           </Link>
@@ -33,27 +31,31 @@ const HospitalDashboard = () => {
       {/* Hospitals Grid */}
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#424242] mb-10 text-center">
+          <h2 className="text-3xl font-bold text-gray-800 mb-10 text-center">
             Featured Hospitals
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {hospitals.map((hospital) => (
               <Link key={hospital.id} to={hospital.href} className="group">
-                <Card className="hover:shadow-2xl transition-all duration-300 hover:-translate-y-3 border-[#E0E0E0]/50 overflow-hidden h-full">
-                  <CardHeader className="p-6 text-center bg-gradient-to-b from-[#26A69A]/20 to-white">
-                    <div className="w-20 h-20 bg-[#00695C]/10 rounded-full flex items-center justify-center mx-auto mb-6 transition-transform group-hover:scale-110">
-                      <Hospital className="h-10 w-10 text-[#00695C]" />
+                <Card className="hover:shadow-lg transition-all duration-300 hover:-translate-y-2 border-gray-200 overflow-hidden h-full">
+                  <CardHeader className="p-6 text-center bg-[#007E85]/5">
+                    <div className="w-20 h-20 bg-[#007E85]/10 rounded-full flex items-center justify-center mx-auto mb-6 transition-transform group-hover:scale-110">
+                      <Hospital className="h-10 w-10 text-[#007E85]" />
                     </div>
-                    <CardTitle className="text-2xl text-[#424242] font-semibold">
+                    <CardTitle className="text-xl text-gray-800 font-semibold">
                       {hospital.name}
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="p-6 pt-0">
-                    <CardDescription className="text-[#424242]/70 mb-4 text-center">
-                      {hospital.location} | {hospital.beds} Beds
+                    <CardDescription className="text-gray-600 mb-4 text-center">
+                      <span className="block">{hospital.location}</span>
+                      <span className="block font-medium">{hospital.beds} Beds</span>
                     </CardDescription>
                     <div className="text-center">
-                      <Button className="bg-gradient-to-r from-[#26A69A] to-[#00695C] text-white shadow-md hover:shadow-lg transition-all duration-200">
+                      <Button 
+                        variant="outline"
+                        className="border-[#007E85] text-[#007E85] hover:bg-[#007E85]/10 hover:text-[#007E85]"
+                      >
                         View Details
                       </Button>
                     </div>
@@ -64,7 +66,6 @@ const HospitalDashboard = () => {
           </div>
         </div>
       </div>
-      
     </div>
   );
 };

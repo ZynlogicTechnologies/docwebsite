@@ -65,35 +65,35 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-practo-light to-white flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
           <Link to="/" className="flex items-center justify-center space-x-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-practo-navy">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#007E85]">
               <img
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtmGKUkkbFQtXTPCWPiudoEEzT2301MdDuvg&s"
                 alt="MediCare Logo"
                 className="h-6 w-6"
               />
             </div>
-            <span className="text-2xl font-bold text-practo-navy">MediCare</span>
+            <span className="text-2xl font-bold text-gray-800">MediCare</span>
           </Link>
-          <p className="text-practo-sky mt-2">Your trusted healthcare companion</p>
+          <p className="text-[#007E85] mt-2">Your trusted healthcare companion</p>
         </div>
 
-        <Card className="border-practo-light shadow-lg">
+        <Card className="border-gray-200 shadow-lg">
           <Tabs defaultValue="login" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
               <TabsTrigger
                 value="login"
-                className="data-[state=active]:bg-practo-navy data-[state=active]:text-white"
+                className="data-[state=active]:bg-[#007E85] data-[state=active]:text-white"
               >
                 Login
               </TabsTrigger>
               <TabsTrigger
                 value="signup"
-                className="data-[state=active]:bg-practo-navy data-[state=active]:text-white"
+                className="data-[state=active]:bg-[#007E85] data-[state=active]:text-white"
               >
                 Sign Up
               </TabsTrigger>
@@ -101,7 +101,7 @@ const Auth = () => {
 
             <TabsContent value="login">
               <CardHeader className="text-center pb-4">
-                <CardTitle className="text-practo-navy">Welcome Back</CardTitle>
+                <CardTitle className="text-gray-800">Welcome Back</CardTitle>
                 <CardDescription>Enter your credentials to access your account</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -146,13 +146,13 @@ const Auth = () => {
                     <Checkbox id="remember" />
                     <Label htmlFor="remember" className="text-sm">Remember me</Label>
                   </div>
-                  <Link to="/forgot-password" className="text-sm text-practo-sky hover:underline">
+                  <Link to="/forgot-password" className="text-sm text-[#007E85] hover:underline">
                     Forgot Password?
                   </Link>
                 </div>
 
                 <Button
-                  className="w-full bg-practo-navy hover:bg-practo-sky"
+                  className="w-full bg-[#007E85] hover:bg-[#006670] text-white"
                   onClick={handleLogin}
                 >
                   Login
@@ -161,7 +161,7 @@ const Auth = () => {
                 <div className="text-center">
                   <p className="text-sm text-gray-600">
                     Don't have an account?{" "}
-                    <button className="text-practo-sky hover:underline">Sign up</button>
+                    <button className="text-[#007E85] hover:underline">Sign up</button>
                   </p>
                 </div>
               </CardContent>
@@ -169,7 +169,7 @@ const Auth = () => {
 
             <TabsContent value="signup">
               <CardHeader className="text-center pb-4">
-                <CardTitle className="text-practo-navy">Create Account</CardTitle>
+                <CardTitle className="text-gray-800">Create Account</CardTitle>
                 <CardDescription>Join MediCare for better healthcare experience</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -250,24 +250,24 @@ const Auth = () => {
                   <Checkbox id="terms" />
                   <Label htmlFor="terms" className="text-sm">
                     I agree to the{" "}
-                    <Link to="/terms" className="text-practo-sky hover:underline">
+                    <Link to="/terms" className="text-[#007E85] hover:underline">
                       Terms & Conditions
                     </Link>{" "}
                     and{" "}
-                    <Link to="/privacy" className="text-practo-sky hover:underline">
+                    <Link to="/privacy" className="text-[#007E85] hover:underline">
                       Privacy Policy
                     </Link>
                   </Label>
                 </div>
 
-                <Button className="w-full bg-practo-navy hover:bg-practo-sky">
+                <Button className="w-full bg-[#007E85] hover:bg-[#006670] text-white">
                   Create Account
                 </Button>
 
                 <div className="text-center">
                   <p className="text-sm text-gray-600">
                     Already have an account?{" "}
-                    <button className="text-practo-sky hover:underline">Login</button>
+                    <button className="text-[#007E85] hover:underline">Login</button>
                   </p>
                 </div>
               </CardContent>

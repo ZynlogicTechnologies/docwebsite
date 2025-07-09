@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -147,7 +146,7 @@ const PatientDashboard = () => {
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <Card>
                   <CardContent className="p-6 text-center">
-                    <Calendar className="h-8 w-8 text-blue-600 mx-auto mb-2" />
+                    <Calendar className="h-8 w-8 text-[#007E85] mx-auto mb-2" />
                     <div className="text-2xl font-bold">2</div>
                     <div className="text-sm text-gray-600">Upcoming Appointments</div>
                   </CardContent>
@@ -223,7 +222,7 @@ const PatientDashboard = () => {
                       </div>
                       <div className="flex items-center space-x-2">
                         <Badge variant="outline">{appointment.type}</Badge>
-                        <Button size="sm">
+                        <Button size="sm" className="bg-[#007E85] hover:bg-[#006A6F]">
                           {appointment.type === "Video Consultation" ? (
                             <Video className="h-4 w-4 mr-1" />
                           ) : (
@@ -369,7 +368,7 @@ const PatientDashboard = () => {
                       </div>
                     </div>
                     
-                    <Button>Update Profile</Button>
+                    <Button className="bg-[#007E85] hover:bg-[#006A6F]">Update Profile</Button>
                   </div>
                 </CardContent>
               </Card>

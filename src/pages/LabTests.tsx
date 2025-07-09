@@ -97,7 +97,7 @@ const LabTests = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
             <div className="flex items-center space-x-3 p-4 bg-white rounded-lg shadow-sm">
-              <TestTube className="h-8 w-8 text-blue-600" />
+              <TestTube className="h-8 w-8 text-[#007E85]" />
               <div>
                 <div className="font-semibold text-sm">Certified Labs</div>
                 <div className="text-xs text-gray-600">NABL accredited</div>
@@ -120,7 +120,7 @@ const LabTests = () => {
             <div className="flex items-center space-x-3 p-4 bg-white rounded-lg shadow-sm">
               <Shield className="h-8 w-8 text-orange-600" />
               <div>
-                <div className="font-semibold text-sm">Safe & Hygienic</div>
+                <div className="font flurry font-semibold text-sm">Safe & Hygienic</div>
                 <div className="text-xs text-gray-600">100% sterile process</div>
               </div>
             </div>
@@ -145,7 +145,7 @@ const LabTests = () => {
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-lg font-bold text-primary">₹{test.price}</span>
+                      <span className="text-lg font-bold text-[#007E85]">₹{test.price}</span>
                       <span className="text-sm text-gray-500 line-through">₹{test.originalPrice}</span>
                     </div>
                     <div className="text-sm text-gray-600 space-y-1">
@@ -163,7 +163,7 @@ const LabTests = () => {
                     <Button
                       onClick={() => handleAddToCart(test.id)}
                       disabled={!test.inStock}
-                      className="w-full"
+                      className="w-full bg-[#007E85] hover:bg-[#006A6F]"
                     >
                       <ShoppingCart className="mr-2 h-4 w-4" />
                       Add to Cart

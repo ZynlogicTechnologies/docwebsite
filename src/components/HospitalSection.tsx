@@ -69,23 +69,23 @@ const HospitalSection = () => {
 
   return (
     <div className="container mx-auto px-4 py-12">
-      <div >
+      <div>
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-  <h2 className="text-3xl lg:text-4xl font-bold text-practo-black mb-2 md:mb-0">
-    Book an appointment for an in-clinic 
-    <span className="block text-practo-black-600 mt-1 text-base font-medium">
-      consultation — Find experienced doctors across all specialties
-    </span>
-  </h2>
+          <h2 className="text-3xl lg:text-4xl font-bold text-[#007E85] mb-2 md:mb-0">
+            Book an appointment for an in-clinic 
+            <span className="block text-[#007E85]/70 mt-1 text-base font-medium">
+              consultation — Find experienced doctors across all specialties
+            </span>
+          </h2>
 
-  <Link to="/hospitals">
-    <button className="text-sky-600 hover:text-sky-800 text-sm font-semibold border border-sky-600 px-4 py-2 rounded-md mt-2 md:mt-0">
-      View all
-    </button>
-  </Link>
-</div>
+          <Link to="/hospitals">
+            <Button className="text-[#007E85] hover:text-[#006A6F] text-sm font-semibold border border-[#007E85] px-4 py-2 rounded-md mt-2 md:mt-0">
+              View all
+            </Button>
+          </Link>
+        </div>
 
-        <br></br>
+        <br />
         <div
           ref={scrollRef}
           className="flex overflow-x-auto scroll-smooth gap-4 pb-4 hide-scrollbar"
@@ -94,7 +94,7 @@ const HospitalSection = () => {
           {specialties.map((specialty) => (
             <Link key={specialty.id} to="/hospitals" className="block min-w-[300px] flex-shrink-0">
               <Card
-                className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-practo-light overflow-hidden"
+                className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-[#007E85]/20 overflow-hidden"
               >
                 <CardHeader className="p-0">
                   <img
@@ -104,7 +104,7 @@ const HospitalSection = () => {
                   />
                 </CardHeader>
                 <CardContent className="p-4 space-y-2">
-                  <CardTitle className="text-practo-navy text-lg font-semibold">{specialty.name}</CardTitle>
+                  <CardTitle className="text-[#007E85] text-lg font-semibold">{specialty.name}</CardTitle>
                   <CardDescription className="text-gray-600 text-sm line-clamp-2">{specialty.description}</CardDescription>
                 </CardContent>
               </Card>

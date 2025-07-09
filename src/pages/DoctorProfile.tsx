@@ -1,4 +1,3 @@
-
 import { useParams, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -34,7 +33,7 @@ const DoctorProfile = () => {
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Doctor Not Found</h2>
           <p className="text-gray-600 mb-4">The doctor you're looking for doesn't exist.</p>
           <Link to="/find-doctors">
-            <Button>Browse All Doctors</Button>
+            <Button className="bg-[#007E85] hover:bg-[#006A6F]">Browse All Doctors</Button>
           </Link>
         </div>
       </div>
@@ -88,7 +87,7 @@ const DoctorProfile = () => {
                   />
                   <Badge 
                     variant={doctor.available ? "default" : "secondary"}
-                    className="text-sm"
+                    className={doctor.available ? "bg-[#007E85] hover:bg-[#006A6F]" : ""}
                   >
                     {doctor.available ? "Available Now" : "Currently Busy"}
                   </Badge>
@@ -99,7 +98,7 @@ const DoctorProfile = () => {
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">
                       {doctor.name}
                     </h1>
-                    <p className="text-xl text-primary font-semibold mb-2">
+                    <p className="text-xl text-[#007E85] font-semibold mb-2">
                       {doctor.specialty}
                     </p>
                     <p className="text-gray-600">{doctor.qualification}</p>
@@ -107,7 +106,7 @@ const DoctorProfile = () => {
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                     <div className="flex items-center space-x-2">
-                      <Award className="h-4 w-4 text-primary" />
+                      <Award className="h-4 w-4 text-[#007E85]" />
                       <span>{doctor.experience} years experience</span>
                     </div>
                     <div className="flex items-center space-x-2">
@@ -115,20 +114,20 @@ const DoctorProfile = () => {
                       <span>{doctor.rating} ({doctor.reviews} reviews)</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <MapPin className="h-4 w-4 text-primary" />
+                      <MapPin className="h-4 w-4 text-[#007E85]" />
                       <span>{doctor.location}</span>
                     </div>
                   </div>
 
                   <div className="flex items-center space-x-2">
-                    <Languages className="h-4 w-4 text-primary" />
+                    <Languages className="h-4 w-4 text-[#007E85]" />
                     <span className="text-sm">
                       Speaks: {doctor.languages.join(", ")}
                     </span>
                   </div>
 
                   <div className="flex items-center space-x-2">
-                    <Building className="h-4 w-4 text-primary" />
+                    <Building className="h-4 w-4 text-[#007E85]" />
                     <span className="text-sm">{doctor.hospital}</span>
                   </div>
                 </div>
@@ -140,7 +139,7 @@ const DoctorProfile = () => {
                     </CardHeader>
                     <CardContent className="space-y-4">
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-primary">
+                        <div className="text-2xl font-bold text-[#007E85]">
                           ₹{doctor.consultationFee}
                         </div>
                         <div className="text-sm text-gray-600">Consultation Fee</div>
@@ -148,14 +147,14 @@ const DoctorProfile = () => {
 
                       <div className="space-y-2">
                         <div className="text-sm font-medium">Next Available:</div>
-                        <div className="text-sm text-primary font-semibold">
+                        <div className="text-sm text-[#007E85] font-semibold">
                           {doctor.nextSlot}
                         </div>
                       </div>
 
                       <div className="space-y-2">
                         <Link to={`/book-appointment?doctor=${doctor.id}`}>
-                          <Button className="w-full">
+                          <Button className="w-full bg-[#007E85] hover:bg-[#006A6F]">
                             <Calendar className="mr-2 h-4 w-4" />
                             Book Appointment
                           </Button>
@@ -305,7 +304,9 @@ const DoctorProfile = () => {
                     {/* Individual Reviews */}
                     <div className="space-y-4">
                       {reviews.map(review => (
-                        <div key={review.id} className="border-b pb-4 last:border-b-0">
+                        <div key={review
+
+.id} className="border-b pb-4 last:border-b-0">
                           <div className="flex justify-between items-start mb-2">
                             <div>
                               <h4 className="font-medium">{review.name}</h4>
@@ -333,7 +334,7 @@ const DoctorProfile = () => {
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="space-y-4">
-                    <div className="border-l-4 border-primary pl-4">
+                    <div className="border-l-4 border-[#007E85] pl-4">
                       <h3 className="font-semibold">Senior {doctor.specialty}</h3>
                       <p className="text-sm text-gray-600">{doctor.hospital} • 2018 - Present</p>
                       <p className="text-sm text-gray-700 mt-2">

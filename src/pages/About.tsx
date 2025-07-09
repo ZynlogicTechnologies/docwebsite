@@ -45,17 +45,17 @@ const About = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#C8E6C9]">
+    <div className="min-h-screen">
       <Header />
       
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
           {/* Hero Section */}
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-[#424242] mb-4">
+            <h1 className="text-4xl font-bold text-[black] mb-4">
               About MediCare
             </h1>
-            <p className="text-xl text-[#424242]/70 max-w-3xl mx-auto">
+            <p className="text-xl text-[#4b5563]/70 max-w-3xl mx-auto">
               We're on a mission to make healthcare accessible, affordable, and convenient for everyone. 
               Our platform connects patients with qualified doctors and provides comprehensive health services.
             </p>
@@ -66,13 +66,13 @@ const About = () => {
             {stats.map((stat, index) => {
               const IconComponent = stat.icon;
               return (
-                <Card key={index} className="text-center border-[#C8E6C9]/50">
+                <Card key={index} className="text-center border-[#007E85]/20">
                   <CardContent className="p-6">
-                    <IconComponent className="h-8 w-8 text-[#2E7D32] mx-auto mb-2" />
-                    <div className="text-2xl font-bold text-[#424242] mb-1">
+                    <IconComponent className="h-8 w-8 text-[#007E85] mx-auto mb-2" />
+                    <div className="text-2xl font-bold text-[#007E85] mb-1">
                       {stat.value}
                     </div>
-                    <div className="text-sm text-[#424242]/70">
+                    <div className="text-sm text-[black]/70">
                       {stat.label}
                     </div>
                   </CardContent>
@@ -82,22 +82,22 @@ const About = () => {
           </div>
 
           {/* Our Story */}
-          <Card className="mb-12 border-[#C8E6C9]/50">
+          <Card className="mb-12 border-[#007E85]/20">
             <CardHeader>
-              <CardTitle className="text-2xl text-[#424242]">Our Story</CardTitle>
+              <CardTitle className="text-2xl text-[#007E85]">Our Story</CardTitle>
             </CardHeader>
             <CardContent className="prose max-w-none">
-              <p className="text-[#424242]/70 mb-4">
+              <p className="text-[black]/70 mb-4">
                 Founded in 2008, MediCare started with a simple vision: to make healthcare more accessible 
                 and convenient for everyone. What began as a small team of passionate healthcare professionals 
                 has grown into India's leading healthcare platform.
               </p>
-              <p className="text-[#424242]/70 mb-4">
+              <p className="text-[black]/70 mb-4">
                 Today, we serve millions of patients across 200+ cities, connecting them with over 50,000 
                 verified doctors and healthcare providers. Our platform offers everything from online 
                 consultations to lab tests, medicine delivery, and health record management.
               </p>
-              <p className="text-[#424242]/70">
+              <p className="text-[black]/70">
                 We believe that quality healthcare should be available to everyone, regardless of their 
                 location or background. Through technology and innovation, we're breaking down barriers 
                 and making healthcare truly accessible.
@@ -107,16 +107,16 @@ const About = () => {
 
           {/* Our Values */}
           <div className="mb-12">
-            <h2 className="text-2xl font-bold text-[#424242] text-center mb-8">Our Values</h2>
+            <h2 className="text-2xl font-bold text-[#007E85] text-center mb-8">Our Values</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {values.map((value, index) => {
                 const IconComponent = value.icon;
                 return (
-                  <Card key={index} className="hover:shadow-lg transition-shadow border-[#C8E6C9]/50">
+                  <Card key={index} className="hover:shadow-lg transition-shadow border-[#007E85]/20">
                     <CardContent className="p-6 text-center">
-                      <IconComponent className="h-12 w-12 text-[#2E7D32] mx-auto mb-4" />
-                      <h3 className="text-lg font-semibold text-[#424242] mb-2">{value.title}</h3>
-                      <p className="text-[#424242]/70 text-sm">{value.description}</p>
+                      <IconComponent className="h-12 w-12 text-[#007E85] mx-auto mb-4" />
+                      <h3 className="text-lg font-semibold text-[#007E85] mb-2">{value.title}</h3>
+                      <p className="text-[black]/70 text-sm">{value.description}</p>
                     </CardContent>
                   </Card>
                 );
@@ -125,56 +125,56 @@ const About = () => {
           </div>
 
           {/* Achievements */}
-          <Card className="mb-12 border-[#C8E6C9]/50">
+          <Card className="mb-12 border-[#007E85]/20">
             <CardHeader>
-              <CardTitle className="text-2xl text-[#424242]">Our Achievements</CardTitle>
-              <CardDescription className="text-[#424242]/70">Recognition and milestones that make us proud</CardDescription>
+              <CardTitle className="text-2xl text-[#007E85]">Our Achievements</CardTitle>
+              <CardDescription className="text-[#007E85]/70">Recognition and milestones that make us proud</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div className="flex items-start space-x-3">
-                    <CheckCircle className="h-5 w-5 text-[#2E7D32] mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-[#007E85] mt-0.5" />
                     <div>
-                      <div className="font-medium text-[#424242]">ISO 27001 Certified</div>
-                      <div className="text-sm text-[#424242]/70">International security standards compliance</div>
+                      <div className="font-medium text-[black]">ISO 27001 Certified</div>
+                      <div className="text-sm text-[black]/70">International security standards compliance</div>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
-                    <CheckCircle className="h-5 w-5 text-[#2E7D32] mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-[#007E85] mt-0.5" />
                     <div>
-                      <div className="font-medium text-[#424242]">Healthcare Innovation Award 2023</div>
-                      <div className="text-sm text-[#424242]/70">For digital healthcare transformation</div>
+                      <div className="font-medium text-[black]">Healthcare Innovation Award 2023</div>
+                      <div className="text-sm text-[black]/70">For digital healthcare transformation</div>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
-                    <CheckCircle className="h-5 w-5 text-[#2E7D32] mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-[#007E85] mt-0.5" />
                     <div>
-                      <div className="font-medium text-[#424242]">99.9% Uptime</div>
-                      <div className="text-sm text-[#424242]/70">Reliable platform availability</div>
+                      <div className="font-medium text-[black]">99.9% Uptime</div>
+                      <div className="text-sm text-[black]/70">Reliable platform availability</div>
                     </div>
                   </div>
                 </div>
                 <div className="space-y-4">
                   <div className="flex items-start space-x-3">
-                    <CheckCircle className="h-5 w-5 text-[#2E7D32] mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-[#007E85] mt-0.5" />
                     <div>
-                      <div className="font-medium text-[#424242]">4.8/5 Patient Satisfaction</div>
-                      <div className="text-sm text-[#424242]/70">Based on 2M+ reviews</div>
+                      <div className="font-medium text-[black]">4.8/5 Patient Satisfaction</div>
+                      <div className="text-sm text-[black]/70">Based on 2M+ reviews</div>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
-                    <CheckCircle className="h-5 w-5 text-[#2E7D32] mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-[#007E85] mt-0.5" />
                     <div>
-                      <div className="font-medium text-[#424242]">NABH Accredited</div>
-                      <div className="text-sm text-[#424242]/70">National quality standards</div>
+                      <div className="font-medium text-[black]">NABH Accredited</div>
+                      <div className="text-sm text-[black]/70">National quality standards</div>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
-                    <CheckCircle className="h-5 w-5 text-[#2E7D32] mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-[#007E85] mt-0.5" />
                     <div>
-                      <div className="font-medium text-[#424242]">Data Privacy Compliant</div>
-                      <div className="text-sm text-[#424242]/70">GDPR and Indian IT Act compliance</div>
+                      <div className="font-medium text-[black]">Data Privacy Compliant</div>
+                      <div className="text-sm text-[black]/70">GDPR and Indian IT Act compliance</div>
                     </div>
                   </div>
                 </div>

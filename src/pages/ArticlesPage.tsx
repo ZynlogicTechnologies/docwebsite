@@ -43,12 +43,12 @@ const ArticlesPage = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl font-bold text-practo-navy mb-8 text-center">
+          <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
             All Health Articles
           </h1>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {allArticles.map((article) => (
-              <Card key={article.id} className="hover:shadow-lg transition-shadow border-practo-light">
+              <Card key={article.id} className="hover:shadow-lg transition-shadow border-gray-200">
                 <CardHeader className="p-0">
                   <img
                     src={article.image}
@@ -57,13 +57,13 @@ const ArticlesPage = () => {
                   />
                 </CardHeader>
                 <CardContent className="p-6 space-y-4">
-                  <CardTitle className="text-practo-navy text-lg">{article.title}</CardTitle>
+                  <CardTitle className="text-gray-800 text-lg">{article.title}</CardTitle>
                   <CardDescription className="text-gray-600">{article.summary}</CardDescription>
                   <div className="text-sm text-gray-500">
                     By {article.author} | {article.date}
                   </div>
                   <Link to={`/article/${article.id}`} className="block">
-                    <Button className="w-full bg-practo-navy hover:bg-practo-sky">
+                    <Button className="w-full bg-[#007E85] hover:bg-[#006670] text-white">
                       <Heart className="mr-2 h-4 w-4" />
                       Read More
                     </Button>
@@ -74,7 +74,7 @@ const ArticlesPage = () => {
           </div>
           <div className="text-center mt-8">
             <Link to="/">
-              <Button variant="outline" className="border-practo-sky text-practo-sky hover:bg-practo-light">
+              <Button variant="outline" className="border-[#007E85] text-[#007E85] hover:bg-[#007E85]/10">
                 Back to Home
               </Button>
             </Link>

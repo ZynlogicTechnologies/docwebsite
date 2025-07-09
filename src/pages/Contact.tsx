@@ -1,4 +1,3 @@
-
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -91,10 +90,10 @@ const Contact = () => {
               return (
                 <Card key={index} className="hover:shadow-lg transition-shadow cursor-pointer">
                   <CardContent className="p-6 text-center">
-                    <IconComponent className="h-12 w-12 text-primary mx-auto mb-4" />
+                    <IconComponent className="h-12 w-12 text-[#007E85] mx-auto mb-4" />
                     <h3 className="text-lg font-semibold mb-2">{method.title}</h3>
                     <p className="text-gray-600 text-sm mb-3">{method.description}</p>
-                    <div className="font-medium text-primary mb-1">{method.contact}</div>
+                    <div className="font-medium text-[#007E85] mb-1">{method.contact}</div>
                     <div className="text-xs text-gray-500">{method.availability}</div>
                   </CardContent>
                 </Card>
@@ -141,7 +140,7 @@ const Contact = () => {
                     rows={4}
                   />
                 </div>
-                <Button className="w-full">
+                <Button className="w-full bg-[#007E85] hover:bg-[#006A6F]">
                   Send Message
                 </Button>
               </CardContent>
@@ -207,7 +206,7 @@ const Contact = () => {
               <div className="grid md:grid-cols-3 gap-6">
                 {offices.map((office, index) => (
                   <div key={index} className="p-4 border rounded-lg">
-                    <h3 className="text-lg font-semibold mb-3 text-primary">
+                    <h3 className="text-lg font-semibold mb-3 text-[#007E85]">
                       {office.city}
                     </h3>
                     <div className="space-y-2 text-sm">

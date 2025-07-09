@@ -31,12 +31,12 @@ const healthConcerns = [
 
 const ConsultSection = () => {
   return (
-    <section className="py-12 px-4 bg-gradient-to-br from-practo-light/80 via-white to-practo-sky/10">
+    <section className="py-12 px-4">
       <div className="container mx-auto w-full">
         {/* Header Row */}
         <div className="flex flex-col md:flex-row items-start justify-between gap-6 mb-10 px-4">
           <div>
-            <h2 className="text-2xl md:text-3xl font-semibold text-practo-navy text-left">
+            <h2 className="text-2xl md:text-3xl font-semibold text-[#007E85] text-left">
               Consult top doctors online for any health concern
             </h2>
             <p className="text-gray-600 mt-2 text-left">
@@ -44,7 +44,7 @@ const ConsultSection = () => {
             </p>
           </div>
           <Link to="/specialties">
-            <Button variant="outline" className="text-practo-sky border-practo-sky hover:bg-practo-sky/10">
+            <Button variant="outline" className="text-[#007E85] border-[#007E85] hover:bg-[#007E85]/10">
               View All Specialties
             </Button>
           </Link>
@@ -60,7 +60,7 @@ const ConsultSection = () => {
               <p className="text-sm font-medium text-gray-800 line-clamp-2">{item.title}</p>
               <Link
                 to={`/find-doctors?concern=${encodeURIComponent(item.title.toLowerCase().replace(/\s+/g, '-'))}`}
-                className="text-practo-sky text-xs font-semibold mt-2 block hover:underline"
+                className="text-[#007E85] text-xs font-semibold mt-2 block hover:text-[#006A6F] hover:underline"
               >
                 CONSULT NOW
               </Link>

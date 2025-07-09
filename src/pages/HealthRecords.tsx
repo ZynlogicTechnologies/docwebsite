@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -31,7 +30,7 @@ const HealthRecords = () => {
       case "prescription":
         return <Pill className="h-5 w-5 text-green-600" />;
       case "report":
-        return <FileText className="h-5 w-5 text-blue-600" />;
+        return <FileText className="h-5 w-5 text-[#007E85]" />;
       case "vaccine":
         return <Activity className="h-5 w-5 text-purple-600" />;
       case "checkup":
@@ -46,7 +45,7 @@ const HealthRecords = () => {
       case "prescription":
         return "bg-green-100 text-green-800";
       case "report":
-        return "bg-blue-100 text-blue-800";
+        return "bg-[#007E85]/10 text-[#007E85]";
       case "vaccine":
         return "bg-purple-100 text-purple-800";
       case "checkup":
@@ -64,14 +63,14 @@ const HealthRecords = () => {
         <div className="max-w-6xl mx-auto">
           <div className="flex justify-between items-center mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              <h1 className="text-3xl separators font-bold text-gray-900 mb-2">
                 Health Records
               </h1>
               <p className="text-lg text-gray-600">
                 Securely manage and access your medical records
               </p>
             </div>
-            <Button>
+            <Button className="bg-[#007E85] hover:bg-[#006A6F]">
               <Upload className="mr-2 h-4 w-4" />
               Upload Record
             </Button>
@@ -205,8 +204,8 @@ const HealthRecords = () => {
                       <CardContent className="p-6">
                         <div className="flex items-start justify-between">
                           <div className="flex items-start space-x-4">
-                            <div className="p-2 rounded-lg bg-blue-100">
-                              <TestTube className="h-5 w-5 text-blue-600" />
+                            <div className="p-2 rounded-lg bg-[#007E85]/10">
+                              <TestTube className="h-5 w-5 text-[#007E85]" />
                             </div>
                             <div className="flex-1">
                               <h3 className="text-lg font-semibold text-gray-900 mb-2">
@@ -249,7 +248,7 @@ const HealthRecords = () => {
                 <p className="text-gray-600 mb-4">
                   Your vaccination records will appear here
                 </p>
-                <Button>
+                <Button className="bg-[#007E85] hover:bg-[#006A6F]">
                   <Plus className="mr-2 h-4 w-4" />
                   Add Vaccine Record
                 </Button>
@@ -265,7 +264,7 @@ const HealthRecords = () => {
                 <p className="text-gray-600 mb-4">
                   Your regular checkup records will appear here
                 </p>
-                <Button>
+                <Button className="bg-[#007E85] hover:bg-[#006A6F]">
                   <Plus className="mr-2 h-4 w-4" />
                   Add Checkup Record
                 </Button>

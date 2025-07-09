@@ -1,4 +1,4 @@
-
+import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,8 @@ import {
 } from "lucide-react";
 
 const UserDashboard = () => {
+  const [activeTab, setActiveTab] = useState("overview");
+
   const upcomingAppointments = [
     {
       id: "1",
@@ -67,7 +69,7 @@ const UserDashboard = () => {
     { label: "BMI", value: "22.5", status: "Normal", color: "text-green-600" },
     { label: "Blood Pressure", value: "120/80", status: "Normal", color: "text-green-600" },
     { label: "Heart Rate", value: "72 bpm", status: "Normal", color: "text-green-600" },
-    { label: "Weight", value: "70 kg", status: "Stable", color: "text-blue-600" }
+    { label: "Weight", value: "70 kg", status: "Stable", color: "text-[#007E85]" }
   ];
 
   return (
@@ -81,11 +83,11 @@ const UserDashboard = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <Avatar className="h-16 w-16">
-                  <AvatarFallback className="bg-practo-navy text-white text-xl">JD</AvatarFallback>
+                  <AvatarFallback className="bg-[#007E85] text-white text-xl">JD</AvatarFallback>
                 </Avatar>
                 <div>
-                  <h1 className="text-2xl font-bold text-practo-navy">Welcome back, John Doe</h1>
-                  <p className="text-practo-sky">Your health dashboard</p>
+                  <h1 className="text-2xl font-bold text-[#007E85]">Welcome back, John Doe</h1>
+                  <p className="text-[#007E85]">Your health dashboard</p>
                 </div>
               </div>
               <div className="flex items-center space-x-2">
@@ -103,31 +105,31 @@ const UserDashboard = () => {
 
           {/* Quick Stats */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <Card className="border-practo-light">
+            <Card className="border-[#007E85]/20">
               <CardContent className="p-6 text-center">
-                <Calendar className="h-8 w-8 text-practo-navy mx-auto mb-2" />
-                <div className="text-2xl font-bold text-practo-navy">12</div>
+                <Calendar className="h-8 w-8 text-[#007E85] mx-auto mb-2" />
+                <div className="text-2xl font-bold text-[#007E85]">12</div>
                 <div className="text-sm text-gray-600">Appointments</div>
               </CardContent>
             </Card>
-            <Card className="border-practo-light">
+            <Card className="border-[#007E85]/20">
               <CardContent className="p-6 text-center">
-                <FileText className="h-8 w-8 text-practo-sky mx-auto mb-2" />
-                <div className="text-2xl font-bold text-practo-navy">8</div>
+                <FileText className="h-8 w-8 text-[#007E85] mx-auto mb-2" />
+                <div className="text-2xl font-bold text-[#007E85]">8</div>
                 <div className="text-sm text-gray-600">Health Records</div>
               </CardContent>
             </Card>
-            <Card className="border-practo-light">
+            <Card className="border-[#007E85]/20">
               <CardContent className="p-6 text-center">
-                <ShoppingCart className="h-8 w-8 text-practo-navy mx-auto mb-2" />
-                <div className="text-2xl font-bold text-practo-navy">5</div>
+                <ShoppingCart className="h-8 w-8 text-[#007E85] mx-auto mb-2" />
+                <div className="text-2xl font-bold text-[#007E85]">5</div>
                 <div className="text-sm text-gray-600">Orders</div>
               </CardContent>
             </Card>
-            <Card className="border-practo-light">
+            <Card className="border-[#007E85]/20">
               <CardContent className="p-6 text-center">
                 <Heart className="h-8 w-8 text-red-500 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-practo-navy">Good</div>
+                <div className="text-2xl font-bold text-[#007E85]">Good</div>
                 <div className="text-sm text-gray-600">Health Score</div>
               </CardContent>
             </Card>
@@ -137,9 +139,9 @@ const UserDashboard = () => {
             {/* Left Column */}
             <div className="lg:col-span-2 space-y-6">
               {/* Upcoming Appointments */}
-              <Card className="border-practo-light">
+              <Card className="border-[#007E85]/20">
                 <CardHeader>
-                  <CardTitle className="text-practo-navy flex items-center">
+                  <CardTitle className="text-[#007E85] flex items-center">
                     <Calendar className="h-5 w-5 mr-2" />
                     Upcoming Appointments
                   </CardTitle>
@@ -148,12 +150,12 @@ const UserDashboard = () => {
                   {upcomingAppointments.map((appointment) => (
                     <div key={appointment.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                       <div className="flex items-center space-x-4">
-                        <div className="h-12 w-12 bg-practo-light rounded-full flex items-center justify-center">
-                          <User className="h-6 w-6 text-practo-navy" />
+                        <div className="h-12 w-12 bg-[#007E85]/10 rounded-full flex items-center justify-center">
+                          <User className="h-6 w-6 text-[#007E85]" />
                         </div>
                         <div>
-                          <h3 className="font-semibold text-practo-navy">{appointment.doctor}</h3>
-                          <p className="text-sm text-practo-sky">{appointment.speciality}</p>
+                          <h3 className="font-semibold text-[#007E85]">{appointment.doctor}</h3>
+                          <p className="text-sm text-[#007E85]">{appointment.speciality}</p>
                           <div className="flex items-center text-sm text-gray-600 mt-1">
                             <Clock className="h-3 w-3 mr-1" />
                             {appointment.date} at {appointment.time}
@@ -161,7 +163,7 @@ const UserDashboard = () => {
                         </div>
                       </div>
                       <div className="text-right">
-                        <Badge className={appointment.type === "Video Consultation" ? "bg-practo-sky" : "bg-practo-navy"}>
+                        <Badge className={appointment.type === "Video Consultation" ? "bg-[#007E85] hover:bg-[#006A6F]" : "bg-[#007E85]/80 hover:bg-[#006A6F]/80"}>
                           {appointment.type === "Video Consultation" ? <Video className="h-3 w-3 mr-1" /> : <MapPin className="h-3 w-3 mr-1" />}
                           {appointment.type}
                         </Badge>
@@ -169,7 +171,7 @@ const UserDashboard = () => {
                       </div>
                     </div>
                   ))}
-                  <Button className="w-full bg-practo-navy hover:bg-practo-sky">
+                  <Button className="w-full bg-[#007E85] hover:bg-[#006A6F]">
                     <Calendar className="h-4 w-4 mr-2" />
                     Book New Appointment
                   </Button>
@@ -177,9 +179,9 @@ const UserDashboard = () => {
               </Card>
 
               {/* Recent Orders */}
-              <Card className="border-practo-light">
+              <Card className="border-[#007E85]/20">
                 <CardHeader>
-                  <CardTitle className="text-practo-navy flex items-center">
+                  <CardTitle className="text-[#007E85] flex items-center">
                     <ShoppingCart className="h-5 w-5 mr-2" />
                     Recent Orders
                   </CardTitle>
@@ -188,22 +190,22 @@ const UserDashboard = () => {
                   {recentOrders.map((order) => (
                     <div key={order.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                       <div className="flex items-center space-x-4">
-                        <div className="h-10 w-10 bg-practo-light rounded-full flex items-center justify-center">
+                        <div className="h-10 w-10 bg-[#007E85]/10 rounded-full flex items-center justify-center">
                           {order.type === "Medicine" ? (
-                            <Pill className="h-5 w-5 text-practo-navy" />
+                            <Pill className="h-5 w-5 text-[#007E85]" />
                           ) : (
-                            <FileText className="h-5 w-5 text-practo-navy" />
+                            <FileText className="h-5 w-5 text-[#007E85]" />
                           )}
                         </div>
                         <div>
-                          <h3 className="font-semibold text-practo-navy">{order.type}</h3>
+                          <h3 className="font-semibold text-[#007E85]">{order.type}</h3>
                           <p className="text-sm text-gray-600">{order.items}</p>
                           <p className="text-xs text-gray-500">{order.date}</p>
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="font-semibold text-practo-navy">₹{order.amount}</p>
-                        <Badge className={order.status === "Delivered" ? "bg-green-100 text-green-800" : "bg-blue-100 text-blue-800"}>
+                        <p className="font-semibold text-[#007E85]">₹{order.amount}</p>
+                        <Badge className={order.status === "Delivered" ? "bg-green-100 text-green-800" : "bg-[#007E85]/10 text-[#007E85]"}>
                           {order.status}
                         </Badge>
                         {order.status === "Report Ready" && (
@@ -222,9 +224,9 @@ const UserDashboard = () => {
             {/* Right Column */}
             <div className="space-y-6">
               {/* Health Metrics */}
-              <Card className="border-practo-light">
+              <Card className="border-[#007E85]/20">
                 <CardHeader>
-                  <CardTitle className="text-practo-navy flex items-center">
+                  <CardTitle className="text-[#007E85] flex items-center">
                     <Heart className="h-5 w-5 mr-2" />
                     Health Metrics
                   </CardTitle>
@@ -233,7 +235,7 @@ const UserDashboard = () => {
                   {healthMetrics.map((metric, index) => (
                     <div key={index} className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm font-medium text-practo-navy">{metric.label}</p>
+                        <p className="text-sm font-medium text-[#007E85]">{metric.label}</p>
                         <p className="text-lg font-bold">{metric.value}</p>
                       </div>
                       <Badge className={`${metric.color} bg-transparent border`}>
@@ -241,31 +243,31 @@ const UserDashboard = () => {
                       </Badge>
                     </div>
                   ))}
-                  <Button className="w-full bg-practo-sky hover:bg-practo-navy">
+                  <Button className="w-full bg-[#007E85] hover:bg-[#006A6F]">
                     View Full Report
                   </Button>
                 </CardContent>
               </Card>
 
               {/* Quick Actions */}
-              <Card className="border-practo-light">
+              <Card className="border-[#007E85]/20">
                 <CardHeader>
-                  <CardTitle className="text-practo-navy">Quick Actions</CardTitle>
+                  <CardTitle className="text-[#007E85]">Quick Actions</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <Button className="w-full justify-start bg-white border border-practo-light text-practo-navy hover:bg-practo-light">
+                  <Button className="w-full justify-start bg-white border border-[#007E85]/20 text-[#007E85] hover:bg-[#007E85]/10">
                     <Video className="h-4 w-4 mr-2" />
                     Start Video Consultation
                   </Button>
-                  <Button className="w-full justify-start bg-white border border-practo-light text-practo-navy hover:bg-practo-light">
+                  <Button className="w-full justify-start bg-white border border-[#007E85]/20 text-[#007E85] hover:bg-[#007E85]/10">
                     <Pill className="h-4 w-4 mr-2" />
                     Order Medicine
                   </Button>
-                  <Button className="w-full justify-start bg-white border border-practo-light text-practo-navy hover:bg-practo-light">
+                  <Button className="w-full justify-start bg-white border border-[#007E85]/20 text-[#007E85] hover:bg-[#007E85]/10">
                     <FileText className="h-4 w-4 mr-2" />
                     Book Lab Test
                   </Button>
-                  <Button className="w-full justify-start bg-white border border-practo-light text-practo-navy hover:bg-practo-light">
+                  <Button className="w-full justify-start bg-white border border-[#007E85]/20 text-[#007E85] hover:bg-[#007E85]/10">
                     <Download className="h-4 w-4 mr-2" />
                     Download Reports
                   </Button>
@@ -273,9 +275,9 @@ const UserDashboard = () => {
               </Card>
 
               {/* Health Tips */}
-              <Card className="border-practo-light">
+              <Card className="border-[#007E85]/20">
                 <CardHeader>
-                  <CardTitle className="text-practo-navy">Today's Health Tip</CardTitle>
+                  <CardTitle className="text-[#007E85]">Today's Health Tip</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-sm text-gray-600">

@@ -50,8 +50,11 @@ const BookTest = () => {
         <Header />
         <div className="container mx-auto px-4 py-8 text-center">
           <h1 className="text-2xl font-bold text-gray-900">Test Not Found</h1>
-          <p className="text-gray-600 mt-2">The requested lab test could not be found.</p>
-          <Button className="mt-4" onClick={() => navigate("/lab-tests")}>
+          <p className="text-[#007E85] mt-2">The requested lab test could not be found.</p>
+          <Button 
+            className="mt-4 bg-[#007E85] hover:bg-[#006670]" 
+            onClick={() => navigate("/lab-tests")}
+          >
             Back to Lab Tests
           </Button>
         </div>
@@ -72,17 +75,17 @@ const BookTest = () => {
       <Header />
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
-          <Card>
+          <Card className="border-gray-200">
             <CardHeader>
-              <CardTitle>Book {test.name}</CardTitle>
-              <CardDescription>{test.description}</CardDescription>
+              <CardTitle className="text-gray-800">Book {test.name}</CardTitle>
+              <CardDescription className="text-[#007E85]">{test.description}</CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
                   <Label htmlFor="date">Select Date</Label>
                   <div className="relative">
-                    <Calendar className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                    <Calendar className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#007E85]" />
                     <Input id="date" type="date" className="pl-10" required />
                   </div>
                 </div>
@@ -115,9 +118,12 @@ const BookTest = () => {
                 </div>
                 <div className="space-y-2">
                   <Label>Price</Label>
-                  <p className="text-lg font-bold text-primary">₹{test.price}</p>
+                  <p className="text-lg font-bold text-[#007E85]">₹{test.price}</p>
                 </div>
-                <Button type="submit" className="w-full">
+                <Button 
+                  type="submit" 
+                  className="w-full bg-[#007E85] hover:bg-[#006670]"
+                >
                   Confirm Booking
                 </Button>
               </form>
@@ -125,7 +131,7 @@ const BookTest = () => {
           </Card>
           <Button
             variant="outline"
-            className="w-full mt-4"
+            className="w-full mt-4 border-[#007E85] text-[#007E85] hover:bg-[#007E85]/10"
             onClick={() => navigate("/lab-tests")}
           >
             Back to Lab Tests

@@ -1,4 +1,4 @@
-import React from "react"; // Add this import
+import React from "react";
 import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -51,8 +51,8 @@ const Medicine = () => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
-                  <Truck className="h-8 w-8 text-blue-600" />
+                <div className="flex items-center space-x-3 p-3 bg-[#007E85]/10 rounded-lg">
+                  <Truck className="h-8 w-8 text-[#007E85]" />
                   <div>
                     <div className="font-semibold text-sm">Free Delivery</div>
                     <div className="text-xs text-gray-600">On orders above ₹500</div>
@@ -95,7 +95,7 @@ const Medicine = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Badge variant={medicine.inStock ? "default" : "secondary"} className="text-xs">
+                    <Badge variant={medicine.inStock ? "default" : "secondary"} className={medicine.inStock ? "text-xs bg-[#007E85] hover:bg-[#006A6F]" : "text-xs"}>
                       {medicine.inStock ? "In Stock" : "Out of Stock"}
                     </Badge>
                     <CardTitle className="text-lg">{medicine.name}</CardTitle>
@@ -118,7 +118,7 @@ const Medicine = () => {
 
                   <div className="space-y-1">
                     <div className="flex items-center space-x-2">
-                      <span className="text-lg font-bold text-primary">₹{medicine.price}</span>
+                      <span className="text-lg font-bold text-[#007E85]">₹{medicine.price}</span>
                       <span className="text-sm text-gray-500 line-through">₹{medicine.originalPrice}</span>
                     </div>
                     <p className="text-xs text-gray-600">{medicine.description}</p>
@@ -127,7 +127,7 @@ const Medicine = () => {
                   <Button
                     onClick={() => handleAddToCart(medicine.id)}
                     disabled={!medicine.inStock}
-                    className="w-full"
+                    className="w-full bg-[#007E85] hover:bg-[#006A6F]"
                   >
                     <ShoppingCart className="mr-2 h-4 w-4" />
                     Add to Cart
