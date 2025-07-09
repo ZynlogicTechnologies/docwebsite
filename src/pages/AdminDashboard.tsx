@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -33,28 +32,28 @@ const AdminDashboard = () => {
       value: "12,345", 
       change: "+12%", 
       icon: Users, 
-      color: "text-practo-navy" 
+      color: "text-[#2E7D32]" 
     },
     { 
       title: "Appointments Today", 
       value: "156", 
       change: "+8%", 
       icon: Calendar, 
-      color: "text-practo-sky" 
+      color: "text-[#2E7D32]" 
     },
     { 
       title: "Revenue", 
       value: "₹2,45,680", 
       change: "+15%", 
       icon: DollarSign, 
-      color: "text-green-600" 
+      color: "text-[#2E7D32]" 
     },
     { 
       title: "Active Doctors", 
       value: "89", 
       change: "+3%", 
       icon: Heart, 
-      color: "text-red-500" 
+      color: "text-[#2E7D32]" 
     }
   ];
 
@@ -116,27 +115,27 @@ const AdminDashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#C8E6C9]">
       {/* Admin Header */}
-      <header className="bg-white border-b border-practo-light">
+      <header className="bg-white border-b border-[#C8E6C9]/50">
         <div className="px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-practo-navy">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#2E7D32]">
                 <Heart className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-practo-navy">MediCare Admin</h1>
-                <p className="text-sm text-practo-sky">Healthcare Management System</p>
+                <h1 className="text-xl font-bold text-[#424242]">MediCare Admin</h1>
+                <p className="text-sm text-[#2E7D32]">Healthcare Management System</p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <Button variant="outline" size="sm">
-                <Bell className="h-4 w-4 mr-2" />
+              <Button variant="outline" size="sm" className="border-[#C8E6C9]">
+                <Bell className="h-4 w-4 mr-2 text-[#2E7D32]" />
                 Notifications
               </Button>
               <Avatar>
-                <AvatarFallback className="bg-practo-navy text-white">AD</AvatarFallback>
+                <AvatarFallback className="bg-[#2E7D32] text-white">AD</AvatarFallback>
               </Avatar>
             </div>
           </div>
@@ -150,13 +149,13 @@ const AdminDashboard = () => {
             {stats.map((stat, index) => {
               const IconComponent = stat.icon;
               return (
-                <Card key={index} className="border-practo-light">
+                <Card key={index} className="border-[#C8E6C9]/50">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-                        <p className="text-2xl font-bold text-practo-navy">{stat.value}</p>
-                        <p className="text-sm text-green-600">{stat.change} vs last month</p>
+                        <p className="text-sm font-medium text-[#424242]/70">{stat.title}</p>
+                        <p className="text-2xl font-bold text-[#424242]">{stat.value}</p>
+                        <p className="text-sm text-[#2E7D32]">{stat.change} vs last month</p>
                       </div>
                       <IconComponent className={`h-8 w-8 ${stat.color}`} />
                     </div>
@@ -167,43 +166,43 @@ const AdminDashboard = () => {
           </div>
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-5">
-              <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="appointments">Appointments</TabsTrigger>
-              <TabsTrigger value="doctors">Doctors</TabsTrigger>
-              <TabsTrigger value="patients">Patients</TabsTrigger>
-              <TabsTrigger value="reports">Reports</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-5 bg-[#C8E6C9]/50">
+              <TabsTrigger value="overview" className="text-[#424242] data-[state=active]:bg-[#2E7D32] data-[state=active]:text-white">Overview</TabsTrigger>
+              <TabsTrigger value="appointments" className="text-[#424242] data-[state=active]:bg-[#2E7D32] data-[state=active]:text-white">Appointments</TabsTrigger>
+              <TabsTrigger value="doctors" className="text-[#424242] data-[state=active]:bg-[#2E7D32] data-[state=active]:text-white">Doctors</TabsTrigger>
+              <TabsTrigger value="patients" className="text-[#424242] data-[state=active]:bg-[#2E7D32] data-[state=active]:text-white">Patients</TabsTrigger>
+              <TabsTrigger value="reports" className="text-[#424242] data-[state=active]:bg-[#2E7D32] data-[state=active]:text-white">Reports</TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview" className="space-y-6">
               <div className="grid lg:grid-cols-3 gap-6">
                 {/* Recent Appointments */}
-                <Card className="lg:col-span-2 border-practo-light">
+                <Card className="lg:col-span-2 border-[#C8E6C9]/50">
                   <CardHeader>
-                    <CardTitle className="text-practo-navy">Recent Appointments</CardTitle>
-                    <CardDescription>Latest appointment activities</CardDescription>
+                    <CardTitle className="text-[#424242]">Recent Appointments</CardTitle>
+                    <CardDescription className="text-[#424242]/70">Latest appointment activities</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
                       {recentAppointments.map((appointment) => (
-                        <div key={appointment.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div key={appointment.id} className="flex items-center justify-between p-4 bg-[#C8E6C9]/30 rounded-lg">
                           <div className="flex items-center space-x-3">
                             <Avatar className="h-10 w-10">
-                              <AvatarFallback className="bg-practo-light text-practo-navy">
+                              <AvatarFallback className="bg-[#2E7D32] text-white">
                                 {appointment.patient.split(' ').map(n => n[0]).join('')}
                               </AvatarFallback>
                             </Avatar>
                             <div>
-                              <p className="font-medium text-practo-navy">{appointment.patient}</p>
-                              <p className="text-sm text-practo-sky">{appointment.doctor}</p>
-                              <p className="text-xs text-gray-500">{appointment.time}</p>
+                              <p className="font-medium text-[#424242]">{appointment.patient}</p>
+                              <p className="text-sm text-[#2E7D32]">{appointment.doctor}</p>
+                              <p className="text-xs text-[#424242]/70">{appointment.time}</p>
                             </div>
                           </div>
                           <div className="text-right">
-                            <Badge className={appointment.type === "Video" ? "bg-practo-sky" : "bg-practo-navy"}>
+                            <Badge className={appointment.type === "Video" ? "bg-[#2E7D32]/50 text-[#2E7D32]" : "bg-[#1B5E20]/50 text-[#1B5E20]"}>
                               {appointment.type}
                             </Badge>
-                            <p className="text-xs text-gray-500 mt-1">{appointment.status}</p>
+                            <p className="text-xs text-[#424242]/70 mt-1">{appointment.status}</p>
                           </div>
                         </div>
                       ))}
@@ -212,25 +211,25 @@ const AdminDashboard = () => {
                 </Card>
 
                 {/* Quick Actions */}
-                <Card className="border-practo-light">
+                <Card className="border-[#C8E6C9]/50">
                   <CardHeader>
-                    <CardTitle className="text-practo-navy">Quick Actions</CardTitle>
+                    <CardTitle className="text-[#424242]">Quick Actions</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    <Button className="w-full justify-start bg-practo-navy hover:bg-practo-sky">
-                      <Users className="h-4 w-4 mr-2" />
+                    <Button className="w-full justify-start bg-[#1B5E20] hover:bg-[#2E7D32] text-white">
+                      <Users className="h-4 w-4 mr-2 text-white" />
                       Add New Doctor
                     </Button>
-                    <Button className="w-full justify-start bg-white border border-practo-light text-practo-navy hover:bg-practo-light">
-                      <Calendar className="h-4 w-4 mr-2" />
+                    <Button className="w-full justify-start bg-white border border-[#C8E6C9] text-[#2E7D32] hover:bg-[#C8E6C9]/50">
+                      <Calendar className="h-4 w-4 mr-2 text-[#2E7D32]" />
                       Schedule Appointment
                     </Button>
-                    <Button className="w-full justify-start bg-white border border-practo-light text-practo-navy hover:bg-practo-light">
-                      <FileText className="h-4 w-4 mr-2" />
+                    <Button className="w-full justify-start bg-white border border-[#C8E6C9] text-[#2E7D32] hover:bg-[#C8E6C9]/50">
+                      <FileText className="h-4 w-4 mr-2 text-[#2E7D32]" />
                       Generate Report
                     </Button>
-                    <Button className="w-full justify-start bg-white border border-practo-light text-practo-navy hover:bg-practo-light">
-                      <Settings className="h-4 w-4 mr-2" />
+                    <Button className="w-full justify-start bg-white border border-[#C8E6C9] text-[#2E7D32] hover:bg-[#C8E6C9]/50">
+                      <Settings className="h-4 w-4 mr-2 text-[#2E7D32]" />
                       System Settings
                     </Button>
                   </CardContent>
@@ -239,19 +238,19 @@ const AdminDashboard = () => {
             </TabsContent>
 
             <TabsContent value="doctors" className="space-y-6">
-              <Card className="border-practo-light">
+              <Card className="border-[#C8E6C9]/50">
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <div>
-                      <CardTitle className="text-practo-navy">Doctor Management</CardTitle>
-                      <CardDescription>Manage doctors and their performance</CardDescription>
+                      <CardTitle className="text-[#424242]">Doctor Management</CardTitle>
+                      <CardDescription className="text-[#424242]/70">Manage doctors and their performance</CardDescription>
                     </div>
                     <div className="flex items-center space-x-2">
                       <div className="relative">
-                        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-                        <Input placeholder="Search doctors..." className="pl-10 w-64" />
+                        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#424242]/50" />
+                        <Input placeholder="Search doctors..." className="pl-10 w-64 border-[#C8E6C9]" />
                       </div>
-                      <Button className="bg-practo-navy hover:bg-practo-sky">
+                      <Button className="bg-[#1B5E20] hover:bg-[#2E7D32] text-white">
                         <Users className="h-4 w-4 mr-2" />
                         Add Doctor
                       </Button>
@@ -261,17 +260,17 @@ const AdminDashboard = () => {
                 <CardContent>
                   <div className="space-y-4">
                     {doctors.map((doctor) => (
-                      <div key={doctor.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                      <div key={doctor.id} className="flex items-center justify-between p-4 bg-[#C8E6C9]/30 rounded-lg">
                         <div className="flex items-center space-x-4">
                           <Avatar className="h-12 w-12">
-                            <AvatarFallback className="bg-practo-navy text-white">
+                            <AvatarFallback className="bg-[#2E7D32] text-white">
                               {doctor.name.split(' ')[1]?.[0] || 'D'}
                             </AvatarFallback>
                           </Avatar>
                           <div>
-                            <h3 className="font-semibold text-practo-navy">{doctor.name}</h3>
-                            <p className="text-sm text-practo-sky">{doctor.speciality}</p>
-                            <div className="flex items-center text-sm text-gray-600 mt-1">
+                            <h3 className="font-semibold text-[#424242]">{doctor.name}</h3>
+                            <p className="text-sm text-[#2E7D32]">{doctor.speciality}</p>
+                            <div className="flex items-center text-sm text-[#424242]/70 mt-1">
                               <Users className="h-3 w-3 mr-1" />
                               {doctor.patients} patients
                               <Star className="h-3 w-3 ml-3 mr-1 fill-yellow-400 text-yellow-400" />
@@ -280,13 +279,13 @@ const AdminDashboard = () => {
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="font-semibold text-practo-navy">{doctor.revenue}</p>
-                          <Badge className={doctor.status === "Active" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}>
+                          <p className="font-semibold text-[#424242]">{doctor.revenue}</p>
+                          <Badge className={doctor.status === "Active" ? "bg-[#2E7D32]/50 text-[#2E7D32]" : "bg-[#1B5E20]/50 text-[#1B5E20]"}>
                             {doctor.status}
                           </Badge>
                           <div className="flex space-x-2 mt-2">
-                            <Button size="sm" variant="outline">Edit</Button>
-                            <Button size="sm" variant="outline">View</Button>
+                            <Button size="sm" variant="outline" className="border-[#C8E6C9] text-[#2E7D32]">Edit</Button>
+                            <Button size="sm" variant="outline" className="border-[#C8E6C9] text-[#2E7D32]">View</Button>
                           </div>
                         </div>
                       </div>
@@ -297,19 +296,19 @@ const AdminDashboard = () => {
             </TabsContent>
 
             <TabsContent value="appointments" className="space-y-6">
-              <Card className="border-practo-light">
+              <Card className="border-[#C8E6C9]/50">
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <div>
-                      <CardTitle className="text-practo-navy">Appointment Management</CardTitle>
-                      <CardDescription>Track and manage all appointments</CardDescription>
+                      <CardTitle className="text-[#424242]">Appointment Management</CardTitle>
+                      <CardDescription className="text-[#424242]/70">Track and manage all appointments</CardDescription>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Button variant="outline">
+                      <Button variant="outline" className="border-[#C8E6C9] text-[#2E7D32]">
                         <Filter className="h-4 w-4 mr-2" />
                         Filter
                       </Button>
-                      <Button variant="outline">
+                      <Button variant="outline" className="border-[#C8E6C9] text-[#2E7D32]">
                         <Download className="h-4 w-4 mr-2" />
                         Export
                       </Button>
@@ -317,8 +316,8 @@ const AdminDashboard = () => {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-center py-8 text-gray-500">
-                    <Calendar className="h-12 w-12 mx-auto mb-4" />
+                  <div className="text-center py-8 text-[#424242]/70">
+                    <Calendar className="h-12 w-12 mx-auto mb-4 text-[#2E7D32]" />
                     <p>Appointment management interface would be implemented here</p>
                   </div>
                 </CardContent>
@@ -326,14 +325,14 @@ const AdminDashboard = () => {
             </TabsContent>
 
             <TabsContent value="patients" className="space-y-6">
-              <Card className="border-practo-light">
+              <Card className="border-[#C8E6C9]/50">
                 <CardHeader>
-                  <CardTitle className="text-practo-navy">Patient Management</CardTitle>
-                  <CardDescription>View and manage patient records</CardDescription>
+                  <CardTitle className="text-[#424242]">Patient Management</CardTitle>
+                  <CardDescription className="text-[#424242]/70">View and manage patient records</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-center py-8 text-gray-500">
-                    <User className="h-12 w-12 mx-auto mb-4" />
+                  <div className="text-center py-8 text-[#424242]/70">
+                    <User className="h-12 w-12 mx-auto mb-4 text-[#2E7D32]" />
                     <p>Patient management interface would be implemented here</p>
                   </div>
                 </CardContent>
@@ -341,14 +340,14 @@ const AdminDashboard = () => {
             </TabsContent>
 
             <TabsContent value="reports" className="space-y-6">
-              <Card className="border-practo-light">
+              <Card className="border-[#C8E6C9]/50">
                 <CardHeader>
-                  <CardTitle className="text-practo-navy">Analytics & Reports</CardTitle>
-                  <CardDescription>System performance and analytics</CardDescription>
+                  <CardTitle className="text-[#424242]">Analytics & Reports</CardTitle>
+                  <CardDescription className="text-[#424242]/70">System performance and analytics</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-center py-8 text-gray-500">
-                    <Activity className="h-12 w-12 mx-auto mb-4" />
+                  <div className="text-center py-8 text-[#424242]/70">
+                    <Activity className="h-12 w-12 mx-auto mb-4 text-[#2E7D32]" />
                     <p>Analytics dashboard would be implemented here</p>
                   </div>
                 </CardContent>

@@ -34,6 +34,18 @@ const Auth = () => {
       redirectTo: "/admin-dashboard",
       role: "admin",
     },
+     {
+      email: "hospital@gmail.com",
+      password: "hospital@123",
+      redirectTo: "/hospital-dashboard",
+      role: "hospital",
+    },
+        {
+      email: "doctor@gmail.com",
+      password: "doctor@123",
+      redirectTo: "/doctor-dashboard",
+      role: "doctor",
+    },
   ];
 
   // Handle login button click

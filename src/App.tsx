@@ -25,6 +25,8 @@ import NotFound from "./pages/NotFound";
 import HospitalsPage from "./pages/HospitalsPage";
 import SpecialtiesPage from "./pages/SpecialtiesPage";
 import Cart from "./pages/Cart";
+import HospitalDashboard from "./pages/Hospitaldashboard";
+import DoctorDashboard from "./pages/DoctorDashboard";
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -95,6 +97,8 @@ const App = () => {
                 <Route path="/specialties" element={<SpecialtiesPage />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="*" element={<NotFound />} />
+                <Route path="/hospital-dashboard" element={<HospitalDashboard></HospitalDashboard>}/>
+                <Route path="/doctor-dashboard"  element={<DoctorDashboard></DoctorDashboard>}/>
               </Routes>
             </BrowserRouter>
           </CartProvider>
