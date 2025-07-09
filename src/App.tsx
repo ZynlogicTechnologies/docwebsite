@@ -19,7 +19,7 @@ import PatientDashboard from "./pages/PatientDashboard";
 import VideoConsultation from "./pages/VideoConsultation";
 import Auth from "./pages/Auth";
 import UserDashboard from "./pages/UserDashboard";
-import AdminDashboard from "./pages/AdminDashboard";
+import AdminDashboard from "./pages/admin/components/AdminDashboard";
 import ArticlesPage from "./pages/ArticlesPage";
 import NotFound from "./pages/NotFound";
 import HospitalsPage from "./pages/HospitalsPage";
