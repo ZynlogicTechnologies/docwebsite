@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { FlipCard, FlipCardBack, FlipCardFront } from "@/components/ui/FlipCard";
 import {
   Search,
   Calendar,
@@ -82,7 +83,14 @@ const Index = () => {
       description: "Manage your health records digitally",
       href: "/health-records",
       color: "bg-[#007E85]/10 text-[#007E85]"
-    }
+    },
+     {
+      icon: Video,
+      title: "Online Consulatation",
+      description: "Meet the doctors from your place",
+      href: "/find-doctors",
+      color: "bg-[#007E85]/10 text-[#007E85]"
+    },
   ];
 
   const stats = [
@@ -135,7 +143,7 @@ const Index = () => {
               </div>
 
               {/* Quick Actions */}
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap gap-3  ">
                 <Button variant="outline" size="sm" className="rounded-full border-[#007E85] text-[#007E85] hover:bg-[#007E85]/10">
                   <Video className="mr-2 h-4 w-4" />
                   Video Consultation
@@ -185,40 +193,49 @@ const Index = () => {
 
       {/* Services Section */}
       <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Our Health Services
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Comprehensive healthcare solutions designed to meet all your medical needs
-            </p>
-          </div>
+  <div className="container mx-auto px-4">
+    <div className="text-center mb-12">
+      <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+        Our Health Services
+      </h2>
+      <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+        Comprehensive healthcare solutions designed to meet all your medical needs
+      </p>
+    </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {services.map((service, index) => {
-              const Icon = service.icon;
-              return (
-                <Link key={index} to={service.href}>
-                  <Card className="h-full hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group cursor-pointer border-gray-200">
-                    <CardHeader className="text-center">
-                      <div className={`w-16 h-16 rounded-2xl ${service.color} flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform`}>
-                        <Icon className="h-8 w-8" />
-                      </div>
-                      <CardTitle className="text-xl">{service.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <CardDescription className="text-center">
-                        {service.description}
-                      </CardDescription>
-                    </CardContent>
-                  </Card>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+    <div className="flex flex-wrap justify-center gap-6">
+      {services.map((service, index) => {
+        const Icon = service.icon;
+        return (
+         <FlipCard key={index} className="w-48 h-48">
+  <FlipCardFront className="rounded-xl flex flex-col items-center justify-center border border-gray-200 bg-white p-4 shadow-md">
+    <div className={`w-20 h-20 rounded-xl ${service.color} flex items-center justify-center mb-4`}>
+      <Icon className="h-10 w-10" /> {/* Bigger icon */}
+    </div>
+    <h3 className="text-md font-semibold text-gray-900 text-center">{service.title}</h3>
+  </FlipCardFront>
+
+  <FlipCardBack className="rounded-xl bg-[#007E85] text-white px-5 py-6 flex flex-col justify-between">
+    <div>
+      <h3 className="text-lg font-bold mb-2">{service.title}</h3>
+      <p className="text-sm">{service.description}</p>
+    </div>
+    <Link to={service.href}>
+      <Button
+        variant="secondary"
+        className="mt-4 w-full bg-white text-[#007E85] hover:bg-gray-100"
+      >
+        Learn More
+      </Button>
+    </Link>
+  </FlipCardBack>
+</FlipCard>
+
+        );
+      })}
+    </div>
+  </div>
+</section>
 
       {/* Featured Doctors */}
       <section className="py-20 bg-white">

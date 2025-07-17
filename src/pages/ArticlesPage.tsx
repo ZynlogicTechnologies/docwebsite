@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Heart } from "lucide-react";
+import { Heart } from "lucide-react";import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+
+
 
 const ArticlesPage = () => {
   const allArticles = [
@@ -41,6 +44,7 @@ const ArticlesPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+       <Header/>
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-6xl mx-auto">
           <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
@@ -81,6 +85,7 @@ const ArticlesPage = () => {
           </div>
         </div>
       </div>
+      <Footer></Footer>
     </div>
   );
 };

@@ -1,284 +1,217 @@
-import { useState, useMemo } from "react";
+// src/pages/FindDoctors.tsx
+import React, { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { 
-  Search, 
-  Filter,
-  Star,
-  MapPin,
-  Calendar,
-  Video,
-  Clock,
-  Award
+import {
+  Search, Filter as IconFilter, Star, MapPin, Award, Calendar, Video, Clock as IconClock
 } from "lucide-react";
-import { mockDoctors } from "@/data/mockData";
 
-const FindDoctors = () => {
+const FindDoctors: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedSpecialty, setSelectedSpecialty] = useState<string>("all");
-  const [selectedLocation, setSelectedLocation] = useState<string>("all");
+  const [selectedSpecialty, setSelectedSpecialty] = useState("all");
+  const [selectedLocation, setSelectedLocation] = useState("all");
   const [availableOnly, setAvailableOnly] = useState(false);
-  const [sortBy, setSortBy] = useState<string>("rating");
+  const [sortBy, setSortBy] = useState("rating");
+  const [doctors, setDoctors] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const specialties = [
-    "Cardiologist",
-    "Dermatologist", 
-    "Pediatrician",
-    "Orthopedic Surgeon",
-    "Neurologist",
-    "Gynecologist"
-  ];
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const res = await axios.get(
+          "https://landing.docapp.co.in/api/filter/filter-doctors",
+          { withCredentials: true }
+        );
+        const docs = res.data.doctors.map((d: any) => ({
+          ...d,
+          availability_schedule: JSON.parse(d.availability_schedule || "[]")
+        }));
+        setDoctors(docs);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDoctors();
+  }, []);
 
-  const locations = [
-    "New York, NY",
-    "Los Angeles, CA",
-    "Chicago, IL",
-    "Miami, FL",
-    "Boston, MA"
-  ];
+  const specialties = useMemo(
+    () => Array.from(new Set(doctors.map((d) => d.specialization).filter(Boolean))),
+    [doctors]
+  );
+  const locations = useMemo(
+    () => Array.from(new Set(doctors.map((d) => d.user?.address?.[0]?.city).filter(Boolean))),
+    [doctors]
+  );
 
   const filteredDoctors = useMemo(() => {
-    let filtered = mockDoctors.filter(doctor => {
-      const matchesSearch = doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          doctor.specialty.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesSpecialty = selectedSpecialty === "all" || doctor.specialty === selectedSpecialty;
-      const matchesLocation = selectedLocation === "all" || doctor.location === selectedLocation;
-      const matchesAvailability = !availableOnly || doctor.available;
-      
-      return matchesSearch && matchesSpecialty && matchesLocation && matchesAvailability;
+    let arr = doctors.filter((d) => {
+      const name = d.user?.username?.toLowerCase() || "";
+      const spec = (d.specialization || "").toLowerCase();
+      const city = d.user?.address?.[0]?.city || "";
+
+      return (
+        (name.includes(searchQuery.toLowerCase()) || spec.includes(searchQuery.toLowerCase())) &&
+        (selectedSpecialty === "all" || d.specialization === selectedSpecialty) &&
+        (selectedLocation === "all" || city === selectedLocation) &&
+        (!availableOnly || d.verified_status)
+      );
     });
 
-    // Sort doctors
-    filtered.sort((a, b) => {
+    return arr.sort((a, b) => {
       switch (sortBy) {
         case "rating":
-          return b.rating - a.rating;
+          return (b.doctorRatings?.average || 0) - (a.doctorRatings?.average || 0);
         case "experience":
-          return b.experience - a.experience;
+          return b.experience_years - a.experience_years;
         case "fee-low":
-          return a.consultationFee - b.consultationFee;
+          return parseFloat(a.consultation_fee) - parseFloat(b.consultation_fee);
         case "fee-high":
-          return b.consultationFee - a.consultationFee;
+          return parseFloat(b.consultation_fee) - parseFloat(a.consultation_fee);
         default:
           return 0;
       }
     });
-
-    return filtered;
-  }, [searchQuery, selectedSpecialty, selectedLocation, availableOnly, sortBy]);
+  }, [doctors, searchQuery, selectedSpecialty, selectedLocation, availableOnly, sortBy]);
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      
       <div className="container mx-auto px-4 py-8">
-        {/* Search and Filters */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-8">
-          <div className="space-y-6">
-            {/* Search Bar */}
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#007E85]" />
-              <Input
-                placeholder="Search doctors by name or specialty..."
-                className="pl-12 h-12 text-lg border-gray-300 focus-visible:ring-[#007E85]"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+        <div className="bg-white rounded-xl p-6 shadow-sm border mb-8">
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#007E85]" />
+            <Input
+              placeholder="Search doctors by name or specialty..."
+              className="pl-12 h-12 text-lg border-gray-300 focus-visible:ring-[#007E85]"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
+            <select
+              value={selectedSpecialty}
+              onChange={(e) => setSelectedSpecialty(e.target.value)}
+              className="border-gray-300 focus:ring-[#007E85]"
+            >
+              <option value="all">All Specialties</option>
+              {specialties.map((s) => (
+                <option key={s} value={s}>{s}</option>
+              ))}
+            </select>
+            <select
+              value={selectedLocation}
+              onChange={(e) => setSelectedLocation(e.target.value)}
+              className="border-gray-300 focus:ring-[#007E85]"
+            >
+              <option value="all">All Locations</option>
+              {locations.map((l) => (
+                <option key={l} value={l}>{l}</option>
+              ))}
+            </select>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="border-gray-300 focus:ring-[#007E85]"
+            >
+              <option value="rating">Highest Rated</option>
+              <option value="experience">Most Experienced</option>
+              <option value="fee-low">Fee: Low to High</option>
+              <option value="fee-high">Fee: High to Low</option>
+            </select>
+            <label className="flex items-center space-x-2 text-sm">
+              <input
+                type="checkbox"
+                checked={availableOnly}
+                onChange={(e) => setAvailableOnly(e.target.checked)}
+                className="border-gray-300 form-checkbox text-[#007E85]"
               />
-            </div>
-
-            {/* Filters */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <Select value={selectedSpecialty} onValueChange={setSelectedSpecialty}>
-                <SelectTrigger className="border-gray-300 focus:ring-[#007E85]">
-                  <SelectValue placeholder="Specialty" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Specialties</SelectItem>
-                  {specialties.map(specialty => (
-                    <SelectItem key={specialty} value={specialty}>
-                      {specialty}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-                <SelectTrigger className="border-gray-300 focus:ring-[#007E85]">
-                  <SelectValue placeholder="Location" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Locations</SelectItem>
-                  {locations.map(location => (
-                    <SelectItem key={location} value={location}>
-                      {location}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="border-gray-300 focus:ring-[#007E85]">
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="rating">Highest Rated</SelectItem>
-                  <SelectItem value="experience">Most Experienced</SelectItem>
-                  <SelectItem value="fee-low">Fee: Low to High</SelectItem>
-                  <SelectItem value="fee-high">Fee: High to Low</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="available"
-                  checked={availableOnly}
-                  onCheckedChange={(checked) => setAvailableOnly(checked as boolean)}
-                  className="border-gray-300 data-[state=checked]:bg-[#007E85]"
-                />
-                <label
-                  htmlFor="available"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Available only
-                </label>
-              </div>
-            </div>
+              <span>Available only</span>
+            </label>
           </div>
         </div>
 
-        {/* Results Header */}
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">
-            {filteredDoctors.length} Doctors Found
-          </h1>
-          <div className="text-sm text-[#007E85]">
-            Showing results for "{searchQuery || 'all doctors'}"
-          </div>
-        </div>
+        <h1 className="text-2xl font-bold text-gray-900 mb-6">
+          {filteredDoctors.length} Doctors Found
+        </h1>
 
-        {/* Doctor Cards */}
-        <div className="space-y-6">
-          {filteredDoctors.map((doctor) => (
-            <Card key={doctor.id} className="hover:shadow-lg transition-all duration-300 border-gray-200">
-              <CardContent className="p-6">
-                <div className="flex flex-col lg:flex-row gap-6">
-                  {/* Doctor Image and Basic Info */}
-                  <div className="flex items-start space-x-4">
-                    <img
-                      src={doctor.avatar}
-                      alt={doctor.name}
-                      className="w-24 h-24 rounded-xl object-cover"
-                    />
-                    <div className="space-y-2">
-                      <h3 className="text-xl font-semibold text-gray-900">
-                        {doctor.name}
-                      </h3>
-                      <p className="text-[#007E85] font-medium">{doctor.specialty}</p>
-                      <p className="text-sm text-gray-600">{doctor.qualification}</p>
-                      
-                      <div className="flex items-center space-x-4 text-sm text-gray-600">
-                        <div className="flex items-center space-x-1">
-                          <Award className="h-4 w-4 text-[#007E85]" />
-                          <span>{doctor.experience} years exp</span>
-                        </div>
-                        <div className="flex items-center space-x-1">
-                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                          <span>{doctor.rating} ({doctor.reviews} reviews)</span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center space-x-1 text-sm text-gray-600">
-                        <MapPin className="h-4 w-4 text-[#007E85]" />
-                        <span>{doctor.location}</span>
-                      </div>
+        {loading ? (
+          <div className="text-center py-20 text-[#007E85] text-xl">Loading...</div>
+        ) : (
+          <div className="space-y-6">
+            {filteredDoctors.map((d) => (
+              <Card key={d.id} className="hover:shadow-lg border-gray-200">
+                <CardContent className="flex flex-col lg:flex-row gap-6 p-6">
+                  <img
+                    src={d.profile_picture}
+                    alt={d.user?.username}
+                    className="w-24 h-24 rounded-xl object-cover"
+                  />
+                  <div className="flex-1 space-y-2">
+                    <h3 className="text-xl font-semibold">{d.user?.username}</h3>
+                    <p className="text-[#007E85]">{d.specialization}</p>
+                    <p className="text-sm text-gray-600">{d.license_number}</p>
+                    <div className="flex items-center space-x-4 text-sm text-gray-600">
+                      <Award className="text-[#007E85] w-4 h-4" />
+                      <span>{d.experience_years} yrs</span>
+                      <Star className="fill-yellow-400 w-4 h-4" />
+                      <span>{d.doctorRatings?.average || 4.5}</span>
+                    </div>
+                    <div className="flex items-center space-x-1 text-sm text-gray-600">
+                      <MapPin className="text-[#007E85] w-4 h-4" />
+                      <span>{d.user?.address?.[0]?.city}</span>
                     </div>
                   </div>
-
-                  {/* Details and Actions */}
                   <div className="flex-1 lg:ml-auto lg:max-w-md space-y-4">
-                    <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-600">Consultation Fee</span>
+                    <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+                      <div className="flex justify-between">
+                        <span>Consultation Fee</span>
                         <span className="text-lg font-semibold text-[#007E85]">
-                          ₹{doctor.consultationFee}
+                          ₹{d.consultation_fee}
                         </span>
                       </div>
-                      
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-600">Next Available</span>
-                        <span className="text-sm font-medium">
-                          {doctor.nextSlot}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center space-x-2">
-                        <Badge 
-                          variant={doctor.available ? "default" : "secondary"}
-                          className={`text-xs ${doctor.available ? 'bg-[#007E85]' : ''}`}
-                        >
-                          {doctor.available ? "Available" : "Busy"}
-                        </Badge>
-                        {doctor.languages.map(lang => (
-                          <Badge key={lang} variant="outline" className="text-xs">
-                            {lang}
-                          </Badge>
-                        ))}
-                      </div>
+                      <Badge
+                        variant={d.verified_status ? "default" : "secondary"}
+                        className={`text-xs ${d.verified_status ? "bg-[#007E85]" : ""}`}
+                      >
+                        {d.verified_status ? "Verified" : "Unverified"}
+                      </Badge>
                     </div>
-
-                    <div className="flex flex-col sm:flex-row gap-2">
-                      <Link to={`/doctor/${doctor.id}`} className="flex-1">
-                        <Button variant="outline" className="w-full border-[#007E85] text-[#007E85] hover:bg-[#007E85]/10">
-                          View Profile
-                        </Button>
+                    <div className="flex gap-2">
+                      <Link to={`/doctor/${d.id}`}>
+                        <Button variant="outline" className="text-[#007E85]">View Profile</Button>
                       </Link>
-                      <Link to="/book-appointment" className="flex-1">
-                        <Button className="w-full bg-[#007E85] hover:bg-[#006670]">
-                          <Calendar className="mr-2 h-4 w-4" />
-                          Book Now
-                        </Button>
+                      <Link to={`/doctor/${d.id}`}>
+                        <Button className="bg-[#007E85]">Book Now</Button>
                       </Link>
                     </div>
-
-                    <div className="flex justify-center space-x-4">
-                      <Button variant="ghost" size="sm" className="text-[#007E85] hover:bg-[#007E85]/10">
-                        <Video className="mr-2 h-4 w-4" />
-                        Video Call
+                    <div className="flex justify-center gap-4 text-sm">
+                      <Button variant="ghost" className="text-[#007E85]">
+                        <Video className="w-4 h-4 mr-1" /> Video
                       </Button>
-                      <Button variant="ghost" size="sm" className="text-[#007E85] hover:bg-[#007E85]/10">
-                        <Clock className="mr-2 h-4 w-4" />
-                        Schedule
+                      <Button variant="ghost" className="text-[#007E85]">
+                        <IconClock className="w-4 h-4 mr-1" /> Schedule
                       </Button>
                     </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {filteredDoctors.length === 0 && (
-          <div className="text-center py-12">
-            <div className="text-[#007E85] mb-4">
-              <Search className="h-16 w-16 mx-auto" />
-            </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              No doctors found
-            </h3>
-            <p className="text-[#007E85]">
-              Try adjusting your search criteria or filters
-            </p>
+                </CardContent>
+              </Card>
+            ))}
+            {filteredDoctors.length === 0 && (
+              <div className="text-center py-12 text-[#007E85]">
+                No doctors found
+              </div>
+            )}
           </div>
         )}
       </div>
-
       <Footer />
     </div>
   );

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "@/AuthContext";
 import {
   Search, User, Menu, X, Heart, Calendar, FileText, Pill, TestTube, Video, LogOut, Building
 } from "lucide-react";
@@ -17,7 +18,7 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+  const { isLoggedIn, user, logout } = useAuth();
 
   const navItems = [
     { href: "/find-doctors", label: "Find Doctors", icon: User },
@@ -27,8 +28,8 @@ const Header = () => {
     { href: "/lab-tests", label: "Lab Tests", icon: TestTube },
   ];
 
-  const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
+  const handleLogout = async () => {
+    await logout();
     setIsMenuOpen(false);
     navigate("/");
   };
@@ -37,7 +38,6 @@ const Header = () => {
     <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#007E85]">
               <Heart className="h-5 w-5 text-white" />
@@ -45,7 +45,6 @@ const Header = () => {
             <span className="text-xl font-bold text-[#007E85]">MediCare</span>
           </Link>
 
-          {/* Navigation - Desktop */}
           <nav className="hidden md:flex items-center space-x-6">
             {navItems.map(({ href, label, icon: Icon }) => (
               <Link
@@ -63,7 +62,6 @@ const Header = () => {
             ))}
           </nav>
 
-          {/* Search - Desktop */}
           <div className="hidden lg:flex items-center space-x-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
@@ -74,7 +72,6 @@ const Header = () => {
             </div>
           </div>
 
-          {/* User Actions */}
           <div className="flex items-center space-x-4">
             {!isLoggedIn && (
               <>
@@ -90,7 +87,6 @@ const Header = () => {
               </>
             )}
 
-            {/* Profile Dropdown */}
             {isLoggedIn && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -99,23 +95,15 @@ const Header = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48 mt-2 shadow-lg">
-                  <DropdownMenuItem onClick={() => navigate("/dashboard")}>
-                    Dashboard
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => navigate("/health-records")}>
-                    Medical Records
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => navigate("/cart")}>
-                    Cart
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleLogout} className="text-red-600">
-                    Logout
-                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate("/dashboard")}>Dashboard</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate("/profileUpdate")}>Update Profile</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate("/health-records")}>Medical Records</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate("/cart")}>Cart</DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout} className="text-red-600">Logout</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
 
-            {/* Mobile Menu Button */}
             <Button
               variant="ghost"
               size="sm"
@@ -127,20 +115,14 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-[#007E85]/20">
             <div className="space-y-4">
-              {/* Search Mobile */}
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-                <Input
-                  placeholder="Search doctors, hospitals..."
-                  className="w-full pl-10"
-                />
+                <Input placeholder="Search doctors, hospitals..." className="w-full pl-10" />
               </div>
 
-              {/* Nav Mobile */}
               <nav className="space-y-2">
                 {navItems.map(({ href, label, icon: Icon }) => (
                   <Link
@@ -159,7 +141,6 @@ const Header = () => {
                 ))}
               </nav>
 
-              {/* Auth Mobile */}
               <div className="flex flex-col gap-2 pt-4 border-t border-[#007E85]/20">
                 {!isLoggedIn ? (
                   <>
@@ -173,18 +154,15 @@ const Header = () => {
                 ) : (
                   <>
                     <Link to="/dashboard" onClick={() => setIsMenuOpen(false)}>
-                      <Button variant="ghost" className="w-full justify-start">
-                        Dashboard
-                      </Button>
+                      <Button variant="ghost" className="w-full justify-start">Dashboard</Button>
                     </Link>
-                    <Link to="/medical-records" onClick={() => setIsMenuOpen(false)}>
-                      <Button variant="ghost" className="w-full justify-start">
-                        Medical Records
-                      </Button>
+                    <Link to="/profileUpdate" onClick={() => setIsMenuOpen(false)}>
+                      <Button variant="ghost" className="w-full justify-start">Update Profile</Button>
                     </Link>
-                    <Button variant="outline" size="sm" onClick={handleLogout}>
-                      Logout
-                    </Button>
+                    <Link to="/health-records" onClick={() => setIsMenuOpen(false)}>
+                      <Button variant="ghost" className="w-full justify-start">Medical Records</Button>
+                    </Link>
+                    <Button variant="outline" size="sm" onClick={handleLogout}>Logout</Button>
                   </>
                 )}
               </div>

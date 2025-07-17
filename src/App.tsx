@@ -1,3 +1,4 @@
+// App.tsx
 import React, { Component, ReactNode } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -5,6 +6,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { CartProvider } from "@/components/CartContext";
+import { AuthProvider } from "@/AuthContext";
+import ProtectedRoute from "@/components/ProtectedRoute";
+
 import Index from "./pages/Index";
 import FindDoctors from "./pages/FindDoctors";
 import BookAppointment from "./pages/BookAppointment";
@@ -27,6 +31,9 @@ import SpecialtiesPage from "./pages/SpecialtiesPage";
 import Cart from "./pages/Cart";
 import HospitalDashboard from "./pages/Hospitaldashboard";
 import DoctorDashboard from "./pages/DoctorDashboard";
+import ProfileUpdate from "./pages/PatientProfile";
+import DoctorProfileUpdate from "./pages/DoctorProfileUpdate";
+import DoctorProfileAvalaibility from "./pages/DoctorAvailabilityUpdate";
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -65,46 +72,106 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 const queryClient = new QueryClient();
 
 const App = () => {
-  console.log("App rendered with CartProvider");
   return (
-    <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <CartProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/find-doctors" element={<FindDoctors />} />
-                <Route path="/book-appointment" element={<BookAppointment />} />
-                <Route path="/health-records" element={<HealthRecords />} />
-                <Route path="/medicine" element={<Medicine />} />
-                <Route path="/lab-tests" element={<LabTests />} />
-                <Route path="/book-test/:id" element={<BookTest />} />
-                <Route path="/video-consultation" element={<VideoConsultation />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/doctor/:id" element={<DoctorProfile />} />
-                <Route path="/dashboard" element={<PatientDashboard />} />
-                <Route path="/user-dashboard" element={<UserDashboard />} />
-                <Route path="/admin-dashboard" element={<AdminDashboard />} />
-                <Route path="/articles" element={<ArticlesPage />} />
-                <Route path="/article/:id" element={<div>Article Detail Page</div>} />
-                <Route path="/hospitals" element={<HospitalsPage />} />
-                <Route path="/hospitals/:id" element={<div>Hospital Detail Page</div>} />
-                <Route path="/specialties" element={<SpecialtiesPage />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="*" element={<NotFound />} />
-                <Route path="/hospital-dashboard" element={<HospitalDashboard></HospitalDashboard>}/>
-                <Route path="/doctor-dashboard"  element={<DoctorDashboard></DoctorDashboard>}/>
-              </Routes>
-            </BrowserRouter>
-          </CartProvider>
-        </TooltipProvider>
-      </QueryClientProvider>
-    </ErrorBoundary>
+    <AuthProvider>
+      <ErrorBoundary>
+        <QueryClientProvider client={queryClient}>
+          <TooltipProvider>
+            <CartProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/find-doctors" element={<FindDoctors />} />
+                  <Route path="/book-appointment" element={<BookAppointment />} />
+                  <Route path="/health-records" element={<HealthRecords />} />
+                  <Route path="/medicine" element={<Medicine />} />
+                  <Route path="/lab-tests" element={<LabTests />} />
+                  <Route path="/book-test/:id" element={<BookTest />} />
+                  <Route path="/video-consultation" element={<VideoConsultation />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/auth" element={<Auth />} />
+                  <Route path="/doctor/:id" element={<DoctorProfile />} />
+                  <Route
+                    path="/dashboard"
+                    element={
+                      <ProtectedRoute allowedRoles={["general_user"]}>
+                        <PatientDashboard />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/user-dashboard"
+                    element={
+                      <ProtectedRoute allowedRoles={["general_user"]}>
+                        <UserDashboard />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin-dashboard"
+                    element={
+                      // <ProtectedRoute allowedRoles={["admin"]}>
+                        <AdminDashboard />
+                      // </ProtectedRoute>
+                    }
+                  />
+                  <Route path="/articles" element={<ArticlesPage />} />
+                  <Route path="/article/:id" element={<div>Article Detail Page</div>} />
+                  <Route path="/hospitals" element={<HospitalsPage />} />
+                  <Route path="/hospitals/:id" element={<div>Hospital Detail Page</div>} />
+                  <Route path="/specialties" element={<SpecialtiesPage />} />
+                  <Route path="/cart" element={<Cart />} />
+                  <Route path="*" element={<NotFound />} />
+                  <Route
+                    path="/hospital-dashboard"
+                    element={
+                      <ProtectedRoute allowedRoles={["hospital"]}>
+                        <HospitalDashboard />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/doctor-dashboard"
+                    element={
+                      <ProtectedRoute allowedRoles={["doctor"]}>
+                        <DoctorDashboard />
+                      </ProtectedRoute>
+                    }
+                  />
+                    <Route
+                    path="/doctor-profile-update"
+                    element={
+                      <ProtectedRoute allowedRoles={["doctor"]}>
+                        <DoctorProfileUpdate />
+                      </ProtectedRoute>
+                    }
+                  />
+                   <Route
+                    path="/set-Availability"
+                    element={
+                      <ProtectedRoute allowedRoles={["doctor"]}>
+                        <DoctorProfileAvalaibility />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/profileUpdate"
+                    element={
+                      <ProtectedRoute allowedRoles={["general_user"]}>
+                        <ProfileUpdate />
+                      </ProtectedRoute>
+                    }
+                  />
+                </Routes>
+              </BrowserRouter>
+            </CartProvider>
+          </TooltipProvider>
+        </QueryClientProvider>
+      </ErrorBoundary>
+    </AuthProvider>
   );
 };
 
