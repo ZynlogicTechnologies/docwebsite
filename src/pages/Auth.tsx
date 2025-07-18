@@ -40,39 +40,57 @@ const Auth = () => {
   });
 
   const handleLogin = async () => {
-    try {
-      const res = await fetch("https://landing.docapp.co.in/api/auth/login/general_user", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(loginData),
-      });
+  try {
+    if (loginData.role === "admin") {
+      // Mock admin login logic
+      const adminEmail = "admin@docapp.com";
+      const adminPassword = "admin123";
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Login failed");
-
-      // inside handleLogin()
-if (setUser) {
-  // optionally: setUser with a lowercase role
-  setUser({ ...data.user, role: loginData.role.toLowerCase() });
-}
-
-
-      // Navigate based on role
-      switch (loginData.role) {
-        case "doctor":
-          navigate("/doctor-dashboard");
-          break;
-        case "admin":
-          navigate("/admin-dashboard");
-          break;
-        default:
-          navigate("/dashboard");
+      if (
+        loginData.email === adminEmail &&
+        loginData.password === adminPassword
+      ) {
+        if (setUser) {
+          setUser({
+            id: 0,
+            username: "Admin",
+            email: adminEmail,
+            role: "admin",
+          });
+        }
+        navigate("/admin-dashboard");
+        return;
+      } else {
+        throw new Error("Invalid admin credentials");
       }
-    } catch (err: any) {
-      alert("Login failed: " + err.message);
     }
-  };
+
+    // API login for other roles
+    const res = await fetch("https://landing.docapp.co.in/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(loginData),
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "Login failed");
+
+    if (setUser) {
+      setUser({ ...data.user, role: loginData.role.toLowerCase() });
+    }
+
+    switch (loginData.role) {
+      case "doctor":
+        navigate("/doctor-dashboard");
+        break;
+      default:
+        navigate("/dashboard");
+    }
+  } catch (err: any) {
+    alert("Login failed: " + err.message);
+  }
+};
 
   const handleSignup = async () => {
     if (signupData.password !== signupData.confirmPassword) {
