@@ -473,7 +473,7 @@ const ViewAppointments: React.FC = () => {
   const [callStatus, setCallStatus] = useState<string>('idle');
   const [currentCallId, setCurrentCallId] = useState<string | null>(null);
   const [pollAttempts, setPollAttempts] = useState<number>(0);
-  const [useAlternateEndpoint, setUseAlternateEndpoint] = useState<boolean>(false);
+  const [endpointIndex, setEndpointIndex] = useState<number>(0);
   const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
@@ -481,6 +481,11 @@ const ViewAppointments: React.FC = () => {
 
   const BASE_URL = 'https://landing.docapp.co.in';
   const MAX_POLL_ATTEMPTS = 10;
+  const ENDPOINTS = [
+    '/api/call/receive-call',
+    '/api/call/recieve-call',
+    '/api/call/get-call',
+  ];
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -553,9 +558,7 @@ const ViewAppointments: React.FC = () => {
 
   const pollForAnswer = async (callId: string) => {
     try {
-      const endpoint = useAlternateEndpoint
-        ? `${BASE_URL}/api/call/recieve-call`
-        : `${BASE_URL}/api/call/receive-call`;
+      const endpoint = `${BASE_URL}${ENDPOINTS[endpointIndex]}`;
       const response = await fetch(endpoint, {
         method: 'GET',
         credentials: 'include',
@@ -568,12 +571,12 @@ const ViewAppointments: React.FC = () => {
         if (response.status === 401) {
           throw new Error('Unauthorized: Please log in');
         }
-        if (response.status === 404 && !useAlternateEndpoint) {
-          console.log('Trying alternate endpoint: /api/call/recieve-call');
-          setUseAlternateEndpoint(true);
+        if (response.status === 404 && endpointIndex < ENDPOINTS.length - 1) {
+          console.log(`Endpoint ${ENDPOINTS[endpointIndex]} failed, trying ${ENDPOINTS[endpointIndex + 1]}`);
+          setEndpointIndex((prev) => prev + 1);
           throw new Error('Trying alternate endpoint');
         }
-        throw new Error(`Failed to poll for answer: HTTP ${response.status}`);
+        throw new Error(`Failed to poll for answer: HTTP ${response.status} - ${response.statusText}`);
       }
 
       const data = await response.json();
@@ -602,7 +605,7 @@ const ViewAppointments: React.FC = () => {
   const initiateCall = async (userId: number) => {
     setCallStatus('connecting');
     setPollAttempts(0);
-    setUseAlternateEndpoint(false);
+    setEndpointIndex(0);
     try {
       peerConnectionRef.current = new RTCPeerConnection({
         iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
@@ -668,7 +671,7 @@ const ViewAppointments: React.FC = () => {
         if (response.status === 401) {
           throw new Error('Unauthorized: Please log in to initiate call');
         }
-        throw new Error(`Failed to initiate call: HTTP ${response.status}`);
+        throw new Error(`Failed to initiate call: HTTP ${response.status} - ${response.statusText}`);
       }
 
       const data = await response.json();

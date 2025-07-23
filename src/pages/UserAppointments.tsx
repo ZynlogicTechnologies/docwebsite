@@ -523,12 +523,12 @@ interface CallData {
   from_user: number;
 }
 
-const Receiver: React.FC = () => {
+const UserAppointments: React.FC = () => {
   const [incomingCall, setIncomingCall] = useState<CallData | null>(null);
   const [callStatus, setCallStatus] = useState<string>('waiting');
   const [error, setError] = useState<string | null>(null);
   const [pollAttempts, setPollAttempts] = useState<number>(0);
-  const [useAlternateEndpoint, setUseAlternateEndpoint] = useState<boolean>(false);
+  const [endpointIndex, setEndpointIndex] = useState<number>(0);
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
@@ -536,13 +536,16 @@ const Receiver: React.FC = () => {
 
   const BASE_URL = 'https://landing.docapp.co.in';
   const MAX_POLL_ATTEMPTS = 30;
+  const ENDPOINTS = [
+    '/api/call/receive-call',
+    '/api/call/recieve-call',
+    '/api/call/get-call',
+  ];
 
   useEffect(() => {
     const pollForCalls = async () => {
       try {
-        const endpoint = useAlternateEndpoint
-          ? `${BASE_URL}/api/call/recieve-call`
-          : `${BASE_URL}/api/call/receive-call`;
+        const endpoint = `${BASE_URL}${ENDPOINTS[endpointIndex]}`;
         const response = await fetch(endpoint, {
           method: 'GET',
           credentials: 'include',
@@ -555,12 +558,12 @@ const Receiver: React.FC = () => {
           if (response.status === 401) {
             throw new Error('Unauthorized: Please log in');
           }
-          if (response.status === 404 && !useAlternateEndpoint) {
-            console.log('Trying alternate endpoint: /api/call/recieve-call');
-            setUseAlternateEndpoint(true);
+          if (response.status === 404 && endpointIndex < ENDPOINTS.length - 1) {
+            console.log(`Endpoint ${ENDPOINTS[endpointIndex]} failed, trying ${ENDPOINTS[endpointIndex + 1]}`);
+            setEndpointIndex((prev) => prev + 1);
             throw new Error('Trying alternate endpoint');
           }
-          throw new Error(`Failed to poll for calls: HTTP ${response.status}`);
+          throw new Error(`Failed to poll for calls: HTTP ${response.status} - ${response.statusText}`);
         }
 
         const data = await response.json();
@@ -602,7 +605,7 @@ const Receiver: React.FC = () => {
         (remoteVideoRef.current.srcObject as MediaStream).getTracks().forEach((track) => track.stop());
       }
     };
-  }, [pollAttempts]);
+  }, [pollAttempts, endpointIndex]);
 
   const requestMediaPermissions = async () => {
     try {
@@ -672,10 +675,8 @@ const Receiver: React.FC = () => {
       const answer = await peerConnectionRef.current.createAnswer();
       await peerConnectionRef.current.setLocalDescription(answer);
 
-      const endpoint = useAlternateEndpoint
-        ? `${BASE_URL}/api/call/recieve-call`
-        : `${BASE_URL}/api/call/receive-call`;
-      const response = await fetch(endpoint, {
+      const endpoint = ENDPOINTS[endpointIndex];
+      const response = await fetch(`${BASE_URL}${endpoint}`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -694,7 +695,7 @@ const Receiver: React.FC = () => {
         if (response.status === 401) {
           throw new Error('Unauthorized: Please log in');
         }
-        throw new Error(`Failed to send answer: HTTP ${response.status}`);
+        throw new Error(`Failed to send answer: HTTP ${response.status} - ${response.statusText}`);
       }
 
       console.log('Send answer response:', await response.json());
@@ -766,4 +767,4 @@ const Receiver: React.FC = () => {
   );
 };
 
-export default Receiver;
+export default UserAppointments;
