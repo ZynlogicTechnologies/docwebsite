@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+
 import {
   Search, Filter as IconFilter, Star, MapPin, Award, Calendar, Video, Clock as IconClock
 } from "lucide-react";
@@ -20,6 +21,8 @@ const FindDoctors: React.FC = () => {
   const [sortBy, setSortBy] = useState("rating");
   const [doctors, setDoctors] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [modeFilter, setModeFilter] = useState<"all" | "online" | "inclinic">("all");
+
 
   useEffect(() => {
     const fetchDoctors = async () => {
@@ -30,7 +33,10 @@ const FindDoctors: React.FC = () => {
         );
         const docs = res.data.doctors.map((d: any) => ({
           ...d,
-          availability_schedule: JSON.parse(d.availability_schedule || "[]")
+          availability_schedule: d.user?.doctorSlots?.slots
+  ? JSON.parse(d.user.doctorSlots.slots)
+  : []
+
         }));
         setDoctors(docs);
       } catch (e) {
@@ -51,35 +57,45 @@ const FindDoctors: React.FC = () => {
     [doctors]
   );
 
-  const filteredDoctors = useMemo(() => {
-    let arr = doctors.filter((d) => {
-      const name = d.user?.username?.toLowerCase() || "";
-      const spec = (d.specialization || "").toLowerCase();
-      const city = d.user?.address?.[0]?.city || "";
+ const filteredDoctors = useMemo(() => {
+  let arr = doctors.filter((d) => {
+    const name = d.user?.username?.toLowerCase() || "";
+    const spec = (d.specialization || "").toLowerCase();
+    const city = d.user?.address?.[0]?.city || "";
 
-      return (
-        (name.includes(searchQuery.toLowerCase()) || spec.includes(searchQuery.toLowerCase())) &&
-        (selectedSpecialty === "all" || d.specialization === selectedSpecialty) &&
-        (selectedLocation === "all" || city === selectedLocation) &&
-        (!availableOnly || d.verified_status)
-      );
-    });
+    // Get available modes
+    const availableModes = d.availability_schedule?.map((s: any) => s.mode) || [];
 
-    return arr.sort((a, b) => {
-      switch (sortBy) {
-        case "rating":
-          return (b.doctorRatings?.average || 0) - (a.doctorRatings?.average || 0);
-        case "experience":
-          return b.experience_years - a.experience_years;
-        case "fee-low":
-          return parseFloat(a.consultation_fee) - parseFloat(b.consultation_fee);
-        case "fee-high":
-          return parseFloat(b.consultation_fee) - parseFloat(a.consultation_fee);
-        default:
-          return 0;
-      }
-    });
-  }, [doctors, searchQuery, selectedSpecialty, selectedLocation, availableOnly, sortBy]);
+    // Hybrid match logic
+    const matchesMode =
+      modeFilter === "all" ||
+      (modeFilter === "online" && (availableModes.includes("online") || availableModes.includes("hybrid"))) ||
+      (modeFilter === "inclinic" && (availableModes.includes("offline") || availableModes.includes("hybrid")));
+
+    return (
+      (name.includes(searchQuery.toLowerCase()) || spec.includes(searchQuery.toLowerCase())) &&
+      (selectedSpecialty === "all" || d.specialization === selectedSpecialty) &&
+      (selectedLocation === "all" || city === selectedLocation) &&
+      (!availableOnly || d.verified_status) &&
+      matchesMode
+    );
+  });
+
+  return arr.sort((a, b) => {
+    switch (sortBy) {
+      case "rating":
+        return (b.doctorRatings?.average || 0) - (a.doctorRatings?.average || 0);
+      case "experience":
+        return b.experience_years - a.experience_years;
+      case "fee-low":
+        return parseFloat(a.consultation_fee) - parseFloat(b.consultation_fee);
+      case "fee-high":
+        return parseFloat(b.consultation_fee) - parseFloat(a.consultation_fee);
+      default:
+        return 0;
+    }
+  });
+}, [doctors, searchQuery, selectedSpecialty, selectedLocation, availableOnly, sortBy, modeFilter]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -117,6 +133,15 @@ const FindDoctors: React.FC = () => {
               ))}
             </select>
             <select
+              value={modeFilter}
+              onChange={(e) => setModeFilter(e.target.value as "all" | "online" | "inclinic")}
+              className="border-gray-300 focus:ring-[#007E85]"
+            >
+              <option value="all">All Modes</option>
+              <option value="online">Video Consultation</option>
+              <option value="inclinic">In-Clinic</option>
+            </select>
+            <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
               className="border-gray-300 focus:ring-[#007E85]"
@@ -126,15 +151,7 @@ const FindDoctors: React.FC = () => {
               <option value="fee-low">Fee: Low to High</option>
               <option value="fee-high">Fee: High to Low</option>
             </select>
-            <label className="flex items-center space-x-2 text-sm">
-              <input
-                type="checkbox"
-                checked={availableOnly}
-                onChange={(e) => setAvailableOnly(e.target.checked)}
-                className="border-gray-300 form-checkbox text-[#007E85]"
-              />
-              <span>Available only</span>
-            </label>
+           
           </div>
         </div>
 
@@ -185,20 +202,10 @@ const FindDoctors: React.FC = () => {
                       </Badge>
                     </div>
                     <div className="flex gap-2">
-                      <Link to={`/doctor/${d.id}`}>
-                        <Button variant="outline" className="text-[#007E85]">View Profile</Button>
-                      </Link>
-                      <Link to={`/doctor/${d.id}`}>
-                        <Button className="bg-[#007E85]">Book Now</Button>
-                      </Link>
-                    </div>
-                    <div className="flex justify-center gap-4 text-sm">
-                      <Button variant="ghost" className="text-[#007E85]">
-                        <Video className="w-4 h-4 mr-1" /> Video
-                      </Button>
-                      <Button variant="ghost" className="text-[#007E85]">
-                        <IconClock className="w-4 h-4 mr-1" /> Schedule
-                      </Button>
+                  <Link to={`/doctor/${d.id}?mode=${modeFilter}`}>
+  <Button variant="outline" className="text-[#007E85]">View Profile</Button>
+</Link>
+
                     </div>
                   </div>
                 </CardContent>

@@ -7,6 +7,7 @@
 // import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 // import { Badge } from "@/components/ui/badge";
 // import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+// import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 // import { Input } from "@/components/ui/input";
 // import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 // import { Calendar, Clock, MapPin, Video, XCircle, CalendarPlus } from "lucide-react";
@@ -32,7 +33,8 @@
 
 // interface AppointmentFormatted {
 //   id: string;
-//   patient: string;
+//   doctor: string;
+//   speciality: string;
 //   date: string;
 //   time: string;
 //   type: string;
@@ -60,10 +62,38 @@
 //   // Fallback data based on provided API response
 //   const fallbackAppointments: AppointmentFormatted[] = [
 //     {
-//       id: "14",
-//       patient: "Dr. Unknown",
+//       id: "18",
+//       doctor: "Dr. Unknown",
+//       speciality: "Unknown Specialty",
+//       date: new Date("2025-07-25T00:00:00.000Z").toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+//       time: "1:30 PM",
+//       type: "In-person",
+//       status: "pending"
+//     },
+//     {
+//       id: "16",
+//       doctor: "Dr. Unknown",
+//       speciality: "Unknown Specialty",
 //       date: new Date("2025-07-24T00:00:00.000Z").toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
 //       time: "12:00 PM",
+//       type: "In-person",
+//       status: "pending"
+//     },
+//     {
+//       id: "17",
+//       doctor: "Dr. Unknown",
+//       speciality: "Unknown Specialty",
+//       date: new Date("2025-07-24T00:00:00.000Z").toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+//       time: "2:00 PM",
+//       type: "In-person",
+//       status: "pending"
+//     },
+//     {
+//       id: "15",
+//       doctor: "Dr. Unknown",
+//       speciality: "Unknown Specialty",
+//       date: new Date("2025-07-22T00:00:00.000Z").toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+//       time: "2:30 PM",
 //       type: "In-person",
 //       status: "pending"
 //     }
@@ -95,10 +125,11 @@
 //           });
 //           return {
 //             id: appointment.id.toString(),
-//             patient: "Dr. Unknown", // Placeholder since API lacks patient name
+//             doctor: "Dr. Unknown",
+//             speciality: "Unknown Specialty",
 //             date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
 //             time,
-//             type: appointment.appointment_type === "offline" ? "In-person" : "Video",
+//             type: appointment.appointment_type === "offline" ? "In-person" : "Video Consultation",
 //             status: appointment.appointment_status,
 //           };
 //         });
@@ -147,7 +178,7 @@
 //     }
 
 //     try {
-//       const response = await fetch("http://127.0.0.1:5000/api/appointment/update-appointment", {
+//       const response = await fetch("https://landing.docapp.co.in/api/appointment/update-appointment", {
 //         method: "PUT",
 //         headers: {
 //           "Content-Type": "application/json",
@@ -210,7 +241,7 @@
 //   // Handle delete appointment
 //   const handleDeleteAppointment = async (appointmentId: string) => {
 //     try {
-//       const response = await fetch("http://127.0.0.1:5000/api/appointment/delete-appointment", {
+//       const response = await fetch("https://landing.docapp.co.in/api/appointment/delete-appointment", {
 //         method: "DELETE",
 //         headers: {
 //           "Content-Type": "application/json",
@@ -242,10 +273,10 @@
 //   );
 
 //   return (
+//     <div className="min-h-screen bg-gray-50">
+//       <Header />
 
-
-
-//       <div className="container mx-auto px-4 py-8 border-solid border-[#007E85]/20">
+//       <div className="container mx-auto px-4 py-8">
 //         <div className="max-w-7xl mx-auto">
 //           {/* Page Title */}
 //           <div className="mb-8">
@@ -274,7 +305,7 @@
 //                 <SelectContent>
 //                   <SelectItem value="all">All Types</SelectItem>
 //                   <SelectItem value="In-person">In-person</SelectItem>
-//                   <SelectItem value="Video">Video</SelectItem>
+//                   <SelectItem value="Video Consultation">Video Consultation</SelectItem>
 //                 </SelectContent>
 //               </Select>
 //             </div>
@@ -306,7 +337,7 @@
 //             </div>
 //           </div>
 
-//           {/* Appointments Card */}
+//           {/* Appointments Table */}
 //           <Card className="border-[#007E85]/20">
 //             <CardHeader>
 //               <CardTitle className="text-[#007E85] flex items-center">
@@ -314,95 +345,124 @@
 //                 Your Appointments
 //               </CardTitle>
 //             </CardHeader>
-//             <CardContent className="space-y-4">
+//             <CardContent>
 //               {loading ? (
 //                 <div className="text-center text-[#007E85] py-8">Loading...</div>
-//               ) : paginatedAppointments.length === 0 ? (
+//               ) : filteredAppointments.length === 0 ? (
 //                 <p className="text-gray-600 text-center">No appointments found.</p>
 //               ) : (
 //                 <>
-//                   {paginatedAppointments.map((app) => (
-//                     <div key={app.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-//                       <div>
-//                         <h3 className="font-semibold text-[#007E85]">{app.patient}</h3>
-//                         <div className="flex items-center text-sm text-gray-600 mt-1">
-//                           <Clock className="h-3 w-3 mr-1" />
-//                           {app.date} at {app.time}
-//                         </div>
-//                         <Badge className={app.status === "pending" ? "bg-yellow-100 text-yellow-800 mt-1" : "bg-green-100 text-green-800 mt-1"}>
-//                           {app.status}
-//                         </Badge>
-//                       </div>
-//                       <div className="flex space-x-2">
-//                         <Badge className={app.type === "Video" ? "bg-[#007E85] hover:bg-[#006A6F]" : "bg-[#007E85]/80 hover:bg-[#006A6F]/80"}>
-//                           {app.type === "Video" ? <Video className="h-3 w-3 mr-1" /> : <MapPin className="h-3 w-3 mr-1" />}
-//                           {app.type}
-//                         </Badge>
-//                         <Dialog>
-//                           <DialogTrigger asChild>
-//                             {/* <Button
-//                               variant="outline"
-//                               size="sm"
-//                               className="text-[#007E85] border-[#007E85]/20 hover:bg-[#007E85]/10"
-//                               onClick={() => setRescheduleId(app.id)}
-//                             >
-//                               <CalendarPlus className="h-4 w-4 mr-1" />
-//                               Reschedule
-//                             </Button> */}
-//                           </DialogTrigger>
-//                           <DialogContent>
-//                             <DialogHeader>
-//                               <DialogTitle>Reschedule Appointment</DialogTitle>
-//                             </DialogHeader>
-//                             <div className="space-y-4">
-//                               <div>
-//                                 <label className="text-sm font-medium text-[#007E85]">New Date</label>
-//                                 <Input
-//                                   type="date"
-//                                   value={newDate}
-//                                   onChange={(e) => setNewDate(e.target.value)}
-//                                   className="border-[#007E85]/20"
-//                                 />
-//                               </div>
-//                               <div>
-//                                 <label className="text-sm font-medium text-[#007E85]">New Start Time</label>
-//                                 <Input
-//                                   type="time"
-//                                   value={newStart}
-//                                   onChange={(e) => setNewStart(e.target.value)}
-//                                   className="border-[#007E85]/20"
-//                                 />
-//                               </div>
-//                               <div>
-//                                 <label className="text-sm font-medium text-[#007E85]">New End Time</label>
-//                                 <Input
-//                                   type="time"
-//                                   value={newEnd}
-//                                   onChange={(e) => setNewEnd(e.target.value)}
-//                                   className="border-[#007E85]/20"
-//                                 />
-//                               </div>
-//                               {/* <Button
-//                                 className="bg-[#007E85] hover:bg-[#006A6F]"
-//                                 onClick={() => rescheduleId && handleUpdateAppointment(rescheduleId)}
-//                               >
-//                                 Save Changes
-//                               </Button> */}
+//                   <Table>
+//                     <TableHeader>
+//                       <TableRow>
+//                         {/* <TableHead className="text-[#007E85]">Doctor</TableHead>
+//                         <TableHead className="text-[#007E85]">Speciality</TableHead> */}
+//                         <TableHead className="text-[#007E85]">Date</TableHead>
+//                         <TableHead className="text-[#007E85]">Time</TableHead>
+//                         <TableHead className="text-[#007E85]">Type</TableHead>
+//                         <TableHead className="text-[#007E85]">Status</TableHead>
+//                         <TableHead className="text-[#007E85]">Actions</TableHead>
+//                       </TableRow>
+//                     </TableHeader>
+//                     <TableBody>
+//                       {paginatedAppointments.map((appointment) => (
+//                         <TableRow key={appointment.id}>
+//                           {/* <TableCell className="font-medium text-[#007E85]">{appointment.doctor}</TableCell>
+//                           <TableCell>{appointment.speciality}</TableCell> */}
+//                           <TableCell>
+//                             <div className="flex items-center">
+//                               <Calendar className="h-4 w-4 mr-1 text-[#007E85]" />
+//                               {appointment.date}
 //                             </div>
-//                           </DialogContent>
-//                         </Dialog>
-//                         {/* <Button
-//                           variant="outline"
-//                           size="sm"
-//                           className="text-red-600 border-red-200 hover:bg-red-100"
-//                           onClick={() => handleDeleteAppointment(app.id)}
-//                         >
-//                           <XCircle className="h-4 w-4 mr-1" />
-//                           Cancel
-//                         </Button> */}
-//                       </div>
-//                     </div>
-//                   ))}
+//                           </TableCell>
+//                           <TableCell>
+//                             <div className="flex items-center">
+//                               <Clock className="h-4 w-4 mr-1 text-[#007E85]" />
+//                               {appointment.time}
+//                             </div>
+//                           </TableCell>
+//                           <TableCell>
+//                             <Badge className={appointment.type === "Video Consultation" ? "bg-[#007E85] hover:bg-[#006A6F]" : "bg-[#007E85]/80 hover:bg-[#006A6F]/80"}>
+//                               {appointment.type === "Video Consultation" ? <Video className="h-3 w-3 mr-1" /> : <MapPin className="h-3 w-3 mr-1" />}
+//                               {appointment.type}
+//                             </Badge>
+//                           </TableCell>
+//                           <TableCell>
+//                             <Badge className={appointment.status === "pending" ? "bg-yellow-100 text-yellow-800" : "bg-green-100 text-green-800"}>
+//                               {appointment.status}
+//                             </Badge>
+//                           </TableCell>
+//                           <TableCell>
+//                             <div className="flex space-x-2">
+//                               <Dialog>
+//                                 <DialogTrigger asChild>
+//                                   <Button
+//                                     variant="outline"
+//                                     size="sm"
+//                                     className="text-[#007E85] border-[#007E85]/20 hover:bg-[#007E85]/10"
+//                                     onClick={() => setRescheduleId(appointment.id)}
+//                                   >
+//                                     <CalendarPlus className="h-4 w-4 mr-1" />
+//                                     Reschedule
+//                                   </Button>
+//                                 </DialogTrigger>
+//                                 <DialogContent>
+//                                   <DialogHeader>
+//                                     <DialogTitle>Reschedule Appointment</DialogTitle>
+//                                   </DialogHeader>
+//                                   <div className="space-y-4">
+//                                     <div>
+//                                       <label className="text-sm font-medium text-[#007E85]">New Date</label>
+//                                       <Input
+//                                         type="date"
+//                                         value={newDate}
+//                                         onChange={(e) => setNewDate(e.target.value)}
+//                                         className="border-[#007E85]/20"
+//                                       />
+//                                     </div>
+//                                     <div>
+//                                       <label className="text-sm font-medium text-[#007E85]">New Start Time</label>
+//                                       <Input
+//                                         type="time"
+//                                         value={newStart}
+//                                         onChange={(e) => setNewStart(e.target.value)}
+//                                         className="border-[#007E85]/20"
+//                                       />
+//                                     </div>
+//                                     <div>
+//                                       <label className="text-sm font-medium text-[#007E85]">New End Time</label>
+//                                       <Input
+//                                         type="time"
+//                                         value={newEnd}
+//                                         onChange={(e) => setNewEnd(e.target.value)}
+//                                         className="border-[#007E85]/20"
+//                                       />
+//                                     </div>
+//                                     <Button
+//                                       className="bg-[#007E85] hover:bg-[#006A6F]"
+//                                       onClick={() => rescheduleId && handleUpdateAppointment(rescheduleId)}
+//                                     >
+//                                       Save Changes
+//                                     </Button>
+//                                   </div>
+//                                 </DialogContent>
+//                               </Dialog>
+//                               <Button
+//                                 variant="outline"
+//                                 size="sm"
+//                                 className="text-red-600 border-red-200 hover:bg-red-100"
+//                                 onClick={() => handleDeleteAppointment(appointment.id)}
+//                               >
+//                                 <XCircle className="h-4 w-4 mr-1" />
+//                                 Cancel
+//                               </Button>
+//                             </div>
+//                           </TableCell>
+//                         </TableRow>
+//                       ))}
+//                     </TableBody>
+//                   </Table>
+
 //                   {/* Pagination */}
 //                   <div className="flex justify-between items-center mt-4">
 //                     <div className="text-sm text-gray-600">
@@ -437,9 +497,18 @@
 //           </Card>
 
 //           {/* Link to Book Appointment Page */}
-          
+//           <div className="mt-6">
+//             <Link to="/book-appointment">
+//               <Button className="w-full sm:w-auto bg-[#007E85] hover:bg-[#006A6F]">
+//                 <CalendarPlus className="h-4 w-4 mr-2" />
+//                 Book New Appointment
+//               </Button>
+//             </Link>
+//           </div>
 //         </div>
-      
+//       </div>
+
+//       <Footer />
 //     </div>
 //   );
 // };
@@ -448,44 +517,33 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 
-interface Appointment {
-  id: number;
-  user_id: number;
-  doctor_id: number;
-  appointment_date: string;
-  appointment_start_time: string;
-  appointment_end_time: string;
-  appointment_status: string;
-  appointment_type: string;
-  checkup_time: string | null;
-  prescription: string | null;
-  created_at: string;
-  createdAt: string;
-  updatedAt: string;
-  checkupAppointment: any[];
-  followUp: any[];
+interface CallData {
+  call_id: string;
+  offer: RTCSessionDescriptionInit;
+  from_user: number;
 }
 
-const ViewAppointments: React.FC = () => {
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+const Receiver: React.FC = () => {
+  const [incomingCall, setIncomingCall] = useState<CallData | null>(null);
+  const [callStatus, setCallStatus] = useState<string>('waiting');
   const [error, setError] = useState<string | null>(null);
-  const [callStatus, setCallStatus] = useState<string>('idle');
-  const [currentCallId, setCurrentCallId] = useState<string | null>(null);
   const [pollAttempts, setPollAttempts] = useState<number>(0);
   const [useAlternateEndpoint, setUseAlternateEndpoint] = useState<boolean>(false);
-  const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
+  const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const BASE_URL = 'https://landing.docapp.co.in';
-  const MAX_POLL_ATTEMPTS = 10;
+  const MAX_POLL_ATTEMPTS = 30;
 
   useEffect(() => {
-    const fetchAppointments = async () => {
+    const pollForCalls = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/api/appointment/list-appointments`, {
+        const endpoint = useAlternateEndpoint
+          ? `${BASE_URL}/api/call/recieve-call`
+          : `${BASE_URL}/api/call/receive-call`;
+        const response = await fetch(endpoint, {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -495,29 +553,44 @@ const ViewAppointments: React.FC = () => {
 
         if (!response.ok) {
           if (response.status === 401) {
-            throw new Error('Unauthorized: Please log in to access appointments');
+            throw new Error('Unauthorized: Please log in');
           }
-          throw new Error(`HTTP error ${response.status}: ${response.statusText}`);
+          if (response.status === 404 && !useAlternateEndpoint) {
+            console.log('Trying alternate endpoint: /api/call/recieve-call');
+            setUseAlternateEndpoint(true);
+            throw new Error('Trying alternate endpoint');
+          }
+          throw new Error(`Failed to poll for calls: HTTP ${response.status}`);
         }
 
         const data = await response.json();
-        console.log('Appointments response:', data);
-        if (data && Array.isArray(data.appointments)) {
-          setAppointments(data.appointments);
-        } else {
-          throw new Error('Invalid response format: Expected an "appointments" array');
+        console.log('Poll for calls response:', data);
+        if (data.call_id && data.offer && data.from_user) {
+          setIncomingCall({
+            call_id: data.call_id,
+            offer: data.offer,
+            from_user: data.from_user,
+          });
+          setPollAttempts(0);
         }
-        setLoading(false);
       } catch (err: any) {
-        setError(err.message || 'Failed to fetch appointments');
-        setAppointments([]);
-        setLoading(false);
-        console.error('Fetch appointments error:', err);
+        console.error('Poll for calls error:', err);
+        setPollAttempts((prev) => prev + 1);
+        if (pollAttempts + 1 >= MAX_POLL_ATTEMPTS) {
+          setError('Failed to detect incoming calls: Server unavailable. Please contact support or try again later.');
+          if (pollingIntervalRef.current) {
+            clearInterval(pollingIntervalRef.current);
+          }
+        }
       }
     };
-    fetchAppointments();
+
+    pollingIntervalRef.current = setInterval(pollForCalls, 2000);
 
     return () => {
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
+      }
       if (peerConnectionRef.current) {
         peerConnectionRef.current.close();
         peerConnectionRef.current = null;
@@ -528,11 +601,8 @@ const ViewAppointments: React.FC = () => {
       if (remoteVideoRef.current?.srcObject) {
         (remoteVideoRef.current.srcObject as MediaStream).getTracks().forEach((track) => track.stop());
       }
-      if (pollingIntervalRef.current) {
-        clearInterval(pollingIntervalRef.current);
-      }
     };
-  }, []);
+  }, [pollAttempts]);
 
   const requestMediaPermissions = async () => {
     try {
@@ -551,58 +621,10 @@ const ViewAppointments: React.FC = () => {
     }
   };
 
-  const pollForAnswer = async (callId: string) => {
-    try {
-      const endpoint = useAlternateEndpoint
-        ? `${BASE_URL}/api/call/recieve-call`
-        : `${BASE_URL}/api/call/receive-call`;
-      const response = await fetch(endpoint, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+  const acceptCall = async () => {
+    if (!incomingCall) return;
 
-      if (!response.ok) {
-        if (response.status === 401) {
-          throw new Error('Unauthorized: Please log in');
-        }
-        if (response.status === 404 && !useAlternateEndpoint) {
-          console.log('Trying alternate endpoint: /api/call/recieve-call');
-          setUseAlternateEndpoint(true);
-          throw new Error('Trying alternate endpoint');
-        }
-        throw new Error(`Failed to poll for answer: HTTP ${response.status}`);
-      }
-
-      const data = await response.json();
-      console.log('Poll for answer response:', data);
-      if (data.answer && peerConnectionRef.current) {
-        await peerConnectionRef.current.setRemoteDescription(new RTCSessionDescription(data.answer));
-        setCallStatus('connected');
-        setPollAttempts(0);
-        if (pollingIntervalRef.current) {
-          clearInterval(pollingIntervalRef.current);
-        }
-      }
-    } catch (err: any) {
-      console.error('Poll for answer error:', err);
-      setPollAttempts((prev) => prev + 1);
-      if (pollAttempts + 1 >= MAX_POLL_ATTEMPTS) {
-        setError('Failed to connect call: No answer received from server. Please contact support or try again.');
-        setCallStatus('failed');
-        if (pollingIntervalRef.current) {
-          clearInterval(pollingIntervalRef.current);
-        }
-      }
-    }
-  };
-
-  const initiateCall = async (userId: number) => {
     setCallStatus('connecting');
-    setPollAttempts(0);
-    setUseAlternateEndpoint(false);
     try {
       peerConnectionRef.current = new RTCPeerConnection({
         iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
@@ -626,63 +648,64 @@ const ViewAppointments: React.FC = () => {
       };
 
       peerConnectionRef.current.onicecandidate = async (event) => {
-        if (event.candidate && currentCallId) {
+        if (event.candidate) {
           try {
-            const response = await fetch(`${BASE_URL}/api/call/add-offer-candidates`, {
+            const response = await fetch(`${BASE_URL}/api/call/add-answer-candidates`, {
               method: 'POST',
               credentials: 'include',
               headers: {
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify({
-                call_id: currentCallId,
-                offer_candidate: event.candidate.toJSON(),
+                call_id: incomingCall.call_id,
+                answer_candidate: event.candidate.toJSON(),
               }),
             });
-            console.log('Add offer candidate response:', await response.json());
+            console.log('Add answer candidate response:', await response.json());
           } catch (err) {
-            console.error('Failed to send offer candidate:', err);
+            console.error('Failed to send answer candidate:', err);
           }
         }
       };
 
-      const offer = await peerConnectionRef.current.createOffer();
-      await peerConnectionRef.current.setLocalDescription(offer);
+      await peerConnectionRef.current.setRemoteDescription(new RTCSessionDescription(incomingCall.offer));
+      const answer = await peerConnectionRef.current.createAnswer();
+      await peerConnectionRef.current.setLocalDescription(answer);
 
-      const response = await fetch(`${BASE_URL}/api/call/initialise-call`, {
+      const endpoint = useAlternateEndpoint
+        ? `${BASE_URL}/api/call/recieve-call`
+        : `${BASE_URL}/api/call/receive-call`;
+      const response = await fetch(endpoint, {
         method: 'POST',
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          call_to_user: userId,
-          offer: {
-            sdp: offer.sdp,
-            type: offer.type,
+          call_id: incomingCall.call_id,
+          answer: {
+            sdp: answer.sdp,
+            type: answer.type,
           },
         }),
       });
 
       if (!response.ok) {
         if (response.status === 401) {
-          throw new Error('Unauthorized: Please log in to initiate call');
+          throw new Error('Unauthorized: Please log in');
         }
-        throw new Error(`Failed to initiate call: HTTP ${response.status}`);
+        throw new Error(`Failed to send answer: HTTP ${response.status}`);
       }
 
-      const data = await response.json();
-      console.log('Initiate call response:', data);
-      if (data.call_id) {
-        setCurrentCallId(data.call_id);
-        pollingIntervalRef.current = setInterval(() => pollForAnswer(data.call_id), 2000);
-      } else {
-        throw new Error('No call_id received from server');
+      console.log('Send answer response:', await response.json());
+      setCallStatus('connected');
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
       }
     } catch (err: any) {
-      setError(err.message || 'Failed to initiate call');
+      setError(err.message || 'Failed to accept call');
       setCallStatus('failed');
-      console.error('Initiate call error:', err);
+      console.error('Accept call error:', err);
     }
   };
 
@@ -700,52 +723,31 @@ const ViewAppointments: React.FC = () => {
     if (pollingIntervalRef.current) {
       clearInterval(pollingIntervalRef.current);
     }
-    setCallStatus('idle');
-    setCurrentCallId(null);
+    setCallStatus('waiting');
+    setIncomingCall(null);
     setPollAttempts(0);
     setError(null);
   };
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Appointments</h1>
-      {loading && <div className="text-center mt-8">Loading...</div>}
+      <h1 className="text-2xl font-bold mb-4">Receive Call</h1>
       {error && <div className="text-center mt-8 text-red-500">{error}</div>}
-      {!loading && !error && appointments.length === 0 && (
-        <div className="text-center mt-8">No appointments found</div>
+      {callStatus === 'waiting' && !incomingCall && (
+        <div className="text-center mt-8">Waiting for incoming calls...</div>
       )}
-      {!loading && appointments.length > 0 && (
-        <div className="grid gap-4">
-          {appointments.map((appointment) => (
-            <div key={appointment.id} className="border rounded-lg p-4 flex justify-between items-center">
-              <div>
-                <p className="font-semibold">
-                  {new Date(appointment.appointment_date).toLocaleDateString()} at{' '}
-                  {appointment.appointment_start_time}
-                </p>
-                <p>Type: {appointment.appointment_type}</p>
-                <p>Status: {appointment.appointment_status}</p>
-              </div>
-              <button
-                onClick={() => initiateCall(appointment.user_id)}
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 flex items-center"
-                disabled={callStatus !== 'idle'}
-              >
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                  />
-                </svg>
-                Call
-              </button>
-            </div>
-          ))}
+      {incomingCall && callStatus === 'waiting' && (
+        <div className="text-center mt-8">
+          <p>Incoming call from user {incomingCall.from_user}</p>
+          <button
+            onClick={acceptCall}
+            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mt-4"
+          >
+            Accept Call
+          </button>
         </div>
       )}
-      {callStatus !== 'idle' && (
+      {callStatus !== 'waiting' && (
         <div className="mt-4">
           <p className="mb-2">Call Status: {callStatus}</p>
           <div className="flex gap-4">
@@ -764,4 +766,4 @@ const ViewAppointments: React.FC = () => {
   );
 };
 
-export default ViewAppointments;
+export default Receiver;

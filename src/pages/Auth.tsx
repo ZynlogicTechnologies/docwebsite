@@ -4,6 +4,7 @@ import { useAuth } from "@/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
 import {
   Card,
   CardContent,
@@ -42,30 +43,26 @@ const Auth = () => {
   const handleLogin = async () => {
   try {
     if (loginData.role === "admin") {
-      // Mock admin login logic
-      const adminEmail = "admin@docapp.com";
-      const adminPassword = "admin123";
-
+      // Mock admin login (hardcoded credentials check)
       if (
-        loginData.email === adminEmail &&
-        loginData.password === adminPassword
+        loginData.email === "admin@docapp.com" &&
+        loginData.password === "admin123"
       ) {
-        if (setUser) {
-          setUser({
-            id: 0,
-            username: "Admin",
-            email: adminEmail,
-            role: "admin",
-          });
-        }
+        const mockAdmin = {
+          id: 0,
+          username: "Admin",
+          email: "admin@docapp.com",
+          role: "admin",
+        };
+        if (setUser) setUser(mockAdmin);
         navigate("/admin-dashboard");
-        return;
       } else {
         throw new Error("Invalid admin credentials");
       }
+      return;
     }
 
-    // API login for other roles
+    // Real API login for doctor and general_user
     const res = await fetch("https://landing.docapp.co.in/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -80,17 +77,17 @@ const Auth = () => {
       setUser({ ...data.user, role: loginData.role.toLowerCase() });
     }
 
-    switch (loginData.role) {
-      case "doctor":
-        navigate("/doctor-dashboard");
-        break;
-      default:
-        navigate("/dashboard");
+    // Navigate based on role
+    if (loginData.role === "doctor") {
+      navigate("/doctor-dashboard");
+    } else {
+      navigate("/dashboard");
     }
   } catch (err: any) {
     alert("Login failed: " + err.message);
   }
 };
+
 
   const handleSignup = async () => {
     if (signupData.password !== signupData.confirmPassword) {

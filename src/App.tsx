@@ -32,6 +32,7 @@ import Cart from "./pages/Cart";
 import HospitalDashboard from "./pages/Hospitaldashboard";
 import DoctorDashboard from "./pages/DoctorDashboard";
 import ProfileUpdate from "./pages/PatientProfile";
+import UserAppointments from "./pages/UserAppointments";
 import DoctorProfileUpdate from "./pages/DoctorProfileUpdate";
 import DoctorProfileAvalaibility from "./pages/DoctorAvailabilityUpdate";
 
@@ -94,6 +95,7 @@ const App = () => {
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/doctor/:id" element={<DoctorProfile />} />
+                  <Route path="/userappointments" element={<UserAppointments />} />
                   <Route
                     path="/dashboard"
                     element={
