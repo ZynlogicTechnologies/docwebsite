@@ -515,256 +515,318 @@
 
 // export default ViewAppointments;
 
-import React, { useState, useEffect, useRef } from 'react';
+// import React, { useState, useEffect, useRef } from 'react';
 
-interface CallData {
-  call_id: string;
-  offer: RTCSessionDescriptionInit;
-  from_user: number;
-}
+// interface CallData {
+//   call_id: string;
+//   offer: RTCSessionDescriptionInit;
+//   from_user: number;
+// }
 
-const UserAppointments: React.FC = () => {
-  const [incomingCall, setIncomingCall] = useState<CallData | null>(null);
-  const [callStatus, setCallStatus] = useState<string>('waiting');
-  const [error, setError] = useState<string | null>(null);
-  const [pollAttempts, setPollAttempts] = useState<number>(0);
-  const [endpointIndex, setEndpointIndex] = useState<number>(0);
-  const localVideoRef = useRef<HTMLVideoElement>(null);
-  const remoteVideoRef = useRef<HTMLVideoElement>(null);
-  const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
-  const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+// const UserAppointments: React.FC = () => {
+//   const [incomingCall, setIncomingCall] = useState<CallData | null>(null);
+//   const [callStatus, setCallStatus] = useState<string>('waiting');
+//   const [error, setError] = useState<string | null>(null);
+//   const [pollAttempts, setPollAttempts] = useState<number>(0);
+//   const [endpointIndex, setEndpointIndex] = useState<number>(0);
+//   const localVideoRef = useRef<HTMLVideoElement>(null);
+//   const remoteVideoRef = useRef<HTMLVideoElement>(null);
+//   const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
+//   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const BASE_URL = 'https://landing.docapp.co.in';
-  const MAX_POLL_ATTEMPTS = 30;
-  const ENDPOINTS = [
-    '/api/call/receive-call',
-    '/api/call/recieve-call',
-    '/api/call/get-call',
-  ];
+//   const BASE_URL = 'https://landing.docapp.co.in';
+//   const MAX_POLL_ATTEMPTS = 30;
+//   const ENDPOINTS = [
+//     '/api/call/receive-call',
+//     '/api/call/recieve-call',
+//     '/api/call/get-call',
+//   ];
 
-  useEffect(() => {
-    const pollForCalls = async () => {
-      try {
-        const endpoint = `${BASE_URL}${ENDPOINTS[endpointIndex]}`;
-        const response = await fetch(endpoint, {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+//   useEffect(() => {
+//     const pollForCalls = async () => {
+//       try {
+//         const endpoint = `${BASE_URL}${ENDPOINTS[endpointIndex]}`;
+//         const response = await fetch(endpoint, {
+//           method: 'GET',
+//           credentials: 'include',
+//           headers: {
+//             'Content-Type': 'application/json',
+//           },
+//         });
 
-        if (!response.ok) {
-          if (response.status === 401) {
-            throw new Error('Unauthorized: Please log in');
-          }
-          if (response.status === 404 && endpointIndex < ENDPOINTS.length - 1) {
-            console.log(`Endpoint ${ENDPOINTS[endpointIndex]} failed, trying ${ENDPOINTS[endpointIndex + 1]}`);
-            setEndpointIndex((prev) => prev + 1);
-            throw new Error('Trying alternate endpoint');
-          }
-          throw new Error(`Failed to poll for calls: HTTP ${response.status} - ${response.statusText}`);
-        }
+//         if (!response.ok) {
+//           if (response.status === 401) {
+//             throw new Error('Unauthorized: Please log in');
+//           }
+//           if (response.status === 404 && endpointIndex < ENDPOINTS.length - 1) {
+//             console.log(`Endpoint ${ENDPOINTS[endpointIndex]} failed, trying ${ENDPOINTS[endpointIndex + 1]}`);
+//             setEndpointIndex((prev) => prev + 1);
+//             throw new Error('Trying alternate endpoint');
+//           }
+//           throw new Error(`Failed to poll for calls: HTTP ${response.status} - ${response.statusText}`);
+//         }
 
-        const data = await response.json();
-        console.log('Poll for calls response:', data);
-        if (data.call_id && data.offer && data.from_user) {
-          setIncomingCall({
-            call_id: data.call_id,
-            offer: data.offer,
-            from_user: data.from_user,
-          });
-          setPollAttempts(0);
-        }
-      } catch (err: any) {
-        console.error('Poll for calls error:', err);
-        setPollAttempts((prev) => prev + 1);
-        if (pollAttempts + 1 >= MAX_POLL_ATTEMPTS) {
-          setError('Failed to detect incoming calls: Server unavailable. Please contact support or try again later.');
-          if (pollingIntervalRef.current) {
-            clearInterval(pollingIntervalRef.current);
-          }
-        }
-      }
-    };
+//         const data = await response.json();
+//         console.log('Poll for calls response:', data);
+//         if (data.call_id && data.offer && data.from_user) {
+//           setIncomingCall({
+//             call_id: data.call_id,
+//             offer: data.offer,
+//             from_user: data.from_user,
+//           });
+//           setPollAttempts(0);
+//         }
+//       } catch (err: any) {
+//         console.error('Poll for calls error:', err);
+//         setPollAttempts((prev) => prev + 1);
+//         if (pollAttempts + 1 >= MAX_POLL_ATTEMPTS) {
+//           setError('Failed to detect incoming calls: Server unavailable. Please contact support or try again later.');
+//           if (pollingIntervalRef.current) {
+//             clearInterval(pollingIntervalRef.current);
+//           }
+//         }
+//       }
+//     };
 
-    pollingIntervalRef.current = setInterval(pollForCalls, 2000);
+//     pollingIntervalRef.current = setInterval(pollForCalls, 2000);
 
-    return () => {
-      if (pollingIntervalRef.current) {
-        clearInterval(pollingIntervalRef.current);
-      }
-      if (peerConnectionRef.current) {
-        peerConnectionRef.current.close();
-        peerConnectionRef.current = null;
-      }
-      if (localVideoRef.current?.srcObject) {
-        (localVideoRef.current.srcObject as MediaStream).getTracks().forEach((track) => track.stop());
-      }
-      if (remoteVideoRef.current?.srcObject) {
-        (remoteVideoRef.current.srcObject as MediaStream).getTracks().forEach((track) => track.stop());
-      }
-    };
-  }, [pollAttempts, endpointIndex]);
+//     return () => {
+//       if (pollingIntervalRef.current) {
+//         clearInterval(pollingIntervalRef.current);
+//       }
+//       if (peerConnectionRef.current) {
+//         peerConnectionRef.current.close();
+//         peerConnectionRef.current = null;
+//       }
+//       if (localVideoRef.current?.srcObject) {
+//         (localVideoRef.current.srcObject as MediaStream).getTracks().forEach((track) => track.stop());
+//       }
+//       if (remoteVideoRef.current?.srcObject) {
+//         (remoteVideoRef.current.srcObject as MediaStream).getTracks().forEach((track) => track.stop());
+//       }
+//     };
+//   }, [pollAttempts, endpointIndex]);
 
-  const requestMediaPermissions = async () => {
+//   const requestMediaPermissions = async () => {
+//     try {
+//       const stream = await navigator.mediaDevices.getUserMedia({
+//         audio: true,
+//         video: true,
+//       });
+//       if (localVideoRef.current) {
+//         localVideoRef.current.srcObject = stream;
+//       }
+//       return stream;
+//     } catch (err) {
+//       setError('Failed to get media permissions. Please allow camera and microphone access.');
+//       console.error('Media permission error:', err);
+//       return null;
+//     }
+//   };
+
+//   const acceptCall = async () => {
+//     if (!incomingCall) return;
+
+//     setCallStatus('connecting');
+//     try {
+//       peerConnectionRef.current = new RTCPeerConnection({
+//         iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
+//       });
+
+//       const stream = await requestMediaPermissions();
+//       if (!stream || !peerConnectionRef.current) {
+//         setCallStatus('failed');
+//         setError('Failed to initialize media or peer connection');
+//         return;
+//       }
+
+//       stream.getTracks().forEach((track) => {
+//         peerConnectionRef.current?.addTrack(track, stream);
+//       });
+
+//       peerConnectionRef.current.ontrack = (event) => {
+//         if (remoteVideoRef.current) {
+//           remoteVideoRef.current.srcObject = event.streams[0];
+//         }
+//       };
+
+//       peerConnectionRef.current.onicecandidate = async (event) => {
+//         if (event.candidate) {
+//           try {
+//             const response = await fetch(`${BASE_URL}/api/call/add-answer-candidates`, {
+//               method: 'POST',
+//               credentials: 'include',
+//               headers: {
+//                 'Content-Type': 'application/json',
+//               },
+//               body: JSON.stringify({
+//                 call_id: incomingCall.call_id,
+//                 answer_candidate: event.candidate.toJSON(),
+//               }),
+//             });
+//             console.log('Add answer candidate response:', await response.json());
+//           } catch (err) {
+//             console.error('Failed to send answer candidate:', err);
+//           }
+//         }
+//       };
+
+//       await peerConnectionRef.current.setRemoteDescription(new RTCSessionDescription(incomingCall.offer));
+//       const answer = await peerConnectionRef.current.createAnswer();
+//       await peerConnectionRef.current.setLocalDescription(answer);
+
+//       const endpoint = ENDPOINTS[endpointIndex];
+//       const response = await fetch(`${BASE_URL}${endpoint}`, {
+//         method: 'put',
+//         credentials: 'include',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({
+//           call_id: incomingCall.call_id,
+//           answer: {
+//             sdp: answer.sdp,
+//             type: answer.type,
+//           },
+//         }),
+//       });
+
+//       if (!response.ok) {
+//         if (response.status === 401) {
+//           throw new Error('Unauthorized: Please log in');
+//         }
+//         throw new Error(`Failed to send answer: HTTP ${response.status} - ${response.statusText}`);
+//       }
+
+//       console.log('Send answer response:', await response.json());
+//       setCallStatus('connected');
+//       if (pollingIntervalRef.current) {
+//         clearInterval(pollingIntervalRef.current);
+//       }
+//     } catch (err: any) {
+//       setError(err.message || 'Failed to accept call');
+//       setCallStatus('failed');
+//       console.error('Accept call error:', err);
+//     }
+//   };
+
+//   const endCall = () => {
+//     if (peerConnectionRef.current) {
+//       peerConnectionRef.current.close();
+//       peerConnectionRef.current = null;
+//     }
+//     if (localVideoRef.current?.srcObject) {
+//       (localVideoRef.current.srcObject as MediaStream).getTracks().forEach((track) => track.stop());
+//     }
+//     if (remoteVideoRef.current?.srcObject) {
+//       (remoteVideoRef.current.srcObject as MediaStream).getTracks().forEach((track) => track.stop());
+//     }
+//     if (pollingIntervalRef.current) {
+//       clearInterval(pollingIntervalRef.current);
+//     }
+//     setCallStatus('waiting');
+//     setIncomingCall(null);
+//     setPollAttempts(0);
+//     setError(null);
+//   };
+
+//   return (
+//     <div className="container mx-auto p-4">
+//       <h1 className="text-2xl font-bold mb-4">Receive Call</h1>
+//       {error && <div className="text-center mt-8 text-red-500">{error}</div>}
+//       {callStatus === 'waiting' && !incomingCall && (
+//         <div className="text-center mt-8">Waiting for incoming calls...</div>
+//       )}
+//       {incomingCall && callStatus === 'waiting' && (
+//         <div className="text-center mt-8">
+//           <p>Incoming call from user {incomingCall.from_user}</p>
+//           <button
+//             onClick={acceptCall}
+//             className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mt-4"
+//           >
+//             Accept Call
+//           </button>
+//         </div>
+//       )}
+//       {callStatus !== 'waiting' && (
+//         <div className="mt-4">
+//           <p className="mb-2">Call Status: {callStatus}</p>
+//           <div className="flex gap-4">
+//             <video ref={localVideoRef} autoPlay playsInline className="w-1/2 rounded-lg border" />
+//             <video ref={remoteVideoRef} autoPlay playsInline className="w-1/2 rounded-lg border" />
+//           </div>
+//           <button
+//             onClick={endCall}
+//             className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+//           >
+//             End Call
+//           </button>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default UserAppointments;
+
+
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { toast } from '@/components/ui/use-toast';
+
+const CallerScreen = () => {
+  const { id } = useParams();
+  const [loading, setLoading] = useState(false);
+
+  const handleReceiveCall = async () => {
+    setLoading(true);
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: true,
-        video: true,
-      });
-      if (localVideoRef.current) {
-        localVideoRef.current.srcObject = stream;
-      }
-      return stream;
-    } catch (err) {
-      setError('Failed to get media permissions. Please allow camera and microphone access.');
-      console.error('Media permission error:', err);
-      return null;
-    }
-  };
-
-  const acceptCall = async () => {
-    if (!incomingCall) return;
-
-    setCallStatus('connecting');
-    try {
-      peerConnectionRef.current = new RTCPeerConnection({
-        iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
-      });
-
-      const stream = await requestMediaPermissions();
-      if (!stream || !peerConnectionRef.current) {
-        setCallStatus('failed');
-        setError('Failed to initialize media or peer connection');
-        return;
-      }
-
-      stream.getTracks().forEach((track) => {
-        peerConnectionRef.current?.addTrack(track, stream);
-      });
-
-      peerConnectionRef.current.ontrack = (event) => {
-        if (remoteVideoRef.current) {
-          remoteVideoRef.current.srcObject = event.streams[0];
-        }
-      };
-
-      peerConnectionRef.current.onicecandidate = async (event) => {
-        if (event.candidate) {
-          try {
-            const response = await fetch(`${BASE_URL}/api/call/add-answer-candidates`, {
-              method: 'POST',
-              credentials: 'include',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                call_id: incomingCall.call_id,
-                answer_candidate: event.candidate.toJSON(),
-              }),
-            });
-            console.log('Add answer candidate response:', await response.json());
-          } catch (err) {
-            console.error('Failed to send answer candidate:', err);
-          }
-        }
-      };
-
-      await peerConnectionRef.current.setRemoteDescription(new RTCSessionDescription(incomingCall.offer));
-      const answer = await peerConnectionRef.current.createAnswer();
-      await peerConnectionRef.current.setLocalDescription(answer);
-
-      const endpoint = ENDPOINTS[endpointIndex];
-      const response = await fetch(`${BASE_URL}${endpoint}`, {
-        method: 'put',
-        credentials: 'include',
+      const response = await fetch('https://landing.docapp.co.in/api/call/recieve-call', {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          call_id: incomingCall.call_id,
-          answer: {
-            sdp: answer.sdp,
-            type: answer.type,
-          },
-        }),
+        credentials: 'include', // cookie-based auth
+        body: JSON.stringify({ callId: id }),
       });
 
-      if (!response.ok) {
-        if (response.status === 401) {
-          throw new Error('Unauthorized: Please log in');
-        }
-        throw new Error(`Failed to send answer: HTTP ${response.status} - ${response.statusText}`);
-      }
+      const data = await response.json();
 
-      console.log('Send answer response:', await response.json());
-      setCallStatus('connected');
-      if (pollingIntervalRef.current) {
-        clearInterval(pollingIntervalRef.current);
+      if (response.ok) {
+        toast({
+          title: 'Call received!',
+          description: `You have accepted the call.`,
+        });
+      } else {
+        toast({
+          title: 'Error receiving call',
+          description: data.message || 'Something went wrong.',
+          variant: 'destructive',
+        });
       }
-    } catch (err: any) {
-      setError(err.message || 'Failed to accept call');
-      setCallStatus('failed');
-      console.error('Accept call error:', err);
+    } catch (error) {
+      toast({
+        title: 'Network error',
+        description: 'Could not connect to the server.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
     }
-  };
-
-  const endCall = () => {
-    if (peerConnectionRef.current) {
-      peerConnectionRef.current.close();
-      peerConnectionRef.current = null;
-    }
-    if (localVideoRef.current?.srcObject) {
-      (localVideoRef.current.srcObject as MediaStream).getTracks().forEach((track) => track.stop());
-    }
-    if (remoteVideoRef.current?.srcObject) {
-      (remoteVideoRef.current.srcObject as MediaStream).getTracks().forEach((track) => track.stop());
-    }
-    if (pollingIntervalRef.current) {
-      clearInterval(pollingIntervalRef.current);
-    }
-    setCallStatus('waiting');
-    setIncomingCall(null);
-    setPollAttempts(0);
-    setError(null);
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Receive Call</h1>
-      {error && <div className="text-center mt-8 text-red-500">{error}</div>}
-      {callStatus === 'waiting' && !incomingCall && (
-        <div className="text-center mt-8">Waiting for incoming calls...</div>
-      )}
-      {incomingCall && callStatus === 'waiting' && (
-        <div className="text-center mt-8">
-          <p>Incoming call from user {incomingCall.from_user}</p>
-          <button
-            onClick={acceptCall}
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mt-4"
-          >
-            Accept Call
-          </button>
-        </div>
-      )}
-      {callStatus !== 'waiting' && (
-        <div className="mt-4">
-          <p className="mb-2">Call Status: {callStatus}</p>
-          <div className="flex gap-4">
-            <video ref={localVideoRef} autoPlay playsInline className="w-1/2 rounded-lg border" />
-            <video ref={remoteVideoRef} autoPlay playsInline className="w-1/2 rounded-lg border" />
-          </div>
-          <button
-            onClick={endCall}
-            className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-          >
-            End Call
-          </button>
-        </div>
-      )}
-    </div>
+    <Card className="w-full max-w-md mx-auto mt-20 p-6">
+      <CardContent className="flex flex-col items-center gap-4">
+        <h2 className="text-xl font-bold">Incoming Call</h2>
+        <Button onClick={handleReceiveCall} disabled={loading}>
+          {loading ? 'Connecting...' : 'Accept Call'}
+        </Button>
+      </CardContent>
+    </Card>
   );
 };
 
-export default UserAppointments;
+export default CallerScreen;
