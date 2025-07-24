@@ -677,7 +677,7 @@ const UserAppointments: React.FC = () => {
 
       const endpoint = ENDPOINTS[endpointIndex];
       const response = await fetch(`${BASE_URL}${endpoint}`, {
-        method: 'POST',
+        method: 'put',
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
