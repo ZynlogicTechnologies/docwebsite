@@ -780,42 +780,47 @@ const CallerScreen = () => {
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
 
-  const handleReceiveCall = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch('https://landing.docapp.co.in/api/call/recieve-call', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include', // cookie-based auth
-        body: JSON.stringify({ callId: id }),
-      });
+const handleReceiveCall = async () => {
+  setLoading(true);
+  try {
+    console.log('Sending call receive request with ID:', id);
 
-      const data = await response.json();
+    const response = await fetch('https://landing.docapp.co.in/api/call/recieve-call', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ callId: id }), // change to call_id if backend expects that
+    });
 
-      if (response.ok) {
-        toast({
-          title: 'Call received!',
-          description: `You have accepted the call.`,
-        });
-      } else {
-        toast({
-          title: 'Error receiving call',
-          description: data.message || 'Something went wrong.',
-          variant: 'destructive',
-        });
-      }
-    } catch (error) {
+    const data = await response.json();
+    console.log('Response:', data);
+
+    if (response.ok) {
       toast({
-        title: 'Network error',
-        description: 'Could not connect to the server.',
+        title: 'Call received!',
+        description: `You have accepted the call.`,
+      });
+    } else {
+      toast({
+        title: 'Error receiving call',
+        description: data.message || 'Something went wrong.',
         variant: 'destructive',
       });
-    } finally {
-      setLoading(false);
     }
-  };
+  } catch (error) {
+    console.error('Network error:', error);
+    toast({
+      title: 'Network error',
+      description: 'Could not connect to the server.',
+      variant: 'destructive',
+    });
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <Card className="w-full max-w-md mx-auto mt-20 p-6">
