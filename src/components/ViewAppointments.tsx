@@ -446,7 +446,23 @@
 
 // export default ViewAppointments;
 
+
 import React, { useState, useEffect, useRef } from 'react';
+import { initializeApp } from 'firebase/app';
+import { getMessaging, getToken, Messaging } from 'firebase/messaging';
+
+// Interfaces for better type safety
+interface CheckupAppointment {
+  id: number;
+  appointment_id: number;
+  checkup_time: string;
+}
+
+interface FollowUp {
+  id: number;
+  appointment_id: number;
+  follow_up_date: string;
+}
 
 interface Appointment {
   id: number;
@@ -462,8 +478,8 @@ interface Appointment {
   created_at: string;
   createdAt: string;
   updatedAt: string;
-  checkupAppointment: any[];
-  followUp: any[];
+  checkupAppointment: CheckupAppointment[];
+  followUp: FollowUp[];
 }
 
 const ViewAppointments: React.FC = () => {
@@ -474,6 +490,7 @@ const ViewAppointments: React.FC = () => {
   const [currentCallId, setCurrentCallId] = useState<string | null>(null);
   const [pollAttempts, setPollAttempts] = useState<number>(0);
   const [endpointIndex, setEndpointIndex] = useState<number>(0);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null); // Track user_id for FCM
   const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
@@ -483,43 +500,90 @@ const ViewAppointments: React.FC = () => {
   const MAX_POLL_ATTEMPTS = 10;
   const ENDPOINTS = [
     '/api/call/receive-call',
-    '/api/call/recieve-call',
+    '/api/call/receive-call',
     '/api/call/get-call',
   ];
 
-  useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        const response = await fetch(`${BASE_URL}/api/appointment/list-appointments`, {
-          method: 'GET',
+  const firebaseConfig = {
+    apiKey: 'AIzaSyAvASTY7O7A1ht9y42GLRQUV8a4O244lYM',
+    authDomain: 'videocall-174e6.firebaseapp.com',
+    projectId: 'videocall-174e6',
+    storageBucket: 'videocall-174e6.firebasestorage.app',
+    messagingSenderId: '965109245557',
+    appId: '1:965109245557:android:4c4946111b1e58e1da7a3c',
+  };
+
+  const firebaseApp = initializeApp(firebaseConfig);
+  const messaging: Messaging = getMessaging(firebaseApp);
+
+  const fetchAppointments = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/appointment/list-appointments`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Unauthorized: Please log in to access appointments');
+        }
+        throw new Error(`HTTP error ${response.status}: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log('Appointments response:', data);
+      if (data && Array.isArray(data.appointments)) {
+        setAppointments(data.appointments);
+        // Set the user_id from the first appointment as a fallback
+        if (data.appointments.length > 0) {
+          setSelectedUserId(data.appointments[0].user_id);
+        }
+      } else {
+        throw new Error('Invalid response format: Expected an "appointments" array');
+      }
+      setLoading(false);
+    } catch (err: any) {
+      setError(err.message || 'Failed to fetch appointments');
+      setAppointments([]);
+      setLoading(false);
+      console.error('Fetch appointments error:', err);
+    }
+  };
+
+  const saveFcmToken = async (userId: number) => {
+    try {
+      const token = await getToken(messaging, {
+        vapidKey: 'BAw0FRbdlAJHz0bR2siHdlRhs-YLFfNDEKOYaiUZKYPP9LcR7mdu5zINa1_l8JT2pNOgBhlxmZvu3TqNCLfb3Po',
+      });
+
+      if (token) {
+        console.log('FCM Token:', token);
+
+        await fetch(`${BASE_URL}/api/notifications/save-token`, {
+          method: 'POST',
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
           },
+          body: JSON.stringify({
+            token,
+            user_id: userId, // Use the provided user_id
+            platform: 'web',
+          }),
         });
-
-        if (!response.ok) {
-          if (response.status === 401) {
-            throw new Error('Unauthorized: Please log in to access appointments');
-          }
-          throw new Error(`HTTP error ${response.status}: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        console.log('Appointments response:', data);
-        if (data && Array.isArray(data.appointments)) {
-          setAppointments(data.appointments);
-        } else {
-          throw new Error('Invalid response format: Expected an "appointments" array');
-        }
-        setLoading(false);
-      } catch (err: any) {
-        setError(err.message || 'Failed to fetch appointments');
-        setAppointments([]);
-        setLoading(false);
-        console.error('Fetch appointments error:', err);
+        console.log('FCM token saved successfully for user_id:', userId);
+      } else {
+        console.warn('No registration token available');
       }
-    };
+    } catch (error) {
+      console.error('Failed to get or send FCM token:', error);
+    }
+  };
+
+  useEffect(() => {
     fetchAppointments();
 
     return () => {
@@ -528,16 +592,28 @@ const ViewAppointments: React.FC = () => {
         peerConnectionRef.current = null;
       }
       if (localVideoRef.current?.srcObject) {
-        (localVideoRef.current.srcObject as MediaStream).getTracks().forEach((track) => track.stop());
+        const stream = localVideoRef.current.srcObject as MediaStream;
+        stream.getTracks().forEach((track) => track.stop());
+        localVideoRef.current.srcObject = null;
       }
       if (remoteVideoRef.current?.srcObject) {
-        (remoteVideoRef.current.srcObject as MediaStream).getTracks().forEach((track) => track.stop());
+        const stream = remoteVideoRef.current.srcObject as MediaStream;
+        stream.getTracks().forEach((track) => track.stop());
+        remoteVideoRef.current.srcObject = null;
       }
       if (pollingIntervalRef.current) {
         clearInterval(pollingIntervalRef.current);
+        pollingIntervalRef.current = null;
       }
     };
   }, []);
+
+  // Run saveFcmToken when selectedUserId changes
+  useEffect(() => {
+    if (selectedUserId) {
+      saveFcmToken(selectedUserId);
+    }
+  }, [selectedUserId]);
 
   const requestMediaPermissions = async () => {
     try {
@@ -587,6 +663,7 @@ const ViewAppointments: React.FC = () => {
         setPollAttempts(0);
         if (pollingIntervalRef.current) {
           clearInterval(pollingIntervalRef.current);
+          pollingIntervalRef.current = null;
         }
       }
     } catch (err: any) {
@@ -597,6 +674,7 @@ const ViewAppointments: React.FC = () => {
         setCallStatus('failed');
         if (pollingIntervalRef.current) {
           clearInterval(pollingIntervalRef.current);
+          pollingIntervalRef.current = null;
         }
       }
     }
@@ -606,10 +684,26 @@ const ViewAppointments: React.FC = () => {
     setCallStatus('connecting');
     setPollAttempts(0);
     setEndpointIndex(0);
+    setSelectedUserId(userId); // Set user_id for FCM token when initiating call
+
     try {
       peerConnectionRef.current = new RTCPeerConnection({
         iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
       });
+
+      peerConnectionRef.current.onconnectionstatechange = () => {
+        if (peerConnectionRef.current) {
+          const state = peerConnectionRef.current.connectionState;
+          console.log('Connection state changed:', state);
+          if (state === 'failed' || state === 'disconnected' || state === 'closed') {
+            setCallStatus('failed');
+            setError(`Call ${state}. Please try again.`);
+            endCall();
+          } else if (state === 'connected') {
+            setCallStatus('connected');
+          }
+        }
+      };
 
       const stream = await requestMediaPermissions();
       if (!stream || !peerConnectionRef.current) {
@@ -695,18 +789,24 @@ const ViewAppointments: React.FC = () => {
       peerConnectionRef.current = null;
     }
     if (localVideoRef.current?.srcObject) {
-      (localVideoRef.current.srcObject as MediaStream).getTracks().forEach((track) => track.stop());
+      const stream = localVideoRef.current.srcObject as MediaStream;
+      stream.getTracks().forEach((track) => track.stop());
+      localVideoRef.current.srcObject = null;
     }
     if (remoteVideoRef.current?.srcObject) {
-      (remoteVideoRef.current.srcObject as MediaStream).getTracks().forEach((track) => track.stop());
+      const stream = remoteVideoRef.current.srcObject as MediaStream;
+      stream.getTracks().forEach((track) => track.stop());
+      remoteVideoRef.current.srcObject = null;
     }
     if (pollingIntervalRef.current) {
       clearInterval(pollingIntervalRef.current);
+      pollingIntervalRef.current = null;
     }
     setCallStatus('idle');
     setCurrentCallId(null);
     setPollAttempts(0);
     setError(null);
+    setSelectedUserId(appointments.length > 0 ? appointments[0].user_id : null); // Reset to first appointment's user_id
   };
 
   return (
