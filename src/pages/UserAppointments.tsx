@@ -781,21 +781,26 @@ const CallerScreen = () => {
   const [loading, setLoading] = useState(false);
 
 const handleReceiveCall = async () => {
+  if (!id) return;
   setLoading(true);
-  try {
-    console.log('Sending call receive request with ID:', id);
 
+  try {
     const response = await fetch('https://landing.docapp.co.in/api/call/recieve-call', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
       credentials: 'include',
-      body: JSON.stringify({ callId: id }), // change to call_id if backend expects that
+      body: JSON.stringify({
+        call_id: id,
+        answer: {
+          sdp: 'this is answer adp', // TODO: replace with actual SDP answer from WebRTC peer connection
+          type: 'answer',
+        }
+      }),
     });
 
     const data = await response.json();
-    console.log('Response:', data);
 
     if (response.ok) {
       toast({
@@ -810,7 +815,6 @@ const handleReceiveCall = async () => {
       });
     }
   } catch (error) {
-    console.error('Network error:', error);
     toast({
       title: 'Network error',
       description: 'Could not connect to the server.',
@@ -820,7 +824,6 @@ const handleReceiveCall = async () => {
     setLoading(false);
   }
 };
-
 
   return (
     <Card className="w-full max-w-md mx-auto mt-20 p-6">
