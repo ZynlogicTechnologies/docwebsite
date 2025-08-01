@@ -67,7 +67,7 @@ const LabTests = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <Header />
       
       <div className="container mx-auto px-4 py-8">
@@ -76,6 +76,7 @@ const LabTests = () => {
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               Lab Tests & Diagnostics
             </h1>
+            <br></br>
             <p className="text-lg text-gray-600">
               Book lab tests at home or visit our centers
             </p>

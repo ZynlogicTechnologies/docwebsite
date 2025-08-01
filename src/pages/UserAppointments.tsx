@@ -769,71 +769,89 @@
 
 // export default UserAppointments;
 
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { toast } from '@/components/ui/use-toast';
 
 const CallerScreen = () => {
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
+  const localVideoRef = useRef<HTMLVideoElement>(null);
+  const remoteVideoRef = useRef<HTMLVideoElement>(null);
+  const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
 
-const handleReceiveCall = async () => {
-  if (!id) return;
-  setLoading(true);
+  const BASE_URL = 'https://landing.docapp.co.in';
 
-  try {
-    const response = await fetch('https://landing.docapp.co.in/api/call/recieve-call', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify({
-        call_id: id,
-        answer: {
-          sdp: 'this is answer adp', // TODO: replace with actual SDP answer from WebRTC peer connection
-          type: 'answer',
-        }
-      }),
-    });
+  useEffect(() => {
+    const setupConnection = async () => {
+      try {
+        const res = await fetch(`${BASE_URL}/api/call/get-call/${id}`);
+        const data = await res.json();
 
-    const data = await response.json();
+        const peerConnection = new RTCPeerConnection({
+          iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
+        });
+        peerConnectionRef.current = peerConnection;
 
-    if (response.ok) {
-      toast({
-        title: 'Call received!',
-        description: `You have accepted the call.`,
-      });
-    } else {
-      toast({
-        title: 'Error receiving call',
-        description: data.message || 'Something went wrong.',
-        variant: 'destructive',
-      });
+        // Get user media
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        if (localVideoRef.current) localVideoRef.current.srcObject = stream;
+        stream.getTracks().forEach((track) => {
+          peerConnection.addTrack(track, stream);
+        });
+
+        peerConnection.ontrack = (event) => {
+          if (remoteVideoRef.current) remoteVideoRef.current.srcObject = event.streams[0];
+        };
+
+        peerConnection.onicecandidate = async (event) => {
+          if (event.candidate) {
+            await fetch(`${BASE_URL}/api/call/add-answer-candidates`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'include',
+              body: JSON.stringify({
+                call_id: id,
+                answer_candidate: event.candidate.toJSON(),
+              }),
+            });
+          }
+        };
+
+        await peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
+        const answer = await peerConnection.createAnswer();
+        await peerConnection.setLocalDescription(answer);
+
+        // Send answer to caller
+        await fetch(`${BASE_URL}/api/call/recieve-call`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            call_id: id,
+            answer: {
+              sdp: answer.sdp,
+              type: answer.type,
+            },
+          }),
+        });
+      } catch (error) {
+        console.error('Error handling call:', error);
+      }
+    };
+
+    if (id) {
+      setupConnection();
     }
-  } catch (error) {
-    toast({
-      title: 'Network error',
-      description: 'Could not connect to the server.',
-      variant: 'destructive',
-    });
-  } finally {
-    setLoading(false);
-  }
-};
+  }, [id]);
 
   return (
-    <Card className="w-full max-w-md mx-auto mt-20 p-6">
-      <CardContent className="flex flex-col items-center gap-4">
-        <h2 className="text-xl font-bold">Incoming Call</h2>
-        <Button onClick={handleReceiveCall} disabled={loading}>
-          {loading ? 'Connecting...' : 'Accept Call'}
-        </Button>
-      </CardContent>
-    </Card>
+    <div className="p-6">
+      <h2 className="text-xl font-bold text-center">Receiving Call</h2>
+      <div className="flex gap-4 mt-4">
+        <video ref={localVideoRef} autoPlay playsInline className="w-1/2 border rounded" />
+        <video ref={remoteVideoRef} autoPlay playsInline className="w-1/2 border rounded" />
+      </div>
+    </div>
   );
 };
 

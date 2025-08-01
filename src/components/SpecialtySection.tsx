@@ -39,6 +39,7 @@ const ConsultSection = () => {
             <h2 className="text-2xl md:text-3xl font-semibold text-[#007E85] text-left">
               Consult top doctors online for any health concern
             </h2>
+            <br />
             <p className="text-gray-600 mt-2 text-left">
               Private online consultations with verified doctors in all specialties
             </p>

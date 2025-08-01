@@ -8,7 +8,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { CartProvider } from "@/components/CartContext";
 import { AuthProvider } from "@/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
-
+import { FaHeartbeat, FaUserMd, FaPills, FaStethoscope } from "react-icons/fa";
 import Index from "./pages/Index";
 import FindDoctors from "./pages/FindDoctors";
 import BookAppointment from "./pages/BookAppointment";
@@ -35,6 +35,8 @@ import ProfileUpdate from "./pages/PatientProfile";
 import UserAppointments from "./pages/UserAppointments";
 import DoctorProfileUpdate from "./pages/DoctorProfileUpdate";
 import DoctorProfileAvalaibility from "./pages/DoctorAvailabilityUpdate";
+import { useEffect } from "react";
+import { useGlobalTextZigzag } from './components/ui/AnimatedTextWrapper';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -43,6 +45,8 @@ interface ErrorBoundaryProps {
 interface ErrorBoundaryState {
   hasError: boolean;
 }
+
+
 
 class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
@@ -64,6 +68,8 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
             Refresh Page
           </button>
         </div>
+
+        
       );
     }
     return this.props.children;
@@ -73,6 +79,13 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 const queryClient = new QueryClient();
 
 const App = () => {
+   useGlobalTextZigzag();
+  useEffect(() => {
+    const elements = document.querySelectorAll('body *');
+    elements.forEach((el, index) => {
+      (el as HTMLElement).style.setProperty('--i', index.toString());
+    });
+  }, []);
   return (
     <AuthProvider>
       <ErrorBoundary>
@@ -168,6 +181,7 @@ const App = () => {
                     }
                   />
                 </Routes>
+                      
               </BrowserRouter>
             </CartProvider>
           </TooltipProvider>

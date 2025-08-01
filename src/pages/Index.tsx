@@ -9,7 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { AnimatedSection } from "@/components/ui/AnimatedSection";
 import { FlipCard, FlipCardBack, FlipCardFront } from "@/components/ui/FlipCard";
+import CountUp from 'react-countup';
 import {
   Search,
   Calendar,
@@ -93,23 +95,40 @@ const Index = () => {
     },
   ];
 
-  const stats = [
-    { number: "50,000+", label: "Verified Doctors" },
-    { number: "2M+", label: "Happy Patients" },
-    { number: "1000+", label: "Hospitals" },
-    { number: "200+", label: "Cities" }
-  ];
+ const stats = [
+  { number: "50,000+", label: "Verified Doctors" },
+  { number: "2M+", label: "Happy Patients" },
+  { number: "1000+", label: "Hospitals" },
+  { number: "200+", label: "Cities" }
+];
+
+const parseNumber = (str: string): number => {
+  const cleaned = str.replace(/[+,]/g, "").toUpperCase();
+  if (cleaned.endsWith("K")) return parseFloat(cleaned) * 1_000;
+  if (cleaned.endsWith("M")) return parseFloat(cleaned) * 1_000_000;
+  return parseFloat(cleaned);
+};
+
+const getSuffix = (str: string): string => {
+  const match = str.match(/[KM+]+$/i);
+  return match ? match[0] : "";
+};
 
   return (
     <div className="min-h-screen bg-white">
       <Header />
 
+     
+
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-[#007E85]/10 via-[#007E85]/5 to-[#006670]/5 py-8 md:py-10">
         <div className="container mx-auto px-4">
+          
           <div className="grid lg:grid-cols-[3fr_2fr] gap-12 items-center">
             {/* Left Side (Text + Search) */}
+            
             <div className="space-y-8 animate-fade-in">
+              <AnimatedSection>
               <div className="space-y-4">
                 <Badge className="bg-[#007E85]/10 text-[#007E85] border-[#007E85]/20">
                   ✨ Your Health, Our Priority
@@ -122,6 +141,7 @@ const Index = () => {
                   Connect with verified doctors, book appointments instantly, and manage your health records - all in one platform.
                 </p>
               </div>
+              </AnimatedSection>
 
               {/* Search Bar */}
               <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-200">
@@ -176,20 +196,28 @@ const Index = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-12 bg-white border-b">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
+       <section className="py-12 bg-white border-b">
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+          {stats.map((stat, index) => {
+            const number = parseNumber(stat.number);
+            const suffix = getSuffix(stat.number);
+
+            return (
               <div key={index} className="text-center">
                 <div className="text-3xl lg:text-4xl font-bold text-[#007E85] mb-2">
-                  {stat.number}
+                  <CountUp start={0} end={number} duration={2} separator="," />
+                  {suffix}
                 </div>
                 <div className="text-gray-600">{stat.label}</div>
               </div>
-            ))}
-          </div>
+            );
+          })}
         </div>
-      </section>
+      </div>
+    </section>
+
+
 
       {/* Services Section */}
       <section className="py-20 bg-gray-50">
@@ -197,7 +225,7 @@ const Index = () => {
     <div className="text-center mb-12">
       <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
         Our Health Services
-      </h2>
+      </h2><br></br>
       <p className="text-xl text-gray-600 max-w-2xl mx-auto">
         Comprehensive healthcare solutions designed to meet all your medical needs
       </p>
@@ -245,6 +273,7 @@ const Index = () => {
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
                 Top Rated Doctors
               </h2>
+              <br></br>
               <p className="text-xl text-gray-600">
                 Consult with our verified and experienced doctors
               </p>
@@ -310,7 +339,7 @@ const Index = () => {
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
               Why Choose MediCare?
-            </h2>
+            </h2><br></br>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               We're committed to providing you with the best healthcare experience
             </p>

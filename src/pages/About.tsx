@@ -54,7 +54,7 @@ const About = () => {
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-[black] mb-4">
               About MediCare
-            </h1>
+            </h1><br></br>
             <p className="text-xl text-[#4b5563]/70 max-w-3xl mx-auto">
               We're on a mission to make healthcare accessible, affordable, and convenient for everyone. 
               Our platform connects patients with qualified doctors and provides comprehensive health services.

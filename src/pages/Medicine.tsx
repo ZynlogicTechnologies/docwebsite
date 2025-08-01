@@ -28,7 +28,7 @@ const Medicine = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Order Medicine</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Order Medicine</h1><br></br>
             <p className="text-lg text-gray-600">Get your medicines delivered safely to your doorstep</p>
           </div>
 

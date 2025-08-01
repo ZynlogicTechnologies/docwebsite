@@ -93,6 +93,7 @@ const VideoConsultation = () => {
         {/* Hero + Search */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-black mb-4">Video Consultation</h1>
+          <br></br>
           <p className="text-xl text-gray-700 max-w-3xl mx-auto">
             Connect with certified doctors from the comfort of your home.
           </p>

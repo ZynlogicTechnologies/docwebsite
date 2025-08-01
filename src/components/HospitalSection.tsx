@@ -40,7 +40,7 @@ const HospitalSection = () => {
     <div className="container mx-auto px-4 py-12">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
         <h2 className="text-3xl lg:text-4xl font-bold text-[#007E85] mb-2 md:mb-0">
-          Book an appointment for an in-clinic
+          Book an appointment for an in-clinic  <br></br>
           <span className="block text-[#007E85]/70 mt-1 text-base font-medium">
             consultation — Find experienced doctors across all specialties
           </span>
