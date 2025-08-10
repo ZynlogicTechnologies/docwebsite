@@ -37,6 +37,7 @@ import DoctorProfileUpdate from "./pages/DoctorProfileUpdate";
 import DoctorProfileAvalaibility from "./pages/DoctorAvailabilityUpdate";
 import { useEffect } from "react";
 import { useGlobalTextZigzag } from './components/ui/AnimatedTextWrapper';
+import PaymentStatus from "./pages/PaymentStatus";
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -109,6 +110,7 @@ const App = () => {
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/doctor/:id" element={<DoctorProfile />} />
                   <Route path="/userappointments" element={<UserAppointments />} />
+                  <Route path="/payment-status" element={<PaymentStatus />} />
                   <Route
                     path="/dashboard"
                     element={

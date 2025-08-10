@@ -48,6 +48,7 @@ const [pendingPayload, setPendingPayload] = useState<any>(null);
           `https://landing.docapp.co.in/api/auth/show-slots/${found.user_id}`,
           {
             credentials: "include",
+         
           }
         );
 
@@ -62,6 +63,7 @@ const [pendingPayload, setPendingPayload] = useState<any>(null);
         }
       } catch (error) {
         console.error("Error fetching doctor or slots:", error);
+          //  console.log(found.user_id);
       } finally {
         setLoading(false);
       }
@@ -118,6 +120,7 @@ const handleBook = () => {
       doctorId: doctor.id,
       doctorName: doctor.user?.username,
       slot: selectedSlot,
+      fee: doctor.consultation_fee,
       mode: finalMode,
       doctor,
     },
@@ -157,6 +160,7 @@ const handleBook = () => {
                   <img
                     src={doctor.profile_picture}
                     alt={doctor.user?.username}
+
                     className="w-32 h-32 rounded-2xl object-cover mb-4"
                   />
                   <Badge className="bg-[#007E85]">
@@ -166,6 +170,7 @@ const handleBook = () => {
 
                 <div className="flex-1 space-y-4">
                   <h1 className="text-3xl font-bold">{doctor.user?.username}</h1>
+                  <h1 className="text-3xl font-bold">{doctor.user?.id}</h1>
                   <p className="text-xl text-[#007E85]">{doctor.specialization}</p>
                   <p className="text-gray-600">{doctor.qualification || doctor.license_number}</p>
 

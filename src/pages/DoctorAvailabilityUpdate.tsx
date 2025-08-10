@@ -14,6 +14,7 @@ type AvailabilitySlot = {
   start?: string;
   end?: string;
   breaks: BreakSlot[];
+  mode: "online" | "offline" | "hybrid" | "";
 };
 
 const DoctorAvailabilityUpdate: React.FC = () => {
@@ -41,6 +42,7 @@ const DoctorAvailabilityUpdate: React.FC = () => {
               const [start, end] = br.split("-");
               return { start, end };
             }),
+            mode: item.mode || "",
           }));
           setAvailability(fetched);
         }
@@ -66,7 +68,7 @@ const DoctorAvailabilityUpdate: React.FC = () => {
     } else {
       setAvailability([
         ...availability,
-        { day, start: "09:00", end: "17:00", breaks: [] },
+        { day, start: "09:00", end: "17:00", breaks: [], mode: "online" },
       ]);
     }
   };
@@ -115,6 +117,14 @@ const DoctorAvailabilityUpdate: React.FC = () => {
     );
   };
 
+  const updateMode = (day: string, mode: "online" | "offline" | "hybrid" | "") => {
+    setAvailability((prev) =>
+      prev.map((slot) =>
+        slot.day === day ? { ...slot, mode } : slot
+      )
+    );
+  };
+
   const handleSubmit = async () => {
     setLoading(true);
     try {
@@ -126,12 +136,14 @@ const DoctorAvailabilityUpdate: React.FC = () => {
               loginTime: slot.start || "09:00",
               logoutTime: slot.end || "17:00",
               breaks: slot.breaks.map((br) => `${br.start}-${br.end}`),
+              mode: slot.mode || "",
             }
           : {
               day: day.toLowerCase(),
               loginTime: "09:00",
               logoutTime: "17:00",
               breaks: [],
+              mode: "",
             };
       });
 
@@ -172,7 +184,7 @@ const DoctorAvailabilityUpdate: React.FC = () => {
             const slot = availability.find((s) => s.day === day);
             return (
               <div key={day} className="border p-4 rounded space-y-2">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-wrap">
                   <Switch checked={!!slot} onCheckedChange={() => toggleDay(day)} />
                   <span className="w-24 font-semibold">{day}</span>
                   <Input
@@ -180,15 +192,28 @@ const DoctorAvailabilityUpdate: React.FC = () => {
                     value={slot?.start || ""}
                     disabled={!slot}
                     onChange={(e) => updateTime(day, "start", e.target.value)}
-                    className="w-32"
+                    className="w-28"
                   />
                   <Input
                     type="time"
                     value={slot?.end || ""}
                     disabled={!slot}
                     onChange={(e) => updateTime(day, "end", e.target.value)}
-                    className="w-32"
+                    className="w-28"
                   />
+                  <select
+                    disabled={!slot}
+                    value={slot?.mode || ""}
+                    onChange={(e) =>
+                      updateMode(day, e.target.value as "online" | "offline" | "hybrid" | "")
+                    }
+                    className="border rounded px-2 py-1 text-sm"
+                  >
+                    <option value="">Select Mode</option>
+                    <option value="online">Online</option>
+                    <option value="offline">Offline</option>
+                    <option value="hybrid">Hybrid</option>
+                  </select>
                 </div>
 
                 {/* Breaks */}
