@@ -446,325 +446,469 @@
 
 // export default ViewAppointments;
 
-import React, { useState, useEffect, useRef } from 'react';
+// import React, { useState, useEffect, useRef } from 'react';
 
-interface Appointment {
-  id: number;
-  user_id: number;
-  doctor_id: number;
-  appointment_date: string;
-  appointment_start_time: string;
-  appointment_end_time: string;
-  appointment_status: string;
-  appointment_type: string;
-  checkup_time: string | null;
-  prescription: string | null;
-  created_at: string;
-  createdAt: string;
-  updatedAt: string;
-  checkupAppointment: any[];
-  followUp: any[];
-}
+// interface Appointment {
+//   id: number;
+//   user_id: number;
+//   doctor_id: number;
+//   appointment_date: string;
+//   appointment_start_time: string;
+//   appointment_end_time: string;
+//   appointment_status: string;
+//   appointment_type: string;
+//   checkup_time: string | null;
+//   prescription: string | null;
+//   created_at: string;
+//   createdAt: string;
+//   updatedAt: string;
+//   checkupAppointment: any[];
+//   followUp: any[];
+// }
 
-const ViewAppointments: React.FC = () => {
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [callStatus, setCallStatus] = useState<string>('idle');
-  const [currentCallId, setCurrentCallId] = useState<string | null>(null);
-  const [pollAttempts, setPollAttempts] = useState<number>(0);
-  const [endpointIndex, setEndpointIndex] = useState<number>(0);
-  const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
-  const localVideoRef = useRef<HTMLVideoElement>(null);
-  const remoteVideoRef = useRef<HTMLVideoElement>(null);
-  const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+// const ViewAppointments: React.FC = () => {
+//   const [appointments, setAppointments] = useState<Appointment[]>([]);
+//   const [loading, setLoading] = useState<boolean>(true);
+//   const [error, setError] = useState<string | null>(null);
+//   const [callStatus, setCallStatus] = useState<string>('idle');
+//   const [currentCallId, setCurrentCallId] = useState<string | null>(null);
+//   const [pollAttempts, setPollAttempts] = useState<number>(0);
+//   const [endpointIndex, setEndpointIndex] = useState<number>(0);
+//   const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
+//   const localVideoRef = useRef<HTMLVideoElement>(null);
+//   const remoteVideoRef = useRef<HTMLVideoElement>(null);
+//   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const BASE_URL = 'https://landing.docapp.co.in';
-  const MAX_POLL_ATTEMPTS = 10;
-  const ENDPOINTS = [
-    '/api/call/receive-call',
-    '/api/call/recieve-call',
-    '/api/call/get-call',
-  ];
+//   const BASE_URL = 'https://landing.docapp.co.in';
+//   const MAX_POLL_ATTEMPTS = 10;
+//   const ENDPOINTS = [
+//     '/api/call/receive-call',
+//     '/api/call/recieve-call',
+//     '/api/call/get-call',
+//   ];
 
-  useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        const response = await fetch(`${BASE_URL}/api/appointment/list-appointments`, {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+//   useEffect(() => {
+//     const fetchAppointments = async () => {
+//       try {
+//         const response = await fetch(`${BASE_URL}/api/appointment/list-appointments`, {
+//           method: 'GET',
+//           credentials: 'include',
+//           headers: {
+//             'Content-Type': 'application/json',
+//           },
+//         });
 
-        if (!response.ok) {
-          if (response.status === 401) {
-            throw new Error('Unauthorized: Please log in to access appointments');
-          }
-          throw new Error(`HTTP error ${response.status}: ${response.statusText}`);
-        }
+//         if (!response.ok) {
+//           if (response.status === 401) {
+//             throw new Error('Unauthorized: Please log in to access appointments');
+//           }
+//           throw new Error(`HTTP error ${response.status}: ${response.statusText}`);
+//         }
 
-        const data = await response.json();
-        console.log('Appointments response:', data);
-        if (data && Array.isArray(data.appointments)) {
-          setAppointments(data.appointments);
-        } else {
-          throw new Error('Invalid response format: Expected an "appointments" array');
-        }
-        setLoading(false);
-      } catch (err: any) {
-        setError(err.message || 'Failed to fetch appointments');
-        setAppointments([]);
-        setLoading(false);
-        console.error('Fetch appointments error:', err);
-      }
-    };
-    fetchAppointments();
+//         const data = await response.json();
+//         console.log('Appointments response:', data);
+//         if (data && Array.isArray(data.appointments)) {
+//           setAppointments(data.appointments);
+//         } else {
+//           throw new Error('Invalid response format: Expected an "appointments" array');
+//         }
+//         setLoading(false);
+//       } catch (err: any) {
+//         setError(err.message || 'Failed to fetch appointments');
+//         setAppointments([]);
+//         setLoading(false);
+//         console.error('Fetch appointments error:', err);
+//       }
+//     };
+//     fetchAppointments();
 
-    return () => {
-      if (peerConnectionRef.current) {
-        peerConnectionRef.current.close();
-        peerConnectionRef.current = null;
-      }
-      if (localVideoRef.current?.srcObject) {
-        (localVideoRef.current.srcObject as MediaStream).getTracks().forEach((track) => track.stop());
-      }
-      if (remoteVideoRef.current?.srcObject) {
-        (remoteVideoRef.current.srcObject as MediaStream).getTracks().forEach((track) => track.stop());
-      }
-      if (pollingIntervalRef.current) {
-        clearInterval(pollingIntervalRef.current);
-      }
-    };
-  }, []);
+//     return () => {
+//       if (peerConnectionRef.current) {
+//         peerConnectionRef.current.close();
+//         peerConnectionRef.current = null;
+//       }
+//       if (localVideoRef.current?.srcObject) {
+//         (localVideoRef.current.srcObject as MediaStream).getTracks().forEach((track) => track.stop());
+//       }
+//       if (remoteVideoRef.current?.srcObject) {
+//         (remoteVideoRef.current.srcObject as MediaStream).getTracks().forEach((track) => track.stop());
+//       }
+//       if (pollingIntervalRef.current) {
+//         clearInterval(pollingIntervalRef.current);
+//       }
+//     };
+//   }, []);
 
-  const requestMediaPermissions = async () => {
+//   const requestMediaPermissions = async () => {
+//     try {
+//       const stream = await navigator.mediaDevices.getUserMedia({
+//         audio: true,
+//         video: true,
+//       });
+//       if (localVideoRef.current) {
+//         localVideoRef.current.srcObject = stream;
+//       }
+//       return stream;
+//     } catch (err) {
+//       setError('Failed to get media permissions. Please allow camera and microphone access.');
+//       console.error('Media permission error:', err);
+//       return null;
+//     }
+//   };
+
+//   const pollForAnswer = async (callId: string) => {
+//     try {
+//       const endpoint = `${BASE_URL}${ENDPOINTS[endpointIndex]}`;
+//       const response = await fetch(endpoint, {
+//         method: 'GET',
+//         credentials: 'include',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//       });
+
+//       if (!response.ok) {
+//         if (response.status === 401) {
+//           throw new Error('Unauthorized: Please log in');
+//         }
+//         if (response.status === 404 && endpointIndex < ENDPOINTS.length - 1) {
+//           console.log(`Endpoint ${ENDPOINTS[endpointIndex]} failed, trying ${ENDPOINTS[endpointIndex + 1]}`);
+//           setEndpointIndex((prev) => prev + 1);
+//           throw new Error('Trying alternate endpoint');
+//         }
+//         throw new Error(`Failed to poll for answer: HTTP ${response.status} - ${response.statusText}`);
+//       }
+
+//       const data = await response.json();
+//       console.log('Poll for answer response:', data);
+//       if (data.answer && peerConnectionRef.current) {
+//         await peerConnectionRef.current.setRemoteDescription(new RTCSessionDescription(data.answer));
+//         setCallStatus('connected');
+//         setPollAttempts(0);
+//         if (pollingIntervalRef.current) {
+//           clearInterval(pollingIntervalRef.current);
+//         }
+//       }
+//     } catch (err: any) {
+//       console.error('Poll for answer error:', err);
+//       setPollAttempts((prev) => prev + 1);
+//       if (pollAttempts + 1 >= MAX_POLL_ATTEMPTS) {
+//         setError('Failed to connect call: No answer received from server. Please contact support or try again.');
+//         setCallStatus('failed');
+//         if (pollingIntervalRef.current) {
+//           clearInterval(pollingIntervalRef.current);
+//         }
+//       }
+//     }
+//   };
+
+//   const initiateCall = async (userId: number) => {
+//     setCallStatus('connecting');
+//     setPollAttempts(0);
+//     setEndpointIndex(0);
+//     try {
+//       peerConnectionRef.current = new RTCPeerConnection({
+//         iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
+//       });
+
+//       const stream = await requestMediaPermissions();
+//       if (!stream || !peerConnectionRef.current) {
+//         setCallStatus('failed');
+//         setError('Failed to initialize media or peer connection');
+//         return;
+//       }
+
+//       stream.getTracks().forEach((track) => {
+//         peerConnectionRef.current?.addTrack(track, stream);
+//       });
+
+//       peerConnectionRef.current.ontrack = (event) => {
+//         if (remoteVideoRef.current) {
+//           remoteVideoRef.current.srcObject = event.streams[0];
+//         }
+//       };
+
+//       peerConnectionRef.current.onicecandidate = async (event) => {
+//         if (event.candidate && currentCallId) {
+//           try {
+//             const response = await fetch(`${BASE_URL}/api/call/add-offer-candidates`, {
+//               method: 'POST',
+//               credentials: 'include',
+//               headers: {
+//                 'Content-Type': 'application/json',
+//               },
+//               body: JSON.stringify({
+//                 call_id: currentCallId,
+//                 offer_candidate: event.candidate.toJSON(),
+//               }),
+//             });
+//             console.log('Add offer candidate response:', await response.json());
+//           } catch (err) {
+//             console.error('Failed to send offer candidate:', err);
+//           }
+//         }
+//       };
+
+//       const offer = await peerConnectionRef.current.createOffer();
+//       await peerConnectionRef.current.setLocalDescription(offer);
+
+//       const response = await fetch(`${BASE_URL}/api/call/initialise-call`, {
+//         method: 'POST',
+//         credentials: 'include',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({
+//           call_to_user: userId,
+//           offer: {
+//             sdp: offer.sdp,
+//             type: offer.type,
+//           },
+//         }),
+//       });
+
+//       if (!response.ok) {
+//         if (response.status === 401) {
+//           throw new Error('Unauthorized: Please log in to initiate call');
+//         }
+//         throw new Error(`Failed to initiate call: HTTP ${response.status} - ${response.statusText}`);
+//       }
+
+//       const data = await response.json();
+//       console.log('Initiate call response:', data);
+//       if (data.call_id) {
+//         setCurrentCallId(data.call_id);
+//         pollingIntervalRef.current = setInterval(() => pollForAnswer(data.call_id), 2000);
+//       } else {
+//         throw new Error('No call_id received from server');
+//       }
+//     } catch (err: any) {
+//       setError(err.message || 'Failed to initiate call');
+//       setCallStatus('failed');
+//       console.error('Initiate call error:', err);
+//     }
+//   };
+
+//   const endCall = () => {
+//     if (peerConnectionRef.current) {
+//       peerConnectionRef.current.close();
+//       peerConnectionRef.current = null;
+//     }
+//     if (localVideoRef.current?.srcObject) {
+//       (localVideoRef.current.srcObject as MediaStream).getTracks().forEach((track) => track.stop());
+//     }
+//     if (remoteVideoRef.current?.srcObject) {
+//       (remoteVideoRef.current.srcObject as MediaStream).getTracks().forEach((track) => track.stop());
+//     }
+//     if (pollingIntervalRef.current) {
+//       clearInterval(pollingIntervalRef.current);
+//     }
+//     setCallStatus('idle');
+//     setCurrentCallId(null);
+//     setPollAttempts(0);
+//     setError(null);
+//   };
+
+//   return (
+//     <div className="container mx-auto p-4">
+//       <h1 className="text-2xl font-bold mb-4">Appointments</h1>
+//       {loading && <div className="text-center mt-8">Loading...</div>}
+//       {error && <div className="text-center mt-8 text-red-500">{error}</div>}
+//       {!loading && !error && appointments.length === 0 && (
+//         <div className="text-center mt-8">No appointments found</div>
+//       )}
+//       {!loading && appointments.length > 0 && (
+//         <div className="grid gap-4">
+//           {appointments.map((appointment) => (
+//             <div key={appointment.id} className="border rounded-lg p-4 flex justify-between items-center">
+//               <div>
+//                 <p className="font-semibold">
+//                   {new Date(appointment.appointment_date).toLocaleDateString()} at{' '}
+//                   {appointment.appointment_start_time}
+//                 </p>
+//                 <p>Type: {appointment.appointment_type}</p>
+//                 <p>Status: {appointment.appointment_status}</p>
+//               </div>
+//               <button
+//                 onClick={() => initiateCall(appointment.user_id)}
+//                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 flex items-center"
+//                 disabled={callStatus !== 'idle'}
+//               >
+//                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                   <path
+//                     strokeLinecap="round"
+//                     strokeLinejoin="round"
+//                     strokeWidth={2}
+//                     d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+//                   />
+//                 </svg>
+//                 Call
+//               </button>
+//             </div>
+//           ))}
+//         </div>
+//       )}
+//       {callStatus !== 'idle' && (
+//         <div className="mt-4">
+//           <p className="mb-2">Call Status: {callStatus}</p>
+//           <div className="flex gap-4">
+//             <video ref={localVideoRef} autoPlay playsInline className="w-1/2 rounded-lg border" />
+//             <video ref={remoteVideoRef} autoPlay playsInline className="w-1/2 rounded-lg border" />
+//           </div>
+//           <button
+//             onClick={endCall}
+//             className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+//           >
+//             End Call
+//           </button>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default ViewAppointments;
+
+
+import React, { useEffect, useState } from "react";
+import { getToken, onMessage } from "firebase/messaging";
+import { messaging } from "../firebase"; // your firebase init file
+import axios from "axios";
+
+const BASE_URL = "https://landing.docapp.co.in"; // prod API base
+const userId = 30; // TODO: replace with logged-in user ID
+const platform = "web"; // "android" | "ios" | "web"
+
+export default function ViewAppointments() {
+  const [fcmToken, setFcmToken] = useState("");
+  const [callId, setCallId] = useState("");
+
+  // ✅ Register FCM token & send to backend
+  const registerFcmToken = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: true,
-        video: true,
-      });
-      if (localVideoRef.current) {
-        localVideoRef.current.srcObject = stream;
-      }
-      return stream;
-    } catch (err) {
-      setError('Failed to get media permissions. Please allow camera and microphone access.');
-      console.error('Media permission error:', err);
-      return null;
-    }
-  };
-
-  const pollForAnswer = async (callId: string) => {
-    try {
-      const endpoint = `${BASE_URL}${ENDPOINTS[endpointIndex]}`;
-      const response = await fetch(endpoint, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const token = await getToken(messaging, {
+        vapidKey: "BAw0FRbdlAJHz0bR2siHdlRhs-YLFfNDEKOYaiUZKYPP9LcR7mdu5zINa1_l8JT2pNOgBhlxmZvu3TqNCLfb3Po" // from Firebase → Project Settings → Cloud Messaging
       });
 
-      if (!response.ok) {
-        if (response.status === 401) {
-          throw new Error('Unauthorized: Please log in');
-        }
-        if (response.status === 404 && endpointIndex < ENDPOINTS.length - 1) {
-          console.log(`Endpoint ${ENDPOINTS[endpointIndex]} failed, trying ${ENDPOINTS[endpointIndex + 1]}`);
-          setEndpointIndex((prev) => prev + 1);
-          throw new Error('Trying alternate endpoint');
-        }
-        throw new Error(`Failed to poll for answer: HTTP ${response.status} - ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      console.log('Poll for answer response:', data);
-      if (data.answer && peerConnectionRef.current) {
-        await peerConnectionRef.current.setRemoteDescription(new RTCSessionDescription(data.answer));
-        setCallStatus('connected');
-        setPollAttempts(0);
-        if (pollingIntervalRef.current) {
-          clearInterval(pollingIntervalRef.current);
-        }
-      }
-    } catch (err: any) {
-      console.error('Poll for answer error:', err);
-      setPollAttempts((prev) => prev + 1);
-      if (pollAttempts + 1 >= MAX_POLL_ATTEMPTS) {
-        setError('Failed to connect call: No answer received from server. Please contact support or try again.');
-        setCallStatus('failed');
-        if (pollingIntervalRef.current) {
-          clearInterval(pollingIntervalRef.current);
-        }
-      }
-    }
-  };
-
-  const initiateCall = async (userId: number) => {
-    setCallStatus('connecting');
-    setPollAttempts(0);
-    setEndpointIndex(0);
-    try {
-      peerConnectionRef.current = new RTCPeerConnection({
-        iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
-      });
-
-      const stream = await requestMediaPermissions();
-      if (!stream || !peerConnectionRef.current) {
-        setCallStatus('failed');
-        setError('Failed to initialize media or peer connection');
+      if (!token) {
+        console.warn("⚠ No FCM token retrieved. Must be HTTPS or localhost.");
         return;
       }
 
-      stream.getTracks().forEach((track) => {
-        peerConnectionRef.current?.addTrack(track, stream);
+      setFcmToken(token);
+      console.log("✅ Got FCM token:", token);
+
+      await axios.post(`${BASE_URL}/api/notifications/save-token`, {
+        token,
+        userId,
+        platform
       });
 
-      peerConnectionRef.current.ontrack = (event) => {
-        if (remoteVideoRef.current) {
-          remoteVideoRef.current.srcObject = event.streams[0];
-        }
-      };
-
-      peerConnectionRef.current.onicecandidate = async (event) => {
-        if (event.candidate && currentCallId) {
-          try {
-            const response = await fetch(`${BASE_URL}/api/call/add-offer-candidates`, {
-              method: 'POST',
-              credentials: 'include',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                call_id: currentCallId,
-                offer_candidate: event.candidate.toJSON(),
-              }),
-            });
-            console.log('Add offer candidate response:', await response.json());
-          } catch (err) {
-            console.error('Failed to send offer candidate:', err);
-          }
-        }
-      };
-
-      const offer = await peerConnectionRef.current.createOffer();
-      await peerConnectionRef.current.setLocalDescription(offer);
-
-      const response = await fetch(`${BASE_URL}/api/call/initialise-call`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          call_to_user: userId,
-          offer: {
-            sdp: offer.sdp,
-            type: offer.type,
-          },
-        }),
-      });
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          throw new Error('Unauthorized: Please log in to initiate call');
-        }
-        throw new Error(`Failed to initiate call: HTTP ${response.status} - ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      console.log('Initiate call response:', data);
-      if (data.call_id) {
-        setCurrentCallId(data.call_id);
-        pollingIntervalRef.current = setInterval(() => pollForAnswer(data.call_id), 2000);
-      } else {
-        throw new Error('No call_id received from server');
-      }
-    } catch (err: any) {
-      setError(err.message || 'Failed to initiate call');
-      setCallStatus('failed');
-      console.error('Initiate call error:', err);
+      console.log("✅ Token saved to backend");
+    } catch (err) {
+      console.error("❌ Error getting/saving FCM token:", err);
     }
   };
 
-  const endCall = () => {
-    if (peerConnectionRef.current) {
-      peerConnectionRef.current.close();
-      peerConnectionRef.current = null;
+  // ✅ Initialise call
+  const initiateCall = async () => {
+    try {
+      const payload = {
+        call_to_user: "29", // Replace with actual callee ID
+        offer: {
+          sdp: "offer_sdp",
+          type: "offer"
+        }
+      };
+
+      console.log("📤 Initiating call with payload:", payload);
+
+      const { data } = await axios.post(
+        `${BASE_URL}/api/call/initialise-call`,
+        payload
+      );
+
+      console.log("✅ Call initiated:", data);
+      setCallId(data.call_id);
+    } catch (err) {
+      console.error("❌ Failed to initiate call:", err.response?.data || err);
     }
-    if (localVideoRef.current?.srcObject) {
-      (localVideoRef.current.srcObject as MediaStream).getTracks().forEach((track) => track.stop());
-    }
-    if (remoteVideoRef.current?.srcObject) {
-      (remoteVideoRef.current.srcObject as MediaStream).getTracks().forEach((track) => track.stop());
-    }
-    if (pollingIntervalRef.current) {
-      clearInterval(pollingIntervalRef.current);
-    }
-    setCallStatus('idle');
-    setCurrentCallId(null);
-    setPollAttempts(0);
-    setError(null);
   };
+
+  // ✅ Add offer candidate
+  const addOfferCandidate = async () => {
+    if (!callId) return alert("No callId yet");
+    try {
+      await axios.post(`${BASE_URL}/api/call/add-offer-candidates`, {
+        call_id: callId,
+        offer_candidate: {
+          candidate: "this is offer candidate 1",
+          sdpMid: "0",
+          sdpMLineIndex: "video"
+        }
+      });
+      console.log("✅ Offer candidate sent");
+    } catch (err) {
+      console.error("❌ Failed to send offer candidate:", err);
+    }
+  };
+
+  // ✅ Add answer candidate
+  const addAnswerCandidate = async () => {
+    if (!callId) return alert("No callId yet");
+    try {
+      await axios.post(`${BASE_URL}/api/call/add-answer-candidates`, {
+        call_id: callId,
+        answer_candidate: {
+          candidate: "candidate 1",
+          sdpMid: "1",
+          sdpMLineIndex: "audio"
+        }
+      });
+      console.log("✅ Answer candidate sent");
+    } catch (err) {
+      console.error("❌ Failed to send answer candidate:", err);
+    }
+  };
+
+  // ✅ Receive call
+  const receiveCall = async () => {
+    if (!callId) return alert("No callId yet");
+    try {
+      await axios.put(`${BASE_URL}/api/call/recieve-call`, {
+        call_id: callId,
+        answer: {
+          sdp: "this is answer sdp",
+          type: "answer"
+        }
+      });
+      console.log("✅ Call accepted");
+    } catch (err) {
+      console.error("❌ Failed to accept call:", err);
+    }
+  };
+
+  // ✅ Listen for FCM push notifications
+  useEffect(() => {
+    registerFcmToken();
+
+    onMessage(messaging, (payload) => {
+      console.log("📩 Push notification received:", payload);
+      // Optional: auto-accept call here if desired
+    });
+  }, []);
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Appointments</h1>
-      {loading && <div className="text-center mt-8">Loading...</div>}
-      {error && <div className="text-center mt-8 text-red-500">{error}</div>}
-      {!loading && !error && appointments.length === 0 && (
-        <div className="text-center mt-8">No appointments found</div>
-      )}
-      {!loading && appointments.length > 0 && (
-        <div className="grid gap-4">
-          {appointments.map((appointment) => (
-            <div key={appointment.id} className="border rounded-lg p-4 flex justify-between items-center">
-              <div>
-                <p className="font-semibold">
-                  {new Date(appointment.appointment_date).toLocaleDateString()} at{' '}
-                  {appointment.appointment_start_time}
-                </p>
-                <p>Type: {appointment.appointment_type}</p>
-                <p>Status: {appointment.appointment_status}</p>
-              </div>
-              <button
-                onClick={() => initiateCall(appointment.user_id)}
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 flex items-center"
-                disabled={callStatus !== 'idle'}
-              >
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                  />
-                </svg>
-                Call
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
-      {callStatus !== 'idle' && (
-        <div className="mt-4">
-          <p className="mb-2">Call Status: {callStatus}</p>
-          <div className="flex gap-4">
-            <video ref={localVideoRef} autoPlay playsInline className="w-1/2 rounded-lg border" />
-            <video ref={remoteVideoRef} autoPlay playsInline className="w-1/2 rounded-lg border" />
-          </div>
-          <button
-            onClick={endCall}
-            className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-          >
-            End Call
-          </button>
-        </div>
-      )}
+    <div>
+      <h1>📞 View Appointments & Call</h1>
+
+      <button onClick={initiateCall}>Initiate Call</button>
+      <button onClick={addOfferCandidate}>Add Offer Candidate</button>
+      <button onClick={addAnswerCandidate}>Add Answer Candidate</button>
+      <button onClick={receiveCall}>Accept Call</button>
+
+      <p>FCM Token: {fcmToken || "Not yet registered"}</p>
+      <p>Call ID: {callId || "No call yet"}</p>
     </div>
   );
-};
-
-export default ViewAppointments;
+}

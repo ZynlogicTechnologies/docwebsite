@@ -40,34 +40,23 @@ const Auth = () => {
     role: "general_user",
   });
 
-  const handleLogin = async () => {
+ const handleLogin = async () => {
   try {
-    if (loginData.role === "admin") {
-      // Mock admin login (hardcoded credentials check)
-      if (
-        loginData.email === "admin@docapp.com" &&
-        loginData.password === "admin123"
-      ) {
-        const mockAdmin = {
-          id: 0,
-          username: "Admin",
-          email: "admin@docapp.com",
-          role: "admin",
-        };
-        if (setUser) setUser(mockAdmin);
-        navigate("/admin-dashboard");
-      } else {
-        throw new Error("Invalid admin credentials");
-      }
-      return;
-    }
+    // Prepare request data
+    const requestBody = {
+      ...loginData,
+      role:
+        loginData.role === "admin"
+          ? "hospital_organization"
+          : loginData.role,
+    };
 
-    // Real API login for doctor and general_user
+    // API login
     const res = await fetch("https://landing.docapp.co.in/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify(loginData),
+      body: JSON.stringify(requestBody),
     });
 
     const data = await res.json();
@@ -80,6 +69,8 @@ const Auth = () => {
     // Navigate based on role
     if (loginData.role === "doctor") {
       navigate("/doctor-dashboard");
+    } else if (loginData.role === "admin") {
+      navigate("/admin-dashboard");
     } else {
       navigate("/dashboard");
     }
@@ -87,28 +78,6 @@ const Auth = () => {
     alert("Login failed: " + err.message);
   }
 };
-
-
-  const handleSignup = async () => {
-    if (signupData.password !== signupData.confirmPassword) {
-      return alert("Passwords do not match");
-    }
-
-    try {
-      const res = await fetch("https://landing.docapp.co.in/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(signupData),
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Signup failed");
-
-      alert("Account created! Please login.");
-    } catch (err: any) {
-      alert("Signup failed: " + err.message);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white flex items-center justify-center p-4">
